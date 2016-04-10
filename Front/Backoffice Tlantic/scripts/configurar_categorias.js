@@ -1,8 +1,12 @@
-var Categorias = ["Televisão", "Computador", "Micro-ondas", "Frigorífico", "Telemóvel", "Colunas", "Rádio",
+//GLOBALS
+
+  var categorias = ["Televisão", "Computador", "Micro-ondas", "Frigorífico", "Telemóvel", "Colunas", "Rádio",
   "Televisão", "Computador", "Frigorífico", "Telemóvel", "Colunas", "Rádio", "Televisão", "Computador", "Micro-ondas", "Frigorífico",
    "Telemóvel", "Colunas", "Rádio", "Televisão", "Computador", "Frigorífico", "Telemóvel", "Colunas", "Rádio"];
-catItems=ko.observableArray(Categorias);
-catItems.sort();
+
+   categorias.sort();
+   catItems=ko.observableArray();
+
 
 function filter(){
 
@@ -198,6 +202,27 @@ function addCharacteristic(){
   });
 }
 
+function autoAddCategory(){
+  $(document).ready(function(){
+    categorias.forEach(function(categoryName) {
+      var self = this;
+      var boxGroup = $('#boxOfGoodies');
+
+      categoryName = capitalizeFirstLetter(categoryName);
+      boxGroup.append('<div class="box"><div class="box-header"><div class="row overflow-rows"><div class="col-sm-5 product-padding table-col-border table-col-border-left table-col-border-top color-backgorund-category col-size"><h3>'+categoryName+'</h3></div><div class="col-sm-3 text-center table-col-border table-col-border-top contain-button col-size"><button type="button" class="btn btn-block product-button addQuestion">Adicionar Pergunta</button></div><div class="col-sm-3 text-center table-col-border table-col-border-top contain-button col-size"><button type="button" class="btn btn-block product-button expandCategoria">Lista de Perguntas/Repostas <span class=" glyphicon glyphicon-menu-down"></span></button></div><div class="col-sm-1 table-col-border table-col-border-top contain-button col-size"><button type="button" class="btn btn-block product-button"><span class="glyphicon glyphicon-remove"></span></button></div></div></div><div class="box-body box-body-scroll"></div></div>');
+      catItems.push(categoryName);
+      catItems.sort();
+
+      //Unbind all elements with the class and then rebbind to include the new element
+      var addQuestionElement = boxGroup.find(".addQuestion");
+      addQuestionElement.unbind("click", addQuestion());
+      addQuestionElement.bind("click", addQuestion());
+      var expandCategoriaElement = boxGroup.find(".expandCategoria");
+      expandCategoriaElement.unbind("click", expandCategoria());
+      expandCategoriaElement.bind("click", expandCategoria());
+    });
+  });
+}
 
 
 //UTILS
