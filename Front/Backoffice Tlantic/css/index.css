@@ -1,0 +1,176 @@
+html, body {
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+}
+
+body{
+  margin: auto;
+  padding:20px;
+  display: table;
+}
+
+.main-div{
+  display:table-cell;
+  vertical-align:middle;
+}
+
+.main-menu-button{
+  border: 2px solid red;
+  background-color: white;
+  border-radius: 0px;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+.table-margin{
+  margin:20px;
+}
+
+.h1-pesquisa-margin{
+  margin-left: -18px;
+}
+
+.table-line-border{
+  border: 2px solid red;
+  border-collapse: collapse;
+
+}
+
+.table-col-border{
+  border-right:2px solid red;
+  border-bottom: 2px solid red;
+  border-collapse: collapse;
+}
+
+.table-col-border-top{
+  border-top: 2px solid red;
+  border-collapse: collapse;
+}
+
+.table-col-border-left{
+  border-left: 2px solid red;
+  border-collapse: collapse;
+}
+
+.table-col-border-right{
+  border-right:2px solid red;
+  border-collapse: collapse;
+}
+
+.product-button{
+  background-color: white;
+  border: 0px;
+  border-radius: 0px;
+  padding-left: 0px;
+  padding-right: 0px;
+  margin: 0px;
+  font-size: 20px;
+  height:45px;
+}
+
+.categorias-inside-menu-button{
+  text-align: left;
+}
+
+
+.no-padding{
+  padding-left: 0px;
+  padding-right: 0px;
+  padding-bottom: 0px;
+  padding-top: 0px;
+}
+
+.no-margin{
+  margin:0px 0px 0px 0px;
+}
+
+.contain-button{
+  padding-left: 0px;
+  padding-right: 0px;
+}
+
+.color-padding{
+    padding:35px;
+    background-image:linear-gradient(to bottom, rgba(240, 255, 40, 1) 0%, rgba(240, 255, 40, 1) 100%), linear-gradient(to bottom, rgba(240, 40, 40, 1) 0%, rgba(240, 40, 40, 1) 100%);
+    background-clip: content-box, padding-box;
+}
+
+.color-backgorund-category{
+  background-color:#FF6666;
+}
+
+.product-padding{
+  padding-left: 45px;
+}
+
+.box-body-scroll{
+  max-height:720px;
+  overflow-y: auto;
+  overflow-x:hidden;
+  width: 100%;
+}
+
+.col-size{
+  height: 50px;
+}
+
+.down-button{
+  webkit-appearance:none;
+  font-size: 18px;
+  color:#008CBA;
+}
+
+.configurar-row-margin{
+  margin-left:30px;
+}
+
+.answer-box{
+  background-color: #CBD0D1;
+}
+
+.input-padding{
+  padding-top: 7px;
+}
+
+.overflow-rows{
+  overflow:hidden;
+}
+
+#custom-search-input {
+        margin:0;
+        margin-top: 0px;
+        padding: 0;
+    }
+
+    #custom-search-input .search-query {
+        padding-right: 3px;
+        padding-right: 4px \9;
+        padding-left: 3px;
+        padding-left: 4px \9;
+        /* IE7-8 doesn't have border-radius, so don't indent the padding */
+
+        margin-bottom: 0;
+        -webkit-border-radius: 3px;
+        -moz-border-radius: 3px;
+        border-radius: 3px;
+    }
+
+    #custom-search-input button {
+        border: 0;
+        background: none;
+        /** belows styles are working good */
+        padding: 2px 15px;
+        margin-top: 2px;
+        position: relative;
+        /* IE7-8 doesn't have border-radius, so don't indent the padding */
+        margin-bottom: 0;
+        -webkit-border-radius: 3px;
+        -moz-border-radius: 3px;
+        border-radius: 3px;
+        color:#D9230F;
+    }
+
+    .search-query:focus + button {
+        z-index: 3;
+    }
