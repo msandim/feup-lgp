@@ -2,6 +2,8 @@ import com.google.inject.AbstractModule;
 import java.time.Clock;
 
 import com.google.inject.Scopes;
+import neo4j.services.CategoryService;
+import neo4j.services.CategoryServiceImpl;
 import neo4j.services.QuestionService;
 import neo4j.services.QuestionServiceImpl;
 import services.ApplicationTimer;
@@ -29,6 +31,7 @@ public class Module extends AbstractModule {
         //bind(Counter.class).to(AtomicCounter.class);
 
         bind(QuestionService.class).to(QuestionServiceImpl.class).in(Scopes.SINGLETON);
+        bind(CategoryService.class).to(CategoryServiceImpl.class).in(Scopes.SINGLETON);
     }
 
 }

@@ -4,14 +4,17 @@
 
 # An example controller showing a sample home page
 GET     /                           controllers.HomeController.index
-# An example controller showing how to use dependency injection
+
 GET     /allQuestions               controllers.QuestionController.retrieveAllQuestions
-
 GET     /question/:id               controllers.QuestionController.retrieveQuestion(id: Long)
-
 GET     /addQuestion/:text          controllers.QuestionController.createOrUpdateQuestion(text: String)
-# An example controller showing how to write asynchronous code
 GET     /deleteQuestion/:id         controllers.QuestionController.deleteQuestion(id: Long)
+
+GET     /allCategories              controllers.CategoryController.retrieveAllCategories
+GET     /category/:id               controllers.CategoryController.retrieveCategory(id: Long)
+GET     /addCategory/:name          controllers.CategoryController.createOrUpdateCategory(name: String)
+GET     /deleteCategory/:id         controllers.CategoryController.deleteCategory(id: Long)
+
 
 GET     /message                    controllers.AsyncController.message
 
