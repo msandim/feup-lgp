@@ -25,6 +25,12 @@ public class QuestionController extends Controller {
 
     }*/
 
+    @BodyParser.Of(BodyParser.Json.class)
+    public Result getNextQuestion()
+    {
+        return ok("lulz");
+    }
+
 
     public Result retrieveAllQuestions()
     {
