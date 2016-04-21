@@ -18,7 +18,6 @@ public class CategoryController extends Controller {
 
         Iterable<Category> res = service.findAll();
 
-
         return ok(res.toString());
     }
 
@@ -36,9 +35,6 @@ public class CategoryController extends Controller {
     public Result createOrUpdateCategory(String categoryName)
     {
         CategoryService service = new CategoryServiceImpl();
-
-
-
 
         Category temp = new Category (categoryName);
         service.createOrUpdate(temp);

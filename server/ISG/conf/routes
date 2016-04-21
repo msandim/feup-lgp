@@ -3,22 +3,24 @@
 # ~~~~
 
 # An example controller showing a sample home page
-GET     /                           controllers.HomeController.index
+GET     /                                   controllers.HomeController.index
 
-GET     /allQuestions               controllers.QuestionController.retrieveAllQuestions
-GET     /question/:id               controllers.QuestionController.retrieveQuestion(id: Long)
-GET     /addQuestion/:text          controllers.QuestionController.createOrUpdateQuestion(text: String)
-GET     /deleteQuestion/:id         controllers.QuestionController.deleteQuestion(id: Long)
+GET     /allQuestions                       controllers.QuestionController.retrieveAllQuestions
+GET     /question/:id                       controllers.QuestionController.retrieveQuestion(id: Long)
+GET     /addQuestion/:text                  controllers.QuestionController.createOrUpdateQuestion(text: String)
+GET     /deleteQuestion/:id                 controllers.QuestionController.deleteQuestion(id: Long)
 
-POST    /getNextQuestion            controllers.QuestionController.getNextQuestion
+# Get the next question
+POST    /getNextQuestion                    controllers.QuestionController.getNextQuestion
 
-GET     /allCategories              controllers.CategoryController.retrieveAllCategories
-GET     /category/:id               controllers.CategoryController.retrieveCategory(id: Long)
-GET     /addCategory/:name          controllers.CategoryController.createOrUpdateCategory(name: String)
-GET     /deleteCategory/:id         controllers.CategoryController.deleteCategory(id: Long)
+GET     /allCategories                      controllers.CategoryController.retrieveAllCategories
+GET     /category/:id                       controllers.CategoryController.retrieveCategory(id: Long)
+GET     /addCategory/:name                  controllers.CategoryController.createOrUpdateCategory(name: String)
+GET     /deleteCategory/:id                 controllers.CategoryController.deleteCategory(id: Long)
+GET     /getQuestionsByCategory/:category   controllers.QuestionController.getQuestionByCategory(category: String)
 
 
-GET     /message                    controllers.AsyncController.message
+GET     /message                            controllers.AsyncController.message
 
 # Map static resources from the /public folder to the /assets URL path
-GET     /assets/*file               controllers.Assets.versioned(path="/public", file: Asset)
+GET     /assets/*file                       controllers.Assets.versioned(path="/public", file: Asset)
