@@ -5,6 +5,10 @@ import javax.inject.*;
 import neo4j.models.Question;
 import neo4j.services.QuestionService;
 import neo4j.services.QuestionServiceImpl;
+import java.util.Collections;
+import java.util.Map;
+import play.libs.Json;
+import com.fasterxml.jackson.databind.JsonNode;
 import play.mvc.*;
 
 @Singleton
@@ -37,6 +41,15 @@ public class QuestionController extends Controller {
         return ok(res.toString());
     }
 
+    public Result getQuestionByCategory(String category)
+    {
+        QuestionService service = new QuestionServiceImpl();
+
+        Iterable<Question> res = service.getQuestionsFromCategory();
+
+        return ok(res.toString());
+    }
+
     public Result retrieveQuestion(Long id)
     {
         QuestionService service = new QuestionServiceImpl();
@@ -51,9 +64,6 @@ public class QuestionController extends Controller {
     public Result createOrUpdateQuestion(String questionText)
     {
         QuestionService service = new QuestionServiceImpl();
-
-
-
 
         Question temp = new Question(questionText, "TV", "ROOM");
         service.createOrUpdate(temp);
