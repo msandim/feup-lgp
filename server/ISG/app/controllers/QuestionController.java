@@ -32,7 +32,11 @@ public class QuestionController extends Controller {
     @BodyParser.Of(BodyParser.Json.class)
     public Result getNextQuestion()
     {
-        return ok("lulz");
+        QuestionService service = new QuestionServiceImpl();
+
+        Iterable<Question> questions = service.getQuestionsFromCategory();
+
+        return ok(questions.toString());
     }
 
 
