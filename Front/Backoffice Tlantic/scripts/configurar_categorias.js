@@ -24,15 +24,24 @@ function filter(){
 
 }
 
-function expand() {
+
+function expandCategoria() {
   var self = this;
-  $('#expand-one').click(function(){
-      $('.content-one').slideToggle('slow');
-      var spanClass = $("#expand-one span").attr("class");
-      if(spanClass == "glyphicon glyphicon-menu-up"){
-        $("#expand-one span").attr("class","glyphicon glyphicon-menu-down");
-      }else{
-        $("#expand-one span").attr("class","glyphicon glyphicon-menu-up");
-      }
+  $('.expandCategoria').click(function(){
+    var boxParent = $( this ).parent().parent().parent().parent();
+    var boxBody = boxParent.children(".box-body");
+    if(boxBody.is(":visible")){
+      $(boxBody).hide('fast');
+    }else{
+      $(boxBody).show('medium');
+    }
+
+    var span = $(this).find(">:first-child");
+    var spanClass = span.attr("class");
+    if(spanClass == "glyphicon glyphicon-menu-up"){
+      span.attr("class","glyphicon glyphicon-menu-down");
+    }else{
+      span.attr("class","glyphicon glyphicon-menu-up");
+    }
   });
 }

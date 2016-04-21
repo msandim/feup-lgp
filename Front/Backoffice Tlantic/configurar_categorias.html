@@ -4,6 +4,12 @@
   <meta charset="utf-8" />
   <link rel="stylesheet" type="text/css" href="bootstrap/css/bootstrap.min.css" />
   <link rel="stylesheet" type="text/css" href="css/index.css" />
+
+  <!-- search dependencies-->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/knockout/3.2.0/knockout-min.js"></script>
+  <script type="text/javascript" src="scripts/configurar_categorias.js"></script>
+
   <title>Configurar categorias</title>
 </head>
 <body>
@@ -38,7 +44,7 @@
                       <button type="button" class="btn btn-block product-button">Adicionar Pergunta</button>
                     </div>
                     <div class="col-sm-3 text-center table-col-border table-col-border-top contain-button col-size">
-                      <button type="button" class="btn btn-block product-button">Lista de Perguntas/Repostas <span class=" glyphicon glyphicon-menu-up"></span></button>
+                      <button type="button" class="btn btn-block product-button expandCategoria">Lista de Perguntas/Repostas <span class=" glyphicon glyphicon-menu-down"></span></button>
                     </div>
                     <div class="col-sm-1 table-col-border table-col-border-top contain-button col-size">
                       <button type="button" class="btn btn-block product-button"><span class="glyphicon glyphicon-remove"></span></button>
@@ -218,7 +224,7 @@
                       <button type="button" class="btn btn-block product-button">Adicionar Pergunta</button>
                     </div>
                     <div class="col-sm-3 text-center table-col-border table-col-border-top contain-button col-size">
-                      <button type="button" class="btn btn-block product-button">Lista de Perguntas/Repostas <span class=" glyphicon glyphicon-menu-up"></span></button>
+                      <button type="button" class="btn btn-block product-button expandCategoria">Lista de Perguntas/Repostas <span class=" glyphicon glyphicon-menu-down"></span></button>
                     </div>
                     <div class="col-sm-1 table-col-border table-col-border-top contain-button col-size">
                       <button type="button" class="btn btn-block product-button"><span class="glyphicon glyphicon-remove"></span></button>
@@ -398,7 +404,7 @@
                       <button type="button" class="btn btn-block product-button">Adicionar Pergunta</button>
                     </div>
                     <div class="col-sm-3 text-center table-col-border table-col-border-top contain-button col-size">
-                      <button type="button" class="btn btn-block product-button">Lista de Perguntas/Repostas <span class=" glyphicon glyphicon-menu-up"></span></button>
+                      <button type="button" class="btn btn-block product-button expandCategoria">Lista de Perguntas/Repostas <span class=" glyphicon glyphicon-menu-down"></span></button>
                     </div>
                     <div class="col-sm-1 table-col-border table-col-border-top contain-button col-size">
                       <button type="button" class="btn btn-block product-button"><span class="glyphicon glyphicon-remove"></span></button>
@@ -578,7 +584,7 @@
                       <button type="button" class="btn btn-block product-button">Adicionar Pergunta</button>
                     </div>
                     <div class="col-sm-3 text-center table-col-border table-col-border-top contain-button col-size">
-                      <button type="button" class="btn btn-block product-button">Lista de Perguntas/Repostas <span class=" glyphicon glyphicon-menu-up"></span></button>
+                      <button type="button" class="btn btn-block product-button expandCategoria">Lista de Perguntas/Repostas <span class=" glyphicon glyphicon-menu-down"></span></button>
                     </div>
                     <div class="col-sm-1 table-col-border table-col-border-top contain-button col-size">
                       <button type="button" class="btn btn-block product-button"><span class="glyphicon glyphicon-remove"></span></button>
@@ -765,7 +771,7 @@
                 <td>
                 <div id="custom-search-input col-size">
                   <div class="input-group col-sm-12">
-                    <input type="text" class="  search-query form-control" placeholder="Search"/>
+                    <input type="text" data-bind="textInput: filter" class="  search-query form-control" placeholder="Search"/>
                     <span class="input-group-btn">
                       <button class="btn btn-block" type="button">
                         <span class=" glyphicon glyphicon-search"></span>
@@ -781,7 +787,7 @@
 
           <div >
             <table class="table table-bordered">
-              <tbody>
+              <!--<tbody>
                 <tr><th class="text-center"><button type="button" class="btn btn-block product-button">Televisão</button></th></tr>
                 <tr><th class="text-center"><button type="button" class="btn btn-block product-button">Computador</button></th></tr>
                 <tr><th class="text-center"><button type="button" class="btn btn-block product-button">Micro-ondas</button></th></tr>
@@ -798,7 +804,10 @@
                 <tr><th class="text-center"><button type="button" class="btn btn-block product-button">Rádio</button></th></tr>
                 <tr><th class="text-center"><button type="button" class="btn btn-block product-button">Televisão</button></th></tr>
                 <tr><th class="text-center"><button type="button" class="btn btn-block product-button">Computador</button></th></tr>
-              </tbody>
+              </tbody>-->
+              <tbody data-bind="foreach: filteredItems">
+      			    <tr><td class="text-center"><button type="button" data-bind="text: $data" class="btn btn-block product-button"></button></td></tr>
+      			  </tbody>
             </table>
           </div>
         <!-- </div>
@@ -811,6 +820,13 @@
       </div>
       </div>
   </div>
+
+
+<!--Scripts-->
+  <script type="text/javascript">
+   filter();
+   expandCategoria();
+  </script>
 
 </body>
 </html>
