@@ -105,10 +105,11 @@ body{
 }
 
 .box-body-scroll{
-  max-height:720px;
+  max-height:670px;
   overflow-y: auto;
   overflow-x:hidden;
   width: 100%;
+  display:none;
 }
 
 .col-size{
@@ -135,6 +136,14 @@ body{
 
 .overflow-rows{
   overflow:hidden;
+}
+
+.answers-inside{
+  display: none;
+}
+
+.characteristics-inside{
+  display: none;
 }
 
 #custom-search-input {

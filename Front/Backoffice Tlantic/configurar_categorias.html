@@ -4,6 +4,12 @@
   <meta charset="utf-8" />
   <link rel="stylesheet" type="text/css" href="bootstrap/css/bootstrap.min.css" />
   <link rel="stylesheet" type="text/css" href="css/index.css" />
+
+  <!-- search dependencies-->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/knockout/3.2.0/knockout-min.js"></script>
+  <script type="text/javascript" src="scripts/configurar_categorias.js"></script>
+
   <title>Configurar categorias</title>
 </head>
 <body>
@@ -38,7 +44,7 @@
                       <button type="button" class="btn btn-block product-button">Adicionar Pergunta</button>
                     </div>
                     <div class="col-sm-3 text-center table-col-border table-col-border-top contain-button col-size">
-                      <button type="button" class="btn btn-block product-button">Lista de Perguntas/Repostas <span class=" glyphicon glyphicon-menu-up"></span></button>
+                      <button type="button" class="btn btn-block product-button expandCategoria">Lista de Perguntas/Repostas <span class=" glyphicon glyphicon-menu-down"></span></button>
                     </div>
                     <div class="col-sm-1 table-col-border table-col-border-top contain-button col-size">
                       <button type="button" class="btn btn-block product-button"><span class="glyphicon glyphicon-remove"></span></button>
@@ -48,146 +54,146 @@
                 <!--div que contem as perguntas da categoria -->
                 <div class="box-body box-body-scroll">
                   <div class="box">
-                    <div>
-                    <div class="row configurar-row-margin">
-                      <div class="col-sm-7 table-col-border table-col-border-left col-size contain-button" >
-                        <button type="button" class="btn btn-block product-button categorias-inside-menu-button"><span class=" glyphicon glyphicon-menu-up"></span> P.: Onde estará localizado o produto?</button>
-                      </div>
-                      <div class="col-sm-3 table-col-border col-size contain-button">
-                        <button type="button" class="btn btn-block product-button">Adicionar resposta</button>
-                      </div>
-                      <div class="col-sm-1 table-col-border contain-button col-size ">
-                        <button type="button" class="btn btn-block product-button"><span class="glyphicon glyphicon-remove"></span></button>
-                      </div>
-                    </div>
-                    <!-- div que contem as respostas -->
-                    <div class="box">
-                      <div>
-                        <div class="row configurar-row-margin">
-                          <div class="col-sm-7 table-col-border table-col-border-left col-size contain-button answer-box">
-                            <button type="button" class="btn btn-block product-button categorias-inside-menu-button answer-box"><span class=" glyphicon glyphicon-menu-up"></span> R.: Sala de estar</button>
-                          </div>
-                          <div class="col-sm-3 table-col-border col-size contain-button answer-box">
-                            <button type="button" class="btn btn-block product-button answer-box">Adicionar carateristica</button>
-                          </div>
-                          <div class="col-sm-1 table-col-border contain-button col-size contain-button answer-box">
-                            <button type="button" class="btn btn-block product-button answer-box"><span class="glyphicon glyphicon-remove"></span></button>
-                          </div>
+                    <div class="box-of-answers">
+                      <div class="row configurar-row-margin">
+                        <div class="col-sm-7 table-col-border table-col-border-left col-size contain-button" >
+                          <button type="button" class="btn btn-block product-button categorias-inside-menu-button expandQuestion"><span class=" glyphicon glyphicon-menu-down"></span> P.: Onde estará localizado o produto?</button>
                         </div>
-                          <!-- div que contem as carateristicas -->
-                          <div class="box">
-                            <div>
-                              <div class="row configurar-row-margin">
-                                <div class="col-sm-2 table-col-border table-col-border-left col-size">
-                                  <h4>Caraterística</h4>
+                        <div class="col-sm-3 table-col-border col-size contain-button">
+                          <button type="button" class="btn btn-block product-button">Adicionar resposta</button>
+                        </div>
+                        <div class="col-sm-1 table-col-border contain-button col-size ">
+                          <button type="button" class="btn btn-block product-button"><span class="glyphicon glyphicon-remove"></span></button>
+                        </div>
+                      </div>
+                      <!-- div que contem as respostas -->
+                      <div class="box answers-inside">
+                        <div>
+                          <div class="row configurar-row-margin">
+                            <div class="col-sm-7 table-col-border table-col-border-left col-size contain-button answer-box">
+                              <button type="button" class="btn btn-block product-button categorias-inside-menu-button answer-box expandAnswer"><span class=" glyphicon glyphicon-menu-down"></span> R.: Sala de estar</button>
+                            </div>
+                            <div class="col-sm-3 table-col-border col-size contain-button answer-box">
+                              <button type="button" class="btn btn-block product-button answer-box">Adicionar carateristica</button>
+                            </div>
+                            <div class="col-sm-1 table-col-border contain-button col-size contain-button answer-box">
+                              <button type="button" class="btn btn-block product-button answer-box"><span class="glyphicon glyphicon-remove"></span></button>
+                            </div>
+                          </div>
+                            <!-- div que contem as carateristicas -->
+                            <div class="box characteristics-inside">
+                              <div>
+                                <div class="row configurar-row-margin">
+                                  <div class="col-sm-2 table-col-border table-col-border-left col-size">
+                                    <h4>Caraterística</h4>
+                                  </div>
+                                  <div class="col-sm-2 table-col-border col-size">
+                                    <h4>Score</h4>
+                                  </div>
+                                  <div class="col-sm-2 table-col-border col-size">
+                                    <h4>Valor</h4>
+                                  </div>
+                                  <div class="col-sm-2 table-col-border col-size">
+                                    <h4>Operador</h4>
+                                  </div>
+                                  <div class="col-sm-2 table-col-border col-size">
+                                    <h4>Nome</h4>
+                                  </div>
+                                  <div class="col-sm-1 table-col-border contain-button col-size">
+                                    <button type="button" class="btn btn-block product-button"><span class="glyphicon glyphicon-remove"></span></button>
+                                  </div>
+                                  <div class="col-sm-2 col-size"></div>
+                                  <div class="col-sm-2 table-col-border-right table-col-border-left col-size input-padding">
+                                    <input type="text" class="form-control" placeholder="5">
+                                  </div>
+                                  <div class="col-sm-2 table-col-border col-size input-padding">
+                                    <input type="text" class="form-control" placeholder="400">
+                                  </div>
+                                  <div class="col-sm-2 table-col-border col-size input-padding">
+                                    <input type="text" class="form-control" placeholder="=">
+                                  </div>
+                                  <div class="col-sm-2 table-col-border col-size input-padding">
+                                    <input type="text" class="form-control" placeholder="Largura">
+                                  </div>
                                 </div>
-                                <div class="col-sm-2 table-col-border col-size">
-                                  <h4>Score</h4>
-                                </div>
-                                <div class="col-sm-2 table-col-border col-size">
-                                  <h4>Valor</h4>
-                                </div>
-                                <div class="col-sm-2 table-col-border col-size">
-                                  <h4>Operador</h4>
-                                </div>
-                                <div class="col-sm-2 table-col-border col-size">
-                                  <h4>Nome</h4>
-                                </div>
-                                <div class="col-sm-1 table-col-border contain-button col-size">
-                                  <button type="button" class="btn btn-block product-button"><span class="glyphicon glyphicon-remove"></span></button>
-                                </div>
-                                <div class="col-sm-2 col-size"></div>
-                                <div class="col-sm-2 table-col-border-right table-col-border-left col-size input-padding">
-                                  <input type="text" class="form-control" placeholder="5">
-                                </div>
-                                <div class="col-sm-2 table-col-border col-size input-padding">
-                                  <input type="text" class="form-control" placeholder="400">
-                                </div>
-                                <div class="col-sm-2 table-col-border col-size input-padding">
-                                  <input type="text" class="form-control" placeholder="=">
-                                </div>
-                                <div class="col-sm-2 table-col-border col-size input-padding">
-                                  <input type="text" class="form-control" placeholder="Largura">
+                              </div>
+
+                              <div>
+                                <div class="row configurar-row-margin">
+                                  <div class="col-sm-2 table-col-border table-col-border-left table-col-border-top col-size">
+                                    <h4>Caraterística</h4>
+                                  </div>
+                                  <div class="col-sm-2 table-col-border table-col-border-top col-size">
+                                    <h4>Score</h4>
+                                  </div>
+                                  <div class="col-sm-2 table-col-border table-col-border-top col-size">
+                                    <h4>Valor</h4>
+                                  </div>
+                                  <div class="col-sm-2 table-col-border table-col-border-top col-size">
+                                    <h4>Operador</h4>
+                                  </div>
+                                  <div class="col-sm-2 table-col-border table-col-border-top col-size">
+                                    <h4>Nome</h4>
+                                  </div>
+                                  <div class="col-sm-1 table-col-border table-col-border-top contain-button col-size">
+                                    <button type="button" class="btn btn-block product-button"><span class="glyphicon glyphicon-remove"></span></button>
+                                  </div>
+                                  <div class="col-sm-2 col-size"></div>
+                                  <div class="col-sm-2 table-col-border table-col-border-left col-size input-padding">
+                                    <input type="text" class="form-control" placeholder="5">
+                                  </div>
+                                  <div class="col-sm-2 table-col-border col-size input-padding">
+                                    <input type="text" class="form-control" placeholder="400">
+                                  </div>
+                                  <div class="col-sm-2 table-col-border col-size input-padding">
+                                    <input type="text" class="form-control" placeholder="=">
+                                  </div>
+                                  <div class="col-sm-2 table-col-border col-size input-padding">
+                                    <input type="text" class="form-control" placeholder="Largura">
+                                  </div>
                                 </div>
                               </div>
                             </div>
+                        </div>
 
-                            <div>
-                              <div class="row configurar-row-margin">
-                                <div class="col-sm-2 table-col-border table-col-border-left table-col-border-top col-size">
-                                  <h4>Caraterística</h4>
-                                </div>
-                                <div class="col-sm-2 table-col-border table-col-border-top col-size">
-                                  <h4>Score</h4>
-                                </div>
-                                <div class="col-sm-2 table-col-border table-col-border-top col-size">
-                                  <h4>Valor</h4>
-                                </div>
-                                <div class="col-sm-2 table-col-border table-col-border-top col-size">
-                                  <h4>Operador</h4>
-                                </div>
-                                <div class="col-sm-2 table-col-border table-col-border-top col-size">
-                                  <h4>Nome</h4>
-                                </div>
-                                <div class="col-sm-1 table-col-border table-col-border-top contain-button col-size">
-                                  <button type="button" class="btn btn-block product-button"><span class="glyphicon glyphicon-remove"></span></button>
-                                </div>
-                                <div class="col-sm-2 col-size"></div>
-                                <div class="col-sm-2 table-col-border table-col-border-left col-size input-padding">
-                                  <input type="text" class="form-control" placeholder="5">
-                                </div>
-                                <div class="col-sm-2 table-col-border col-size input-padding">
-                                  <input type="text" class="form-control" placeholder="400">
-                                </div>
-                                <div class="col-sm-2 table-col-border col-size input-padding">
-                                  <input type="text" class="form-control" placeholder="=">
-                                </div>
-                                <div class="col-sm-2 table-col-border col-size input-padding">
-                                  <input type="text" class="form-control" placeholder="Largura">
-                                </div>
-                              </div>
+                        <div>
+                          <div class="row configurar-row-margin">
+                            <div class="col-sm-7 table-col-border table-col-border-left col-size contain-button answer-box">
+                              <button type="button" class="btn btn-block product-button categorias-inside-menu-button answer-box"><span class=" glyphicon glyphicon-menu-down"></span> R.: Sala de jantar</button>
+                            </div>
+                            <div class="col-sm-3 table-col-border col-size contain-button answer-box">
+                              <button type="button" class="btn btn-block product-button answer-box">Adicionar carateristica</button>
+                            </div>
+                            <div class="col-sm-1 table-col-border contain-button col-size contain-button answer-box">
+                              <button type="button" class="btn btn-block product-button answer-box"><span class="glyphicon glyphicon-remove"></span></button>
                             </div>
                           </div>
-                      </div>
-
-                      <div>
-                        <div class="row configurar-row-margin">
-                          <div class="col-sm-7 table-col-border table-col-border-left col-size contain-button answer-box">
-                            <button type="button" class="btn btn-block product-button categorias-inside-menu-button answer-box"><span class=" glyphicon glyphicon-menu-down"></span> R.: Sala de jantar</button>
-                          </div>
-                          <div class="col-sm-3 table-col-border col-size contain-button answer-box">
-                            <button type="button" class="btn btn-block product-button answer-box">Adicionar carateristica</button>
-                          </div>
-                          <div class="col-sm-1 table-col-border contain-button col-size contain-button answer-box">
-                            <button type="button" class="btn btn-block product-button answer-box"><span class="glyphicon glyphicon-remove"></span></button>
-                          </div>
+                            <!-- div que contem as carateristicas -->
+                            <div class="box">
+                            </div>
                         </div>
-                          <!-- div que contem as carateristicas -->
-                          <div class="box">
-                          </div>
-                      </div>
 
-                      <div>
-                        <div class="row configurar-row-margin">
-                          <div class="col-sm-7 table-col-border table-col-border-left col-size contain-button answer-box">
-                            <button type="button" class="btn btn-block product-button categorias-inside-menu-button answer-box"><span class=" glyphicon glyphicon-menu-down"></span> R.: Cozinha</button>
+                        <div>
+                          <div class="row configurar-row-margin">
+                            <div class="col-sm-7 table-col-border table-col-border-left col-size contain-button answer-box">
+                              <button type="button" class="btn btn-block product-button categorias-inside-menu-button answer-box"><span class=" glyphicon glyphicon-menu-down"></span> R.: Cozinha</button>
+                            </div>
+                            <div class="col-sm-3 table-col-border col-size contain-button answer-box">
+                              <button type="button" class="btn btn-block product-button answer-box">Adicionar carateristica</button>
+                            </div>
+                            <div class="col-sm-1 table-col-border contain-button col-size contain-button answer-box">
+                              <button type="button" class="btn btn-block product-button answer-box"><span class="glyphicon glyphicon-remove"></span></button>
+                            </div>
                           </div>
-                          <div class="col-sm-3 table-col-border col-size contain-button answer-box">
-                            <button type="button" class="btn btn-block product-button answer-box">Adicionar carateristica</button>
-                          </div>
-                          <div class="col-sm-1 table-col-border contain-button col-size contain-button answer-box">
-                            <button type="button" class="btn btn-block product-button answer-box"><span class="glyphicon glyphicon-remove"></span></button>
-                          </div>
+                            <!-- div que contem as carateristicas -->
+                            <div class="box">
+                            </div>
                         </div>
-                          <!-- div que contem as carateristicas -->
-                          <div class="box">
-                          </div>
+
+                        </div>
+
+
                       </div>
-
-                      </div>
-
-
-                    </div>
                     </div>
 
                     <div>
@@ -218,7 +224,7 @@
                       <button type="button" class="btn btn-block product-button">Adicionar Pergunta</button>
                     </div>
                     <div class="col-sm-3 text-center table-col-border table-col-border-top contain-button col-size">
-                      <button type="button" class="btn btn-block product-button">Lista de Perguntas/Repostas <span class=" glyphicon glyphicon-menu-up"></span></button>
+                      <button type="button" class="btn btn-block product-button expandCategoria">Lista de Perguntas/Repostas <span class=" glyphicon glyphicon-menu-down"></span></button>
                     </div>
                     <div class="col-sm-1 table-col-border table-col-border-top contain-button col-size">
                       <button type="button" class="btn btn-block product-button"><span class="glyphicon glyphicon-remove"></span></button>
@@ -228,146 +234,146 @@
                 <!--div que contem as perguntas da categoria -->
                 <div class="box-body box-body-scroll">
                   <div class="box">
-                    <div>
-                    <div class="row configurar-row-margin">
-                      <div class="col-sm-7 table-col-border table-col-border-left col-size contain-button" >
-                        <button type="button" class="btn btn-block product-button categorias-inside-menu-button"><span class=" glyphicon glyphicon-menu-up"></span> P.: Onde estará localizado o produto?</button>
-                      </div>
-                      <div class="col-sm-3 table-col-border col-size contain-button">
-                        <button type="button" class="btn btn-block product-button">Adicionar resposta</button>
-                      </div>
-                      <div class="col-sm-1 table-col-border contain-button col-size ">
-                        <button type="button" class="btn btn-block product-button"><span class="glyphicon glyphicon-remove"></span></button>
-                      </div>
-                    </div>
-                    <!-- div que contem as respostas -->
-                    <div class="box">
-                      <div>
-                        <div class="row configurar-row-margin">
-                          <div class="col-sm-7 table-col-border table-col-border-left col-size contain-button answer-box">
-                            <button type="button" class="btn btn-block product-button categorias-inside-menu-button answer-box"><span class=" glyphicon glyphicon-menu-up"></span> R.: Sala de estar</button>
-                          </div>
-                          <div class="col-sm-3 table-col-border col-size contain-button answer-box">
-                            <button type="button" class="btn btn-block product-button answer-box">Adicionar carateristica</button>
-                          </div>
-                          <div class="col-sm-1 table-col-border contain-button col-size contain-button answer-box">
-                            <button type="button" class="btn btn-block product-button answer-box"><span class="glyphicon glyphicon-remove"></span></button>
-                          </div>
+                    <div class="box-of-answers">
+                      <div class="row configurar-row-margin">
+                        <div class="col-sm-7 table-col-border table-col-border-left col-size contain-button" >
+                          <button type="button" class="btn btn-block product-button categorias-inside-menu-button expandQuestion"><span class=" glyphicon glyphicon-menu-down"></span> P.: Onde estará localizado o produto?</button>
                         </div>
-                          <!-- div que contem as carateristicas -->
-                          <div class="box">
-                            <div>
-                              <div class="row configurar-row-margin">
-                                <div class="col-sm-2 table-col-border table-col-border-left col-size">
-                                  <h4>Caraterística</h4>
+                        <div class="col-sm-3 table-col-border col-size contain-button">
+                          <button type="button" class="btn btn-block product-button">Adicionar resposta</button>
+                        </div>
+                        <div class="col-sm-1 table-col-border contain-button col-size ">
+                          <button type="button" class="btn btn-block product-button"><span class="glyphicon glyphicon-remove"></span></button>
+                        </div>
+                      </div>
+                      <!-- div que contem as respostas -->
+                      <div class="box answers-inside">
+                        <div>
+                          <div class="row configurar-row-margin">
+                            <div class="col-sm-7 table-col-border table-col-border-left col-size contain-button answer-box">
+                              <button type="button" class="btn btn-block product-button categorias-inside-menu-button answer-box expandAnswer"><span class=" glyphicon glyphicon-menu-down"></span> R.: Sala de estar</button>
+                            </div>
+                            <div class="col-sm-3 table-col-border col-size contain-button answer-box">
+                              <button type="button" class="btn btn-block product-button answer-box">Adicionar carateristica</button>
+                            </div>
+                            <div class="col-sm-1 table-col-border contain-button col-size contain-button answer-box">
+                              <button type="button" class="btn btn-block product-button answer-box"><span class="glyphicon glyphicon-remove"></span></button>
+                            </div>
+                          </div>
+                            <!-- div que contem as carateristicas -->
+                            <div class="box characteristics-inside">
+                              <div>
+                                <div class="row configurar-row-margin">
+                                  <div class="col-sm-2 table-col-border table-col-border-left col-size">
+                                    <h4>Caraterística</h4>
+                                  </div>
+                                  <div class="col-sm-2 table-col-border col-size">
+                                    <h4>Score</h4>
+                                  </div>
+                                  <div class="col-sm-2 table-col-border col-size">
+                                    <h4>Valor</h4>
+                                  </div>
+                                  <div class="col-sm-2 table-col-border col-size">
+                                    <h4>Operador</h4>
+                                  </div>
+                                  <div class="col-sm-2 table-col-border col-size">
+                                    <h4>Nome</h4>
+                                  </div>
+                                  <div class="col-sm-1 table-col-border contain-button col-size">
+                                    <button type="button" class="btn btn-block product-button"><span class="glyphicon glyphicon-remove"></span></button>
+                                  </div>
+                                  <div class="col-sm-2 col-size"></div>
+                                  <div class="col-sm-2 table-col-border-right table-col-border-left col-size input-padding">
+                                    <input type="text" class="form-control" placeholder="5">
+                                  </div>
+                                  <div class="col-sm-2 table-col-border col-size input-padding">
+                                    <input type="text" class="form-control" placeholder="400">
+                                  </div>
+                                  <div class="col-sm-2 table-col-border col-size input-padding">
+                                    <input type="text" class="form-control" placeholder="=">
+                                  </div>
+                                  <div class="col-sm-2 table-col-border col-size input-padding">
+                                    <input type="text" class="form-control" placeholder="Largura">
+                                  </div>
                                 </div>
-                                <div class="col-sm-2 table-col-border col-size">
-                                  <h4>Score</h4>
-                                </div>
-                                <div class="col-sm-2 table-col-border col-size">
-                                  <h4>Valor</h4>
-                                </div>
-                                <div class="col-sm-2 table-col-border col-size">
-                                  <h4>Operador</h4>
-                                </div>
-                                <div class="col-sm-2 table-col-border col-size">
-                                  <h4>Nome</h4>
-                                </div>
-                                <div class="col-sm-1 table-col-border contain-button col-size">
-                                  <button type="button" class="btn btn-block product-button"><span class="glyphicon glyphicon-remove"></span></button>
-                                </div>
-                                <div class="col-sm-2 col-size"></div>
-                                <div class="col-sm-2 table-col-border-right table-col-border-left col-size input-padding">
-                                  <input type="text" class="form-control" placeholder="5">
-                                </div>
-                                <div class="col-sm-2 table-col-border col-size input-padding">
-                                  <input type="text" class="form-control" placeholder="400">
-                                </div>
-                                <div class="col-sm-2 table-col-border col-size input-padding">
-                                  <input type="text" class="form-control" placeholder="=">
-                                </div>
-                                <div class="col-sm-2 table-col-border col-size input-padding">
-                                  <input type="text" class="form-control" placeholder="Largura">
+                              </div>
+
+                              <div>
+                                <div class="row configurar-row-margin">
+                                  <div class="col-sm-2 table-col-border table-col-border-left table-col-border-top col-size">
+                                    <h4>Caraterística</h4>
+                                  </div>
+                                  <div class="col-sm-2 table-col-border table-col-border-top col-size">
+                                    <h4>Score</h4>
+                                  </div>
+                                  <div class="col-sm-2 table-col-border table-col-border-top col-size">
+                                    <h4>Valor</h4>
+                                  </div>
+                                  <div class="col-sm-2 table-col-border table-col-border-top col-size">
+                                    <h4>Operador</h4>
+                                  </div>
+                                  <div class="col-sm-2 table-col-border table-col-border-top col-size">
+                                    <h4>Nome</h4>
+                                  </div>
+                                  <div class="col-sm-1 table-col-border table-col-border-top contain-button col-size">
+                                    <button type="button" class="btn btn-block product-button"><span class="glyphicon glyphicon-remove"></span></button>
+                                  </div>
+                                  <div class="col-sm-2 col-size"></div>
+                                  <div class="col-sm-2 table-col-border table-col-border-left col-size input-padding">
+                                    <input type="text" class="form-control" placeholder="5">
+                                  </div>
+                                  <div class="col-sm-2 table-col-border col-size input-padding">
+                                    <input type="text" class="form-control" placeholder="400">
+                                  </div>
+                                  <div class="col-sm-2 table-col-border col-size input-padding">
+                                    <input type="text" class="form-control" placeholder="=">
+                                  </div>
+                                  <div class="col-sm-2 table-col-border col-size input-padding">
+                                    <input type="text" class="form-control" placeholder="Largura">
+                                  </div>
                                 </div>
                               </div>
                             </div>
+                        </div>
 
-                            <div>
-                              <div class="row configurar-row-margin">
-                                <div class="col-sm-2 table-col-border table-col-border-left table-col-border-top col-size">
-                                  <h4>Caraterística</h4>
-                                </div>
-                                <div class="col-sm-2 table-col-border table-col-border-top col-size">
-                                  <h4>Score</h4>
-                                </div>
-                                <div class="col-sm-2 table-col-border table-col-border-top col-size">
-                                  <h4>Valor</h4>
-                                </div>
-                                <div class="col-sm-2 table-col-border table-col-border-top col-size">
-                                  <h4>Operador</h4>
-                                </div>
-                                <div class="col-sm-2 table-col-border table-col-border-top col-size">
-                                  <h4>Nome</h4>
-                                </div>
-                                <div class="col-sm-1 table-col-border table-col-border-top contain-button col-size">
-                                  <button type="button" class="btn btn-block product-button"><span class="glyphicon glyphicon-remove"></span></button>
-                                </div>
-                                <div class="col-sm-2 col-size"></div>
-                                <div class="col-sm-2 table-col-border table-col-border-left col-size input-padding">
-                                  <input type="text" class="form-control" placeholder="5">
-                                </div>
-                                <div class="col-sm-2 table-col-border col-size input-padding">
-                                  <input type="text" class="form-control" placeholder="400">
-                                </div>
-                                <div class="col-sm-2 table-col-border col-size input-padding">
-                                  <input type="text" class="form-control" placeholder="=">
-                                </div>
-                                <div class="col-sm-2 table-col-border col-size input-padding">
-                                  <input type="text" class="form-control" placeholder="Largura">
-                                </div>
-                              </div>
+                        <div>
+                          <div class="row configurar-row-margin">
+                            <div class="col-sm-7 table-col-border table-col-border-left col-size contain-button answer-box">
+                              <button type="button" class="btn btn-block product-button categorias-inside-menu-button answer-box"><span class=" glyphicon glyphicon-menu-down"></span> R.: Sala de jantar</button>
+                            </div>
+                            <div class="col-sm-3 table-col-border col-size contain-button answer-box">
+                              <button type="button" class="btn btn-block product-button answer-box">Adicionar carateristica</button>
+                            </div>
+                            <div class="col-sm-1 table-col-border contain-button col-size contain-button answer-box">
+                              <button type="button" class="btn btn-block product-button answer-box"><span class="glyphicon glyphicon-remove"></span></button>
                             </div>
                           </div>
-                      </div>
-
-                      <div>
-                        <div class="row configurar-row-margin">
-                          <div class="col-sm-7 table-col-border table-col-border-left col-size contain-button answer-box">
-                            <button type="button" class="btn btn-block product-button categorias-inside-menu-button answer-box"><span class=" glyphicon glyphicon-menu-down"></span> R.: Sala de jantar</button>
-                          </div>
-                          <div class="col-sm-3 table-col-border col-size contain-button answer-box">
-                            <button type="button" class="btn btn-block product-button answer-box">Adicionar carateristica</button>
-                          </div>
-                          <div class="col-sm-1 table-col-border contain-button col-size contain-button answer-box">
-                            <button type="button" class="btn btn-block product-button answer-box"><span class="glyphicon glyphicon-remove"></span></button>
-                          </div>
+                            <!-- div que contem as carateristicas -->
+                            <div class="box">
+                            </div>
                         </div>
-                          <!-- div que contem as carateristicas -->
-                          <div class="box">
-                          </div>
-                      </div>
 
-                      <div>
-                        <div class="row configurar-row-margin">
-                          <div class="col-sm-7 table-col-border table-col-border-left col-size contain-button answer-box">
-                            <button type="button" class="btn btn-block product-button categorias-inside-menu-button answer-box"><span class=" glyphicon glyphicon-menu-down"></span> R.: Cozinha</button>
+                        <div>
+                          <div class="row configurar-row-margin">
+                            <div class="col-sm-7 table-col-border table-col-border-left col-size contain-button answer-box">
+                              <button type="button" class="btn btn-block product-button categorias-inside-menu-button answer-box"><span class=" glyphicon glyphicon-menu-down"></span> R.: Cozinha</button>
+                            </div>
+                            <div class="col-sm-3 table-col-border col-size contain-button answer-box">
+                              <button type="button" class="btn btn-block product-button answer-box">Adicionar carateristica</button>
+                            </div>
+                            <div class="col-sm-1 table-col-border contain-button col-size contain-button answer-box">
+                              <button type="button" class="btn btn-block product-button answer-box"><span class="glyphicon glyphicon-remove"></span></button>
+                            </div>
                           </div>
-                          <div class="col-sm-3 table-col-border col-size contain-button answer-box">
-                            <button type="button" class="btn btn-block product-button answer-box">Adicionar carateristica</button>
-                          </div>
-                          <div class="col-sm-1 table-col-border contain-button col-size contain-button answer-box">
-                            <button type="button" class="btn btn-block product-button answer-box"><span class="glyphicon glyphicon-remove"></span></button>
-                          </div>
+                            <!-- div que contem as carateristicas -->
+                            <div class="box">
+                            </div>
                         </div>
-                          <!-- div que contem as carateristicas -->
-                          <div class="box">
-                          </div>
+
+                        </div>
+
+
                       </div>
-
-                      </div>
-
-
-                    </div>
                     </div>
 
                     <div>
@@ -398,7 +404,7 @@
                       <button type="button" class="btn btn-block product-button">Adicionar Pergunta</button>
                     </div>
                     <div class="col-sm-3 text-center table-col-border table-col-border-top contain-button col-size">
-                      <button type="button" class="btn btn-block product-button">Lista de Perguntas/Repostas <span class=" glyphicon glyphicon-menu-up"></span></button>
+                      <button type="button" class="btn btn-block product-button expandCategoria">Lista de Perguntas/Repostas <span class=" glyphicon glyphicon-menu-down"></span></button>
                     </div>
                     <div class="col-sm-1 table-col-border table-col-border-top contain-button col-size">
                       <button type="button" class="btn btn-block product-button"><span class="glyphicon glyphicon-remove"></span></button>
@@ -408,146 +414,146 @@
                 <!--div que contem as perguntas da categoria -->
                 <div class="box-body box-body-scroll">
                   <div class="box">
-                    <div>
-                    <div class="row configurar-row-margin">
-                      <div class="col-sm-7 table-col-border table-col-border-left col-size contain-button" >
-                        <button type="button" class="btn btn-block product-button categorias-inside-menu-button"><span class=" glyphicon glyphicon-menu-up"></span> P.: Onde estará localizado o produto?</button>
-                      </div>
-                      <div class="col-sm-3 table-col-border col-size contain-button">
-                        <button type="button" class="btn btn-block product-button">Adicionar resposta</button>
-                      </div>
-                      <div class="col-sm-1 table-col-border contain-button col-size ">
-                        <button type="button" class="btn btn-block product-button"><span class="glyphicon glyphicon-remove"></span></button>
-                      </div>
-                    </div>
-                    <!-- div que contem as respostas -->
-                    <div class="box">
-                      <div>
-                        <div class="row configurar-row-margin">
-                          <div class="col-sm-7 table-col-border table-col-border-left col-size contain-button answer-box">
-                            <button type="button" class="btn btn-block product-button categorias-inside-menu-button answer-box"><span class=" glyphicon glyphicon-menu-up"></span> R.: Sala de estar</button>
-                          </div>
-                          <div class="col-sm-3 table-col-border col-size contain-button answer-box">
-                            <button type="button" class="btn btn-block product-button answer-box">Adicionar carateristica</button>
-                          </div>
-                          <div class="col-sm-1 table-col-border contain-button col-size contain-button answer-box">
-                            <button type="button" class="btn btn-block product-button answer-box"><span class="glyphicon glyphicon-remove"></span></button>
-                          </div>
+                    <div class="box-of-answers">
+                      <div class="row configurar-row-margin">
+                        <div class="col-sm-7 table-col-border table-col-border-left col-size contain-button" >
+                          <button type="button" class="btn btn-block product-button categorias-inside-menu-button expandQuestion"><span class=" glyphicon glyphicon-menu-down"></span> P.: Onde estará localizado o produto?</button>
                         </div>
-                          <!-- div que contem as carateristicas -->
-                          <div class="box">
-                            <div>
-                              <div class="row configurar-row-margin">
-                                <div class="col-sm-2 table-col-border table-col-border-left col-size">
-                                  <h4>Caraterística</h4>
+                        <div class="col-sm-3 table-col-border col-size contain-button">
+                          <button type="button" class="btn btn-block product-button">Adicionar resposta</button>
+                        </div>
+                        <div class="col-sm-1 table-col-border contain-button col-size ">
+                          <button type="button" class="btn btn-block product-button"><span class="glyphicon glyphicon-remove"></span></button>
+                        </div>
+                      </div>
+                      <!-- div que contem as respostas -->
+                      <div class="box answers-inside">
+                        <div>
+                          <div class="row configurar-row-margin">
+                            <div class="col-sm-7 table-col-border table-col-border-left col-size contain-button answer-box">
+                              <button type="button" class="btn btn-block product-button categorias-inside-menu-button answer-box expandAnswer"><span class=" glyphicon glyphicon-menu-down"></span> R.: Sala de estar</button>
+                            </div>
+                            <div class="col-sm-3 table-col-border col-size contain-button answer-box">
+                              <button type="button" class="btn btn-block product-button answer-box">Adicionar carateristica</button>
+                            </div>
+                            <div class="col-sm-1 table-col-border contain-button col-size contain-button answer-box">
+                              <button type="button" class="btn btn-block product-button answer-box"><span class="glyphicon glyphicon-remove"></span></button>
+                            </div>
+                          </div>
+                            <!-- div que contem as carateristicas -->
+                            <div class="box characteristics-inside">
+                              <div>
+                                <div class="row configurar-row-margin">
+                                  <div class="col-sm-2 table-col-border table-col-border-left col-size">
+                                    <h4>Caraterística</h4>
+                                  </div>
+                                  <div class="col-sm-2 table-col-border col-size">
+                                    <h4>Score</h4>
+                                  </div>
+                                  <div class="col-sm-2 table-col-border col-size">
+                                    <h4>Valor</h4>
+                                  </div>
+                                  <div class="col-sm-2 table-col-border col-size">
+                                    <h4>Operador</h4>
+                                  </div>
+                                  <div class="col-sm-2 table-col-border col-size">
+                                    <h4>Nome</h4>
+                                  </div>
+                                  <div class="col-sm-1 table-col-border contain-button col-size">
+                                    <button type="button" class="btn btn-block product-button"><span class="glyphicon glyphicon-remove"></span></button>
+                                  </div>
+                                  <div class="col-sm-2 col-size"></div>
+                                  <div class="col-sm-2 table-col-border-right table-col-border-left col-size input-padding">
+                                    <input type="text" class="form-control" placeholder="5">
+                                  </div>
+                                  <div class="col-sm-2 table-col-border col-size input-padding">
+                                    <input type="text" class="form-control" placeholder="400">
+                                  </div>
+                                  <div class="col-sm-2 table-col-border col-size input-padding">
+                                    <input type="text" class="form-control" placeholder="=">
+                                  </div>
+                                  <div class="col-sm-2 table-col-border col-size input-padding">
+                                    <input type="text" class="form-control" placeholder="Largura">
+                                  </div>
                                 </div>
-                                <div class="col-sm-2 table-col-border col-size">
-                                  <h4>Score</h4>
-                                </div>
-                                <div class="col-sm-2 table-col-border col-size">
-                                  <h4>Valor</h4>
-                                </div>
-                                <div class="col-sm-2 table-col-border col-size">
-                                  <h4>Operador</h4>
-                                </div>
-                                <div class="col-sm-2 table-col-border col-size">
-                                  <h4>Nome</h4>
-                                </div>
-                                <div class="col-sm-1 table-col-border contain-button col-size">
-                                  <button type="button" class="btn btn-block product-button"><span class="glyphicon glyphicon-remove"></span></button>
-                                </div>
-                                <div class="col-sm-2 col-size"></div>
-                                <div class="col-sm-2 table-col-border-right table-col-border-left col-size input-padding">
-                                  <input type="text" class="form-control" placeholder="5">
-                                </div>
-                                <div class="col-sm-2 table-col-border col-size input-padding">
-                                  <input type="text" class="form-control" placeholder="400">
-                                </div>
-                                <div class="col-sm-2 table-col-border col-size input-padding">
-                                  <input type="text" class="form-control" placeholder="=">
-                                </div>
-                                <div class="col-sm-2 table-col-border col-size input-padding">
-                                  <input type="text" class="form-control" placeholder="Largura">
+                              </div>
+
+                              <div>
+                                <div class="row configurar-row-margin">
+                                  <div class="col-sm-2 table-col-border table-col-border-left table-col-border-top col-size">
+                                    <h4>Caraterística</h4>
+                                  </div>
+                                  <div class="col-sm-2 table-col-border table-col-border-top col-size">
+                                    <h4>Score</h4>
+                                  </div>
+                                  <div class="col-sm-2 table-col-border table-col-border-top col-size">
+                                    <h4>Valor</h4>
+                                  </div>
+                                  <div class="col-sm-2 table-col-border table-col-border-top col-size">
+                                    <h4>Operador</h4>
+                                  </div>
+                                  <div class="col-sm-2 table-col-border table-col-border-top col-size">
+                                    <h4>Nome</h4>
+                                  </div>
+                                  <div class="col-sm-1 table-col-border table-col-border-top contain-button col-size">
+                                    <button type="button" class="btn btn-block product-button"><span class="glyphicon glyphicon-remove"></span></button>
+                                  </div>
+                                  <div class="col-sm-2 col-size"></div>
+                                  <div class="col-sm-2 table-col-border table-col-border-left col-size input-padding">
+                                    <input type="text" class="form-control" placeholder="5">
+                                  </div>
+                                  <div class="col-sm-2 table-col-border col-size input-padding">
+                                    <input type="text" class="form-control" placeholder="400">
+                                  </div>
+                                  <div class="col-sm-2 table-col-border col-size input-padding">
+                                    <input type="text" class="form-control" placeholder="=">
+                                  </div>
+                                  <div class="col-sm-2 table-col-border col-size input-padding">
+                                    <input type="text" class="form-control" placeholder="Largura">
+                                  </div>
                                 </div>
                               </div>
                             </div>
+                        </div>
 
-                            <div>
-                              <div class="row configurar-row-margin">
-                                <div class="col-sm-2 table-col-border table-col-border-left table-col-border-top col-size">
-                                  <h4>Caraterística</h4>
-                                </div>
-                                <div class="col-sm-2 table-col-border table-col-border-top col-size">
-                                  <h4>Score</h4>
-                                </div>
-                                <div class="col-sm-2 table-col-border table-col-border-top col-size">
-                                  <h4>Valor</h4>
-                                </div>
-                                <div class="col-sm-2 table-col-border table-col-border-top col-size">
-                                  <h4>Operador</h4>
-                                </div>
-                                <div class="col-sm-2 table-col-border table-col-border-top col-size">
-                                  <h4>Nome</h4>
-                                </div>
-                                <div class="col-sm-1 table-col-border table-col-border-top contain-button col-size">
-                                  <button type="button" class="btn btn-block product-button"><span class="glyphicon glyphicon-remove"></span></button>
-                                </div>
-                                <div class="col-sm-2 col-size"></div>
-                                <div class="col-sm-2 table-col-border table-col-border-left col-size input-padding">
-                                  <input type="text" class="form-control" placeholder="5">
-                                </div>
-                                <div class="col-sm-2 table-col-border col-size input-padding">
-                                  <input type="text" class="form-control" placeholder="400">
-                                </div>
-                                <div class="col-sm-2 table-col-border col-size input-padding">
-                                  <input type="text" class="form-control" placeholder="=">
-                                </div>
-                                <div class="col-sm-2 table-col-border col-size input-padding">
-                                  <input type="text" class="form-control" placeholder="Largura">
-                                </div>
-                              </div>
+                        <div>
+                          <div class="row configurar-row-margin">
+                            <div class="col-sm-7 table-col-border table-col-border-left col-size contain-button answer-box">
+                              <button type="button" class="btn btn-block product-button categorias-inside-menu-button answer-box"><span class=" glyphicon glyphicon-menu-down"></span> R.: Sala de jantar</button>
+                            </div>
+                            <div class="col-sm-3 table-col-border col-size contain-button answer-box">
+                              <button type="button" class="btn btn-block product-button answer-box">Adicionar carateristica</button>
+                            </div>
+                            <div class="col-sm-1 table-col-border contain-button col-size contain-button answer-box">
+                              <button type="button" class="btn btn-block product-button answer-box"><span class="glyphicon glyphicon-remove"></span></button>
                             </div>
                           </div>
-                      </div>
-
-                      <div>
-                        <div class="row configurar-row-margin">
-                          <div class="col-sm-7 table-col-border table-col-border-left col-size contain-button answer-box">
-                            <button type="button" class="btn btn-block product-button categorias-inside-menu-button answer-box"><span class=" glyphicon glyphicon-menu-down"></span> R.: Sala de jantar</button>
-                          </div>
-                          <div class="col-sm-3 table-col-border col-size contain-button answer-box">
-                            <button type="button" class="btn btn-block product-button answer-box">Adicionar carateristica</button>
-                          </div>
-                          <div class="col-sm-1 table-col-border contain-button col-size contain-button answer-box">
-                            <button type="button" class="btn btn-block product-button answer-box"><span class="glyphicon glyphicon-remove"></span></button>
-                          </div>
+                            <!-- div que contem as carateristicas -->
+                            <div class="box">
+                            </div>
                         </div>
-                          <!-- div que contem as carateristicas -->
-                          <div class="box">
-                          </div>
-                      </div>
 
-                      <div>
-                        <div class="row configurar-row-margin">
-                          <div class="col-sm-7 table-col-border table-col-border-left col-size contain-button answer-box">
-                            <button type="button" class="btn btn-block product-button categorias-inside-menu-button answer-box"><span class=" glyphicon glyphicon-menu-down"></span> R.: Cozinha</button>
+                        <div>
+                          <div class="row configurar-row-margin">
+                            <div class="col-sm-7 table-col-border table-col-border-left col-size contain-button answer-box">
+                              <button type="button" class="btn btn-block product-button categorias-inside-menu-button answer-box"><span class=" glyphicon glyphicon-menu-down"></span> R.: Cozinha</button>
+                            </div>
+                            <div class="col-sm-3 table-col-border col-size contain-button answer-box">
+                              <button type="button" class="btn btn-block product-button answer-box">Adicionar carateristica</button>
+                            </div>
+                            <div class="col-sm-1 table-col-border contain-button col-size contain-button answer-box">
+                              <button type="button" class="btn btn-block product-button answer-box"><span class="glyphicon glyphicon-remove"></span></button>
+                            </div>
                           </div>
-                          <div class="col-sm-3 table-col-border col-size contain-button answer-box">
-                            <button type="button" class="btn btn-block product-button answer-box">Adicionar carateristica</button>
-                          </div>
-                          <div class="col-sm-1 table-col-border contain-button col-size contain-button answer-box">
-                            <button type="button" class="btn btn-block product-button answer-box"><span class="glyphicon glyphicon-remove"></span></button>
-                          </div>
+                            <!-- div que contem as carateristicas -->
+                            <div class="box">
+                            </div>
                         </div>
-                          <!-- div que contem as carateristicas -->
-                          <div class="box">
-                          </div>
+
+                        </div>
+
+
                       </div>
-
-                      </div>
-
-
-                    </div>
                     </div>
 
                     <div>
@@ -578,7 +584,7 @@
                       <button type="button" class="btn btn-block product-button">Adicionar Pergunta</button>
                     </div>
                     <div class="col-sm-3 text-center table-col-border table-col-border-top contain-button col-size">
-                      <button type="button" class="btn btn-block product-button">Lista de Perguntas/Repostas <span class=" glyphicon glyphicon-menu-up"></span></button>
+                      <button type="button" class="btn btn-block product-button expandCategoria">Lista de Perguntas/Repostas <span class=" glyphicon glyphicon-menu-down"></span></button>
                     </div>
                     <div class="col-sm-1 table-col-border table-col-border-top contain-button col-size">
                       <button type="button" class="btn btn-block product-button"><span class="glyphicon glyphicon-remove"></span></button>
@@ -588,146 +594,146 @@
                 <!--div que contem as perguntas da categoria -->
                 <div class="box-body box-body-scroll">
                   <div class="box">
-                    <div>
-                    <div class="row configurar-row-margin">
-                      <div class="col-sm-7 table-col-border table-col-border-left col-size contain-button" >
-                        <button type="button" class="btn btn-block product-button categorias-inside-menu-button"><span class=" glyphicon glyphicon-menu-down"></span> P.: Onde estará localizado o produto?</button>
-                      </div>
-                      <div class="col-sm-3 table-col-border col-size contain-button">
-                        <button type="button" class="btn btn-block product-button">Adicionar resposta</button>
-                      </div>
-                      <div class="col-sm-1 table-col-border contain-button col-size ">
-                        <button type="button" class="btn btn-block product-button"><span class="glyphicon glyphicon-remove"></span></button>
-                      </div>
-                    </div>
-                    <!-- div que contem as respostas -->
-                    <div class="box" style="display:none;">
-                      <div>
-                        <div class="row configurar-row-margin">
-                          <div class="col-sm-7 table-col-border table-col-border-left col-size contain-button answer-box">
-                            <button type="button" class="btn btn-block product-button categorias-inside-menu-button answer-box"><span class=" glyphicon glyphicon-menu-up"></span> R.: Sala de estar</button>
-                          </div>
-                          <div class="col-sm-3 table-col-border col-size contain-button answer-box">
-                            <button type="button" class="btn btn-block product-button answer-box">Adicionar carateristica</button>
-                          </div>
-                          <div class="col-sm-1 table-col-border contain-button col-size contain-button answer-box">
-                            <button type="button" class="btn btn-block product-button answer-box"><span class="glyphicon glyphicon-remove"></span></button>
-                          </div>
+                    <div class="box-of-answers">
+                      <div class="row configurar-row-margin">
+                        <div class="col-sm-7 table-col-border table-col-border-left col-size contain-button" >
+                          <button type="button" class="btn btn-block product-button categorias-inside-menu-button expandQuestion"><span class=" glyphicon glyphicon-menu-down"></span> P.: Onde estará localizado o produto?</button>
                         </div>
-                          <!-- div que contem as carateristicas -->
-                          <div class="box">
-                            <div>
-                              <div class="row configurar-row-margin">
-                                <div class="col-sm-2 table-col-border table-col-border-left col-size">
-                                  <h4>Caraterística</h4>
+                        <div class="col-sm-3 table-col-border col-size contain-button">
+                          <button type="button" class="btn btn-block product-button">Adicionar resposta</button>
+                        </div>
+                        <div class="col-sm-1 table-col-border contain-button col-size ">
+                          <button type="button" class="btn btn-block product-button"><span class="glyphicon glyphicon-remove"></span></button>
+                        </div>
+                      </div>
+                      <!-- div que contem as respostas -->
+                      <div class="box answers-inside">
+                        <div>
+                          <div class="row configurar-row-margin">
+                            <div class="col-sm-7 table-col-border table-col-border-left col-size contain-button answer-box">
+                              <button type="button" class="btn btn-block product-button categorias-inside-menu-button answer-box expandAnswer"><span class=" glyphicon glyphicon-menu-down"></span> R.: Sala de estar</button>
+                            </div>
+                            <div class="col-sm-3 table-col-border col-size contain-button answer-box">
+                              <button type="button" class="btn btn-block product-button answer-box">Adicionar carateristica</button>
+                            </div>
+                            <div class="col-sm-1 table-col-border contain-button col-size contain-button answer-box">
+                              <button type="button" class="btn btn-block product-button answer-box"><span class="glyphicon glyphicon-remove"></span></button>
+                            </div>
+                          </div>
+                            <!-- div que contem as carateristicas -->
+                            <div class="box characteristics-inside">
+                              <div>
+                                <div class="row configurar-row-margin">
+                                  <div class="col-sm-2 table-col-border table-col-border-left col-size">
+                                    <h4>Caraterística</h4>
+                                  </div>
+                                  <div class="col-sm-2 table-col-border col-size">
+                                    <h4>Score</h4>
+                                  </div>
+                                  <div class="col-sm-2 table-col-border col-size">
+                                    <h4>Valor</h4>
+                                  </div>
+                                  <div class="col-sm-2 table-col-border col-size">
+                                    <h4>Operador</h4>
+                                  </div>
+                                  <div class="col-sm-2 table-col-border col-size">
+                                    <h4>Nome</h4>
+                                  </div>
+                                  <div class="col-sm-1 table-col-border contain-button col-size">
+                                    <button type="button" class="btn btn-block product-button"><span class="glyphicon glyphicon-remove"></span></button>
+                                  </div>
+                                  <div class="col-sm-2 col-size"></div>
+                                  <div class="col-sm-2 table-col-border-right table-col-border-left col-size input-padding">
+                                    <input type="text" class="form-control" placeholder="5">
+                                  </div>
+                                  <div class="col-sm-2 table-col-border col-size input-padding">
+                                    <input type="text" class="form-control" placeholder="400">
+                                  </div>
+                                  <div class="col-sm-2 table-col-border col-size input-padding">
+                                    <input type="text" class="form-control" placeholder="=">
+                                  </div>
+                                  <div class="col-sm-2 table-col-border col-size input-padding">
+                                    <input type="text" class="form-control" placeholder="Largura">
+                                  </div>
                                 </div>
-                                <div class="col-sm-2 table-col-border col-size">
-                                  <h4>Score</h4>
-                                </div>
-                                <div class="col-sm-2 table-col-border col-size">
-                                  <h4>Valor</h4>
-                                </div>
-                                <div class="col-sm-2 table-col-border col-size">
-                                  <h4>Operador</h4>
-                                </div>
-                                <div class="col-sm-2 table-col-border col-size">
-                                  <h4>Nome</h4>
-                                </div>
-                                <div class="col-sm-1 table-col-border contain-button col-size">
-                                  <button type="button" class="btn btn-block product-button"><span class="glyphicon glyphicon-remove"></span></button>
-                                </div>
-                                <div class="col-sm-2 col-size"></div>
-                                <div class="col-sm-2 table-col-border-right table-col-border-left col-size input-padding">
-                                  <input type="text" class="form-control" placeholder="5">
-                                </div>
-                                <div class="col-sm-2 table-col-border col-size input-padding">
-                                  <input type="text" class="form-control" placeholder="400">
-                                </div>
-                                <div class="col-sm-2 table-col-border col-size input-padding">
-                                  <input type="text" class="form-control" placeholder="=">
-                                </div>
-                                <div class="col-sm-2 table-col-border col-size input-padding">
-                                  <input type="text" class="form-control" placeholder="Largura">
+                              </div>
+
+                              <div>
+                                <div class="row configurar-row-margin">
+                                  <div class="col-sm-2 table-col-border table-col-border-left table-col-border-top col-size">
+                                    <h4>Caraterística</h4>
+                                  </div>
+                                  <div class="col-sm-2 table-col-border table-col-border-top col-size">
+                                    <h4>Score</h4>
+                                  </div>
+                                  <div class="col-sm-2 table-col-border table-col-border-top col-size">
+                                    <h4>Valor</h4>
+                                  </div>
+                                  <div class="col-sm-2 table-col-border table-col-border-top col-size">
+                                    <h4>Operador</h4>
+                                  </div>
+                                  <div class="col-sm-2 table-col-border table-col-border-top col-size">
+                                    <h4>Nome</h4>
+                                  </div>
+                                  <div class="col-sm-1 table-col-border table-col-border-top contain-button col-size">
+                                    <button type="button" class="btn btn-block product-button"><span class="glyphicon glyphicon-remove"></span></button>
+                                  </div>
+                                  <div class="col-sm-2 col-size"></div>
+                                  <div class="col-sm-2 table-col-border table-col-border-left col-size input-padding">
+                                    <input type="text" class="form-control" placeholder="5">
+                                  </div>
+                                  <div class="col-sm-2 table-col-border col-size input-padding">
+                                    <input type="text" class="form-control" placeholder="400">
+                                  </div>
+                                  <div class="col-sm-2 table-col-border col-size input-padding">
+                                    <input type="text" class="form-control" placeholder="=">
+                                  </div>
+                                  <div class="col-sm-2 table-col-border col-size input-padding">
+                                    <input type="text" class="form-control" placeholder="Largura">
+                                  </div>
                                 </div>
                               </div>
                             </div>
+                        </div>
 
-                            <div>
-                              <div class="row configurar-row-margin">
-                                <div class="col-sm-2 table-col-border table-col-border-left table-col-border-top col-size">
-                                  <h4>Caraterística</h4>
-                                </div>
-                                <div class="col-sm-2 table-col-border table-col-border-top col-size">
-                                  <h4>Score</h4>
-                                </div>
-                                <div class="col-sm-2 table-col-border table-col-border-top col-size">
-                                  <h4>Valor</h4>
-                                </div>
-                                <div class="col-sm-2 table-col-border table-col-border-top col-size">
-                                  <h4>Operador</h4>
-                                </div>
-                                <div class="col-sm-2 table-col-border table-col-border-top col-size">
-                                  <h4>Nome</h4>
-                                </div>
-                                <div class="col-sm-1 table-col-border table-col-border-top contain-button col-size">
-                                  <button type="button" class="btn btn-block product-button"><span class="glyphicon glyphicon-remove"></span></button>
-                                </div>
-                                <div class="col-sm-2 col-size"></div>
-                                <div class="col-sm-2 table-col-border table-col-border-left col-size input-padding">
-                                  <input type="text" class="form-control" placeholder="5">
-                                </div>
-                                <div class="col-sm-2 table-col-border col-size input-padding">
-                                  <input type="text" class="form-control" placeholder="400">
-                                </div>
-                                <div class="col-sm-2 table-col-border col-size input-padding">
-                                  <input type="text" class="form-control" placeholder="=">
-                                </div>
-                                <div class="col-sm-2 table-col-border col-size input-padding">
-                                  <input type="text" class="form-control" placeholder="Largura">
-                                </div>
-                              </div>
+                        <div>
+                          <div class="row configurar-row-margin">
+                            <div class="col-sm-7 table-col-border table-col-border-left col-size contain-button answer-box">
+                              <button type="button" class="btn btn-block product-button categorias-inside-menu-button answer-box"><span class=" glyphicon glyphicon-menu-down"></span> R.: Sala de jantar</button>
+                            </div>
+                            <div class="col-sm-3 table-col-border col-size contain-button answer-box">
+                              <button type="button" class="btn btn-block product-button answer-box">Adicionar carateristica</button>
+                            </div>
+                            <div class="col-sm-1 table-col-border contain-button col-size contain-button answer-box">
+                              <button type="button" class="btn btn-block product-button answer-box"><span class="glyphicon glyphicon-remove"></span></button>
                             </div>
                           </div>
-                      </div>
-
-                      <div>
-                        <div class="row configurar-row-margin">
-                          <div class="col-sm-7 table-col-border table-col-border-left col-size contain-button answer-box">
-                            <button type="button" class="btn btn-block product-button categorias-inside-menu-button answer-box"><span class=" glyphicon glyphicon-menu-down"></span> R.: Sala de jantar</button>
-                          </div>
-                          <div class="col-sm-3 table-col-border col-size contain-button answer-box">
-                            <button type="button" class="btn btn-block product-button answer-box">Adicionar carateristica</button>
-                          </div>
-                          <div class="col-sm-1 table-col-border contain-button col-size contain-button answer-box">
-                            <button type="button" class="btn btn-block product-button answer-box"><span class="glyphicon glyphicon-remove"></span></button>
-                          </div>
+                            <!-- div que contem as carateristicas -->
+                            <div class="box">
+                            </div>
                         </div>
-                          <!-- div que contem as carateristicas -->
-                          <div class="box">
-                          </div>
-                      </div>
 
-                      <div>
-                        <div class="row configurar-row-margin">
-                          <div class="col-sm-7 table-col-border table-col-border-left col-size contain-button answer-box">
-                            <button type="button" class="btn btn-block product-button categorias-inside-menu-button answer-box"><span class=" glyphicon glyphicon-menu-down"></span> R.: Cozinha</button>
+                        <div>
+                          <div class="row configurar-row-margin">
+                            <div class="col-sm-7 table-col-border table-col-border-left col-size contain-button answer-box">
+                              <button type="button" class="btn btn-block product-button categorias-inside-menu-button answer-box"><span class=" glyphicon glyphicon-menu-down"></span> R.: Cozinha</button>
+                            </div>
+                            <div class="col-sm-3 table-col-border col-size contain-button answer-box">
+                              <button type="button" class="btn btn-block product-button answer-box">Adicionar carateristica</button>
+                            </div>
+                            <div class="col-sm-1 table-col-border contain-button col-size contain-button answer-box">
+                              <button type="button" class="btn btn-block product-button answer-box"><span class="glyphicon glyphicon-remove"></span></button>
+                            </div>
                           </div>
-                          <div class="col-sm-3 table-col-border col-size contain-button answer-box">
-                            <button type="button" class="btn btn-block product-button answer-box">Adicionar carateristica</button>
-                          </div>
-                          <div class="col-sm-1 table-col-border contain-button col-size contain-button answer-box">
-                            <button type="button" class="btn btn-block product-button answer-box"><span class="glyphicon glyphicon-remove"></span></button>
-                          </div>
+                            <!-- div que contem as carateristicas -->
+                            <div class="box">
+                            </div>
                         </div>
-                          <!-- div que contem as carateristicas -->
-                          <div class="box">
-                          </div>
+
+                        </div>
+
+
                       </div>
-
-                      </div>
-
-
-                    </div>
                     </div>
 
                     <div>
@@ -747,7 +753,6 @@
                 </div>
               </div>
 
-
             </div>
           </div>
         </div>
@@ -765,7 +770,7 @@
                 <td>
                 <div id="custom-search-input col-size">
                   <div class="input-group col-sm-12">
-                    <input type="text" class="  search-query form-control" placeholder="Search"/>
+                    <input type="text" data-bind="textInput: filter" class="  search-query form-control" placeholder="Search"/>
                     <span class="input-group-btn">
                       <button class="btn btn-block" type="button">
                         <span class=" glyphicon glyphicon-search"></span>
@@ -781,7 +786,7 @@
 
           <div >
             <table class="table table-bordered">
-              <tbody>
+              <!--<tbody>
                 <tr><th class="text-center"><button type="button" class="btn btn-block product-button">Televisão</button></th></tr>
                 <tr><th class="text-center"><button type="button" class="btn btn-block product-button">Computador</button></th></tr>
                 <tr><th class="text-center"><button type="button" class="btn btn-block product-button">Micro-ondas</button></th></tr>
@@ -798,7 +803,10 @@
                 <tr><th class="text-center"><button type="button" class="btn btn-block product-button">Rádio</button></th></tr>
                 <tr><th class="text-center"><button type="button" class="btn btn-block product-button">Televisão</button></th></tr>
                 <tr><th class="text-center"><button type="button" class="btn btn-block product-button">Computador</button></th></tr>
-              </tbody>
+              </tbody>-->
+              <tbody data-bind="foreach: filteredItems">
+      			    <tr><td class="text-center"><button type="button" data-bind="text: $data" class="btn btn-block product-button"></button></td></tr>
+      			  </tbody>
             </table>
           </div>
         <!-- </div>
@@ -811,6 +819,15 @@
       </div>
       </div>
   </div>
+
+
+<!--Scripts-->
+  <script type="text/javascript">
+   filter();
+   expandCategoria();
+   expandQuestion();
+   expandAnswer();
+  </script>
 
 </body>
 </html>
