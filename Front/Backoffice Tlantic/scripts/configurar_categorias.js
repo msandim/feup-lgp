@@ -45,3 +45,45 @@ function expandCategoria() {
     }
   });
 }
+
+function expandQuestion() {
+  var self = this;
+  $('.expandQuestion').click(function(){
+    var boxParent = $( this ).parent().parent().parent();
+    var boxBody = boxParent.children(".answers-inside");
+    if(boxBody.is(":visible")){
+      $(boxBody).hide('fast');
+    }else{
+      $(boxBody).show('medium');
+    }
+
+    var span = $(this).find(">:first-child");
+    var spanClass = span.attr("class");
+    if(spanClass == "glyphicon glyphicon-menu-up"){
+      span.attr("class","glyphicon glyphicon-menu-down");
+    }else{
+      span.attr("class","glyphicon glyphicon-menu-up");
+    }
+  });
+}
+
+function expandAnswer() {
+  var self = this;
+  $('.expandAnswer').click(function(){
+    var boxParent = $( this ).parent().parent().parent();
+    var boxBody = boxParent.children(".characteristics-inside");
+    if(boxBody.is(":visible")){
+      $(boxBody).hide('fast');
+    }else{
+      $(boxBody).show('medium');
+    }
+
+    var span = $(this).find(">:first-child");
+    var spanClass = span.attr("class");
+    if(spanClass == "glyphicon glyphicon-menu-up"){
+      span.attr("class","glyphicon glyphicon-menu-down");
+    }else{
+      span.attr("class","glyphicon glyphicon-menu-up");
+    }
+  });
+}

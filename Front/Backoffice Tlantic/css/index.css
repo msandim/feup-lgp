@@ -138,6 +138,13 @@ body{
   overflow:hidden;
 }
 
+.answers-inside{
+  display: none;
+}
+
+.characteristics-inside{
+  display: none;
+}
 
 #custom-search-input {
         margin:0;
