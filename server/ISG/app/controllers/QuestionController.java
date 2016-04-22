@@ -68,7 +68,7 @@ public class QuestionController extends Controller {
     {
         QuestionService service = new QuestionServiceImpl();
 
-        Iterable<Question> res = service.getQuestionsFromCategory();
+        Iterable<Question> res = service.getQuestionsFromCategory(category);
 
         return ok(res.toString());
     }
@@ -84,11 +84,11 @@ public class QuestionController extends Controller {
         return ok(res.toString());
     }
 
-    public Result createOrUpdateQuestion(String questionText)
+    public Result createOrUpdateQuestion(String questionText, String category)
     {
         QuestionService service = new QuestionServiceImpl();
 
-        Question temp = new Question(questionText, "TV", "ROOM");
+        Question temp = new Question(questionText, category);
         service.createOrUpdate(temp);
 
 
