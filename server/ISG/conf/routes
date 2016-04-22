@@ -13,11 +13,17 @@ GET     /deleteQuestion/:id                 controllers.QuestionController.delet
 # Get the next question
 POST    /api/get_next_question              controllers.QuestionController.getNextQuestion
 
-GET     /allCategories                      controllers.CategoryController.retrieveAllCategories
-GET     /category/:id                       controllers.CategoryController.retrieveCategory(id: Long)
-GET     /addCategory/:name                  controllers.CategoryController.createOrUpdateCategory(name: String)
-GET     /deleteCategory/:id                 controllers.CategoryController.deleteCategory(id: Long)
 GET     /getQuestionsByCategory             controllers.QuestionController.getQuestionByCategory(category: String)
+
+GET     /get_all_categories         controllers.CategoryController.retrieveAllCategories
+GET     /category/:id               controllers.CategoryController.retrieveCategory(id: Long)
+POST    /api/addc                   controllers.CategoryController.createOrUpdateCategory()
+GET     /deleteCategory/:id         controllers.CategoryController.deleteCategory(id: Long)
+
+#GET     /allProducts                controllers.CategoryController.retrieveAllProducts
+#GET     /product/:id                controllers.CategoryController.retrieveProduct(id: Long)
+#GET     /addProduct/:name&:price    controllers.CategoryController.createOrUpdateProduct(name: String, price :Float)
+#GET     /deleteProduct/:id          controllers.CategoryController.deleteProduct(id: Long)
 
 
 GET     /message                            controllers.AsyncController.message
