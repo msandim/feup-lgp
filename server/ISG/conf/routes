@@ -10,6 +10,9 @@ GET     /question/:id                       controllers.QuestionController.retri
 GET     /addQuestion                        controllers.QuestionController.createOrUpdateQuestion(text: String, category: String)
 GET     /deleteQuestion/:id                 controllers.QuestionController.deleteQuestion(id: Long)
 
+# Get the next question
+POST    /getNextQuestion                    controllers.QuestionController.getNextQuestion
+
 GET     /allCategories                      controllers.CategoryController.retrieveAllCategories
 GET     /category/:id                       controllers.CategoryController.retrieveCategory(id: Long)
 GET     /addCategory/:name                  controllers.CategoryController.createOrUpdateCategory(name: String)
