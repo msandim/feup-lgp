@@ -24,6 +24,9 @@
     -  `org.neo4j.server.webserver.port=7474`
     -  `org.neo4j.server.webserver.https.enabled=true`
     -  `org.neo4j.server.webserver.https.port=7473`
+    -  `org.neo4j.server.webserver.address=0.0.0.0`
+      - without this last one you won't be able to access the db from outside the machine
+
   
   - Save and close the file, close the options window and press the Start button.
   

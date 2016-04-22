@@ -18,8 +18,6 @@ public class Question extends Entity{
 
     private String category;
 
-    private String area;
-
     @Relationship(type = "seq", direction = "OUTGOING")
     public Set<Question> nextQuestions;
     @Relationship(type = "seq", direction = "INCOMING")
@@ -33,19 +31,17 @@ public class Question extends Entity{
 
     }
 
-    public Question(String text, String category, String area)
+    public Question(String text, String category)
     {
         this();
         this.text=text;
         this.category=category;
-        this.area=area;
     }
 
     @Override
     public String toString() {
         return "Question{" + "id=" + getId() + ", text=" + text +
                 ", category=" + category +
-                ", area=" + area +
                 ", nextQuestionsSize=" + nextQuestions.size() +
                 '}'+ '\n';
     }
@@ -65,14 +61,6 @@ public class Question extends Entity{
 
     public void setCategory(String category) {
         this.category = category;
-    }
-
-    public String getArea() {
-        return area;
-    }
-
-    public void setArea(String area) {
-        this.area = area;
     }
 
     public Set<Question> getNextQuestions() {

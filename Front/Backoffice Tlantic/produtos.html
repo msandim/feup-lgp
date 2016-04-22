@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <link rel="stylesheet" type="text/css" href="bootstrap/css/bootstrap.min.css" />
+  <link rel="stylesheet" type="text/css" href="css/index.css" />
+
+  <!-- search dependencies-->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/knockout/3.2.0/knockout-min.js"></script>
+  <script type="text/javascript" src="scripts/produtos.js"></script>
+
+
+  <title>Produtos</title>
+</head>
+<body>
+  <!--tabs -->
+  <div>
+    <ul class="nav nav-tabs">
+      <li><a href="configurar_categorias.html">Configurar Categorias</a></li>
+      <li class="active"><a href="produtos.html">Adicionar/Remover Produtos</a></li>
+    </ul>
+  </div>
+  <!--tabelas-->
+  <div class ="row">
+    <h1 class="col-sm-10">Categorias</h1>
+    <h1 class="col-sm-1" style="padding-left: 10px;">Pesquisa</h1>
+  </div>
+
+  <div class="row">
+    <div class="col-sm-9 pull-left">
+      <div class="box" style="height:770px;">
+        <div class="box-body" style=" height:770px; overflow-y:auto; overflow-x:hidden;">
+          <div class="row" style=" height:770px">
+            <!-- div que contem todas as categorias -->
+            <div class="box-group" style=" height:770px">
+              <!-- div que contem tudo sobre a categoria -->
+              <div class="box">
+                <div class="box-header">
+                  <div class="col-sm-5 product-padding table-col-border table-col-border-left table-col-border-top color-backgorund-category col-size">
+                    <h3>Televisão</h3>
+                  </div>
+                  <div class="col-sm-3 text-center table-col-border table-col-border-top contain-button col-size">
+                    <button type="button" class="btn btn-block product-button">Adicionar Produtos</button>
+                  </div>
+                  <div class="col-sm-3 text-center table-col-border table-col-border-top contain-button col-size">
+                    <button type="button" class="btn btn-block product-button expand">Lista de Produtos <span class="glyphicon glyphicon-menu-down"></span></button>
+                  </div>
+                  <div class="col-sm-1 table-col-border table-col-border-top contain-button col-size">
+                    <button type="button" class="btn btn-block product-button"><span class="glyphicon glyphicon-remove"></span></button>
+                  </div>
+                </div>
+                <!--div que contem os produtos da categoria -->
+                <div class="box-body box-body-scroll">
+                  <div>
+                    <div class="col-sm-10 table-col-border table-col-border-left product-padding col-size">
+                      <h3>TV LED Smart TV3D 42'' LG 42LF652V</h3>
+                    </div>
+                    <div class="col-sm-1 table-col-border contain-button col-size">
+                      <button type="button" class="btn btn-block product-button"><span class="glyphicon glyphicon-remove"></span></button>
+                    </div>
+                  </div>
+                  <div>
+                    <div class="col-sm-10 table-col-border table-col-border-left product-padding col-size">
+                      <h3>TV LED Smart TV3D 42'' LG 42LF652V</h3>
+                    </div>
+                    <div class="col-sm-1 table-col-border contain-button col-size">
+                      <button type="button" class="btn btn-block product-button"><span class="glyphicon glyphicon-remove"></span></button>
+                    </div>
+                  </div>
+                  <div>
+                    <div class="col-sm-10 table-col-border table-col-border-left product-padding col-size">
+                      <h3>TV LED Smart TV3D 42'' LG 42LF652V</h3>
+                    </div>
+                    <div class="col-sm-1 table-col-border contain-button col-size">
+                      <button type="button" class="btn btn-block product-button"><span class="glyphicon glyphicon-remove"></span></button>
+                    </div>
+                  </div>
+                  <div>
+                    <div class="col-sm-10 table-col-border table-col-border-left product-padding col-size">
+                      <h3>TV LED Smart TV3D 42'' LG 42LF652V</h3>
+                    </div>
+                    <div class="col-sm-1 table-col-border contain-button col-size">
+                      <button type="button" class="btn btn-block product-button"><span class="glyphicon glyphicon-remove"></span></button>
+                    </div>
+                  </div>
+                  <div>
+                    <div class="col-sm-10 table-col-border table-col-border-left product-padding col-size">
+                      <h3>TV LED Smart TV3D 42'' LG 42LF652V</h3>
+                    </div>
+                    <div class="col-sm-1 table-col-border contain-button col-size">
+                      <button type="button" class="btn btn-block product-button"><span class="glyphicon glyphicon-remove"></span></button>
+                    </div>
+                  </div>
+                  <div>
+                    <div class="col-sm-10 table-col-border table-col-border-left product-padding col-size">
+                      <h3>TV LED Smart TV3D 42'' LG 42LF652V</h3>
+                    </div>
+                    <div class="col-sm-1 table-col-border contain-button col-size">
+                      <button type="button" class="btn btn-block product-button"><span class="glyphicon glyphicon-remove"></span></button>
+                    </div>
+                  </div>
+                  <div>
+                    <div class="col-sm-10 table-col-border table-col-border-left product-padding col-size">
+                      <h3>TV LED Smart TV3D 42'' LG 42LF652V</h3>
+                    </div>
+                    <div class="col-sm-1 table-col-border contain-button col-size">
+                      <button type="button" class="btn btn-block product-button"><span class="glyphicon glyphicon-remove"></span></button>
+                    </div>
+                  </div>
+                  <div>
+                    <div class="col-sm-10 table-col-border table-col-border-left product-padding col-size">
+                      <h3>TV LED Smart TV3D 42'' LG 42LF652V</h3>
+                    </div>
+                    <div class="col-sm-1 table-col-border contain-button col-size">
+                      <button type="button" class="btn btn-block product-button"><span class="glyphicon glyphicon-remove"></span></button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- div que contem tudo sobre a categoria -->
+              <div class="box">
+                <div class="box-header">
+                  <div class="col-sm-5 product-padding table-col-border table-col-border-left table-col-border-top color-backgorund-category col-size">
+                    <h3>Computador</h3>
+                  </div>
+                  <div class="col-sm-3 text-center table-col-border table-col-border-top contain-button col-size">
+                    <button type="button" class="btn btn-block product-button">Adicionar Produtos</button>
+                  </div>
+                  <div class="col-sm-3 text-center table-col-border table-col-border-top contain-button col-size">
+                    <button type="button" class="btn btn-block product-button expand">Lista de Produtos <span class=" glyphicon glyphicon-menu-down"></span></button>
+                  </div>
+                  <div class="col-sm-1 table-col-border table-col-border-top contain-button col-size">
+                    <button type="button" class="btn btn-block product-button"><span class="glyphicon glyphicon-remove"></span></button>
+                  </div>
+                </div>
+                <!--div que contem os produtos da categoria -->
+                <div class="box-body box-body-scroll">
+                  <div>
+                    <div class="col-sm-10 table-col-border table-col-border-left product-padding col-size">
+                      <h3>TV LED Smart TV3D 42'' LG 42LF652V</h3>
+                    </div>
+                    <div class="col-sm-1 table-col-border contain-button col-size">
+                      <button type="button" class="btn btn-block product-button"><span class="glyphicon glyphicon-remove"></span></button>
+                    </div>
+                  </div>
+                  <div>
+                    <div class="col-sm-10 table-col-border table-col-border-left product-padding col-size">
+                      <h3>TV LED Smart TV3D 42'' LG 42LF652V</h3>
+                    </div>
+                    <div class="col-sm-1 table-col-border contain-button col-size">
+                      <button type="button" class="btn btn-block product-button"><span class="glyphicon glyphicon-remove"></span></button>
+                    </div>
+                  </div>
+                  <div>
+                    <div class="col-sm-10 table-col-border table-col-border-left product-padding col-size">
+                      <h3>TV LED Smart TV3D 42'' LG 42LF652V</h3>
+                    </div>
+                    <div class="col-sm-1 table-col-border contain-button col-size">
+                      <button type="button" class="btn btn-block product-button"><span class="glyphicon glyphicon-remove"></span></button>
+                    </div>
+                  </div>
+                  <div>
+                    <div class="col-sm-10 table-col-border table-col-border-left product-padding col-size">
+                      <h3>TV LED Smart TV3D 42'' LG 42LF652V</h3>
+                    </div>
+                    <div class="col-sm-1 table-col-border contain-button col-size">
+                      <button type="button" class="btn btn-block product-button"><span class="glyphicon glyphicon-remove"></span></button>
+                    </div>
+                  </div>
+                  <div>
+                    <div class="col-sm-10 table-col-border table-col-border-left product-padding col-size">
+                      <h3>TV LED Smart TV3D 42'' LG 42LF652V</h3>
+                    </div>
+                    <div class="col-sm-1 table-col-border contain-button col-size">
+                      <button type="button" class="btn btn-block product-button"><span class="glyphicon glyphicon-remove"></span></button>
+                    </div>
+                  </div>
+                  <div>
+                    <div class="col-sm-10 table-col-border table-col-border-left product-padding col-size">
+                      <h3>TV LED Smart TV3D 42'' LG 42LF652V</h3>
+                    </div>
+                    <div class="col-sm-1 table-col-border contain-button col-size">
+                      <button type="button" class="btn btn-block product-button"><span class="glyphicon glyphicon-remove"></span></button>
+                    </div>
+                  </div>
+                  <div>
+                    <div class="col-sm-10 table-col-border table-col-border-left product-padding col-size">
+                      <h3>TV LED Smart TV3D 42'' LG 42LF652V</h3>
+                    </div>
+                    <div class="col-sm-1 table-col-border contain-button col-size">
+                      <button type="button" class="btn btn-block product-button"><span class="glyphicon glyphicon-remove"></span></button>
+                    </div>
+                  </div>
+                  <div>
+                    <div class="col-sm-10 table-col-border table-col-border-left product-padding col-size">
+                      <h3>TV LED Smart TV3D 42'' LG 42LF652V</h3>
+                    </div>
+                    <div class="col-sm-1 table-col-border contain-button col-size">
+                      <button type="button" class="btn btn-block product-button"><span class="glyphicon glyphicon-remove"></span></button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- div que contem tudo sobre a categoria -->
+              <div class="box">
+                <div class="box-header">
+                  <div class="col-sm-5 product-padding table-col-border table-col-border-left table-col-border-top color-backgorund-category col-size">
+                    <h3>Telemóvel</h3>
+                  </div>
+                  <div class="col-sm-3 text-center table-col-border table-col-border-top contain-button col-size">
+                    <button type="button" class="btn btn-block product-button">Adicionar Produtos</button>
+                  </div>
+                  <div class="col-sm-3 text-center table-col-border table-col-border-top contain-button col-size">
+                    <button type="button" class="btn btn-block product-button expand">Lista de Produtos <span class=" glyphicon glyphicon-menu-down"></span></button>
+                  </div>
+                  <div class="col-sm-1 table-col-border table-col-border-top contain-button col-size">
+                    <button type="button" class="btn btn-block product-button"><span class="glyphicon glyphicon-remove"></span></button>
+                  </div>
+                </div>
+                <!--div que contem os produtos da categoria -->
+                <div class="box-body box-body-scroll">
+                  <div>
+                    <div class="col-sm-10 table-col-border table-col-border-left product-padding col-size">
+                      <h3>TV LED Smart TV3D 42'' LG 42LF652V</h3>
+                    </div>
+                    <div class="col-sm-1 table-col-border contain-button col-size">
+                      <button type="button" class="btn btn-block product-button"><span class="glyphicon glyphicon-remove"></span></button>
+                    </div>
+                  </div>
+                  <div>
+                    <div class="col-sm-10 table-col-border table-col-border-left product-padding col-size">
+                      <h3>TV LED Smart TV3D 42'' LG 42LF652V</h3>
+                    </div>
+                    <div class="col-sm-1 table-col-border contain-button col-size">
+                      <button type="button" class="btn btn-block product-button"><span class="glyphicon glyphicon-remove"></span></button>
+                    </div>
+                  </div>
+                  <div>
+                    <div class="col-sm-10 table-col-border table-col-border-left product-padding col-size">
+                      <h3>TV LED Smart TV3D 42'' LG 42LF652V</h3>
+                    </div>
+                    <div class="col-sm-1 table-col-border contain-button col-size">
+                      <button type="button" class="btn btn-block product-button"><span class="glyphicon glyphicon-remove"></span></button>
+                    </div>
+                  </div>
+                  <div>
+                    <div class="col-sm-10 table-col-border table-col-border-left product-padding col-size">
+                      <h3>TV LED Smart TV3D 42'' LG 42LF652V</h3>
+                    </div>
+                    <div class="col-sm-1 table-col-border contain-button col-size">
+                      <button type="button" class="btn btn-block product-button"><span class="glyphicon glyphicon-remove"></span></button>
+                    </div>
+                  </div>
+                  <div>
+                    <div class="col-sm-10 table-col-border table-col-border-left product-padding col-size">
+                      <h3>TV LED Smart TV3D 42'' LG 42LF652V</h3>
+                    </div>
+                    <div class="col-sm-1 table-col-border contain-button col-size">
+                      <button type="button" class="btn btn-block product-button"><span class="glyphicon glyphicon-remove"></span></button>
+                    </div>
+                  </div>
+                  <div>
+                    <div class="col-sm-10 table-col-border table-col-border-left product-padding col-size">
+                      <h3>TV LED Smart TV3D 42'' LG 42LF652V</h3>
+                    </div>
+                    <div class="col-sm-1 table-col-border contain-button col-size">
+                      <button type="button" class="btn btn-block product-button"><span class="glyphicon glyphicon-remove"></span></button>
+                    </div>
+                  </div>
+                  <div>
+                    <div class="col-sm-10 table-col-border table-col-border-left product-padding col-size">
+                      <h3>TV LED Smart TV3D 42'' LG 42LF652V</h3>
+                    </div>
+                    <div class="col-sm-1 table-col-border contain-button col-size">
+                      <button type="button" class="btn btn-block product-button"><span class="glyphicon glyphicon-remove"></span></button>
+                    </div>
+                  </div>
+                  <div>
+                    <div class="col-sm-10 table-col-border table-col-border-left product-padding col-size">
+                      <h3>TV LED Smart TV3D 42'' LG 42LF652V</h3>
+                    </div>
+                    <div class="col-sm-1 table-col-border contain-button col-size">
+                      <button type="button" class="btn btn-block product-button"><span class="glyphicon glyphicon-remove"></span></button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- div que contem tudo sobre a categoria -->
+              <div class="box">
+                <div class="box-header">
+                  <div class="col-sm-5 product-padding table-col-border table-col-border-left table-col-border-top color-backgorund-category col-size">
+                    <h3>Colunas</h3>
+                  </div>
+                  <div class="col-sm-3 text-center table-col-border table-col-border-top contain-button col-size">
+                    <button type="button" class="btn btn-block product-button">Adicionar Produtos</button>
+                  </div>
+                  <div class="col-sm-3 text-center table-col-border table-col-border-top contain-button col-size">
+                    <button type="button" class="btn btn-block product-button expand">Lista de Produtos <span class=" glyphicon glyphicon-menu-down"></span></button>
+                  </div>
+                  <div class="col-sm-1 table-col-border table-col-border-top contain-button col-size">
+                    <button type="button" class="btn btn-block product-button"><span class="glyphicon glyphicon-remove"></span></button>
+                  </div>
+                </div>
+                <!--div que contem os produtos da categoria -->
+                <div class="box-body box-body-scroll" style="display:none">
+                  <div>
+                    <div class="col-sm-10 table-col-border table-col-border-left product-padding col-size">
+                      <h3>TV LED Smart TV3D 42'' LG 42LF652V</h3>
+                    </div>
+                    <div class="col-sm-1 table-col-border contain-button col-size">
+                      <button type="button" class="btn btn-block product-button"><span class="glyphicon glyphicon-remove"></span></button>
+                    </div>
+                  </div>
+                  <div>
+                    <div class="col-sm-10 table-col-border table-col-border-left product-padding col-size">
+                      <h3>TV LED Smart TV3D 42'' LG 42LF652V</h3>
+                    </div>
+                    <div class="col-sm-1 table-col-border contain-button col-size">
+                      <button type="button" class="btn btn-block product-button"><span class="glyphicon glyphicon-remove"></span></button>
+                    </div>
+                  </div>
+                  <div>
+                    <div class="col-sm-10 table-col-border table-col-border-left product-padding col-size">
+                      <h3>TV LED Smart TV3D 42'' LG 42LF652V</h3>
+                    </div>
+                    <div class="col-sm-1 table-col-border contain-button col-size">
+                      <button type="button" class="btn btn-block product-button"><span class="glyphicon glyphicon-remove"></span></button>
+                    </div>
+                  </div>
+                  <div>
+                    <div class="col-sm-10 table-col-border table-col-border-left product-padding col-size">
+                      <h3>TV LED Smart TV3D 42'' LG 42LF652V</h3>
+                    </div>
+                    <div class="col-sm-1 table-col-border contain-button col-size">
+                      <button type="button" class="btn btn-block product-button"><span class="glyphicon glyphicon-remove"></span></button>
+                    </div>
+                  </div>
+                  <div>
+                    <div class="col-sm-10 table-col-border table-col-border-left product-padding col-size">
+                      <h3>TV LED Smart TV3D 42'' LG 42LF652V</h3>
+                    </div>
+                    <div class="col-sm-1 table-col-border contain-button col-size">
+                      <button type="button" class="btn btn-block product-button"><span class="glyphicon glyphicon-remove"></span></button>
+                    </div>
+                  </div>
+                  <div>
+                    <div class="col-sm-10 table-col-border table-col-border-left product-padding col-size">
+                      <h3>TV LED Smart TV3D 42'' LG 42LF652V</h3>
+                    </div>
+                    <div class="col-sm-1 table-col-border contain-button col-size">
+                      <button type="button" class="btn btn-block product-button"><span class="glyphicon glyphicon-remove"></span></button>
+                    </div>
+                  </div>
+                  <div>
+                    <div class="col-sm-10 table-col-border table-col-border-left product-padding col-size">
+                      <h3>TV LED Smart TV3D 42'' LG 42LF652V</h3>
+                    </div>
+                    <div class="col-sm-1 table-col-border contain-button col-size">
+                      <button type="button" class="btn btn-block product-button"><span class="glyphicon glyphicon-remove"></span></button>
+                    </div>
+                  </div>
+                  <div>
+                    <div class="col-sm-10 table-col-border table-col-border-left product-padding col-size">
+                      <h3>TV LED Smart TV3D 42'' LG 42LF652V</h3>
+                    </div>
+                    <div class="col-sm-1 table-col-border contain-button col-size">
+                      <button type="button" class="btn btn-block product-button"><span class="glyphicon glyphicon-remove"></span></button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="box col-sm-2 pull-right" style="margin-top: 25px;">
+        <button type="button" class="btn btn-block pull-right down-button">Gravar alterações</button>
+      </div>
+    </div>
+    <div class="col-sm-2 pull-right" style="height:820px">
+      <div class="box">
+        <div class="box-header">
+          <table class="table table-bordered" style="margin-top:0px; margin-bottom:0px;">
+            <tbody>
+              <tr>
+                <td>
+                <div id="custom-search-input col-size">
+                  <div class="input-group col-sm-12">
+                    <input type="text" data-bind="textInput: filter" class="  search-query form-control" placeholder="Search"/>
+                    <span class="input-group-btn">
+                      <button class="btn btn-block" type="button">
+                        <span class=" glyphicon glyphicon-search"></span>
+                      </button>
+                    </span>
+                  </div>
+                </div>
+              </td>
+              </tr>
+            </tbody>
+          </table>
+        <div class="box-body" style="height:720px; overflow:auto;">
+
+          <div >
+            <table class="table table-bordered">
+             <!-- <tbody data-bind="foreach: filteredItems">
+                <tr><th class="text-center"><button type="button" class="btn btn-block product-button">Televisão</button></th></tr>
+                <tr><th class="text-center"><button type="button" class="btn btn-block product-button">Computador</button></th></tr>
+                <tr><th class="text-center"><button type="button" class="btn btn-block product-button">Micro-ondas</button></th></tr>
+                <tr><th class="text-center"><button type="button" class="btn btn-block product-button">Frigorífico</button></th></tr>
+                <tr><th class="text-center"><button type="button" class="btn btn-block product-button">Telemóvel</button></th></tr>
+                <tr><th class="text-center"><button type="button" class="btn btn-block product-button">Colunas</button></th></tr>
+                <tr><th class="text-center"><button type="button" class="btn btn-block product-button">Rádio</button></th></tr>
+                <tr><th class="text-center"><button type="button" class="btn btn-block product-button">Televisão</button></th></tr>
+                <tr><th class="text-center"><button type="button" class="btn btn-block product-button">Computador</button></th></tr>
+                <tr><th class="text-center"><button type="button" class="btn btn-block product-button">Micro-ondas</button></th></tr>
+                <tr><th class="text-center"><button type="button" class="btn btn-block product-button">Frigorífico</button></th></tr>
+                <tr><th class="text-center"><button type="button" class="btn btn-block product-button">Telemóvel</button></th></tr>
+                <tr><th class="text-center"><button type="button" class="btn btn-block product-button">Colunas</button></th></tr>
+                <tr><th class="text-center"><button type="button" class="btn btn-block product-button">Rádio</button></th></tr>
+                <tr><th class="text-center"><button type="button" class="btn btn-block product-button">Televisão</button></th></tr>
+                <tr><th class="text-center"><button type="button" class="btn btn-block product-button">Computador</button></th></tr>
+              </tbody>-->
+              <tbody data-bind="foreach: filteredItems">
+			    <tr><td class="text-center"><button type="button" data-bind="text: $data" class="btn btn-block product-button"></button></td></tr>
+			  </tbody>
+            </table>
+
+
+
+
+          </div>
+        <!-- </div>
+      </div> -->
+    </div>
+    </div>
+
+      <div class="box col-sm-12" style="margin-top: 25px;">
+        <button type="button" class="btn btn-block pull-right down-button">Adicionar Categoria</button>
+      </div>
+      </div>
+  </div>
+
+
+<!--Scripts -->
+  <script type="text/javascript">
+   filter();
+   expand();
+  </script>
+
+</body>
+</html>

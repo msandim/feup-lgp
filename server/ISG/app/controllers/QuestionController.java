@@ -2,10 +2,17 @@ package controllers;
 
 import javax.inject.*;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import neo4j.models.Question;
 import neo4j.services.QuestionService;
 import neo4j.services.QuestionServiceImpl;
+
+import java.util.*;
+
+import play.api.libs.json.JsPath;
 import play.mvc.*;
+import scala.Console;
+import services.ApplicationTimer;
 
 @Singleton
 public class QuestionController extends Controller {
@@ -25,6 +32,30 @@ public class QuestionController extends Controller {
 
     }*/
 
+    @BodyParser.Of(BodyParser.Json.class)
+    public Result getNextQuestion()
+    {
+        // Parse the parameters:
+        JsonNode jsonRequest = request().body().asJson();
+        String category = jsonRequest.findPath("category").asText();
+
+        Console.print("NOME DA CATEGORIA: " + category + "\n");
+
+        if (category == null)
+            return badRequest("Missing parameter [category]");
+
+        // Get all questions:
+        QuestionService service = new QuestionServiceImpl();
+        Iterable<Question> questions = service.getQuestionsFromCategory(category);
+
+        // Get random question:
+        List<Question> questionList = new ArrayList<>();
+        questions.forEach(questionList::add);
+        Question randomQuestion = questionList.get(new Random().nextInt(questionList.size()));
+
+        return ok(randomQuestion.toString() + category);
+    }
+
 
     public Result retrieveAllQuestions()
     {
@@ -33,6 +64,15 @@ public class QuestionController extends Controller {
 
         Iterable<Question> res = service.findAll();
 
+
+        return ok(res.toString());
+    }
+
+    public Result getQuestionByCategory(String category)
+    {
+        QuestionService service = new QuestionServiceImpl();
+
+        Iterable<Question> res = service.getQuestionsFromCategory(category);
 
         return ok(res.toString());
     }
@@ -48,14 +88,11 @@ public class QuestionController extends Controller {
         return ok(res.toString());
     }
 
-    public Result createOrUpdateQuestion(String questionText)
+    public Result createOrUpdateQuestion(String questionText, String category)
     {
         QuestionService service = new QuestionServiceImpl();
 
-
-
-
-        Question temp = new Question(questionText, "TV", "ROOM");
+        Question temp = new Question(questionText, category);
         service.createOrUpdate(temp);
 
 
