@@ -8,5 +8,5 @@ import java.util.Map;
  */
 public interface QuestionService extends Service<Question> {
 
-    Iterable<Question> getQuestionsFromCategory();
+    Iterable<Question> getQuestionsFromCategory(String category);
 }
