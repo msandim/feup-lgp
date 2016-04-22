@@ -11,6 +11,7 @@ import java.util.*;
 
 import play.api.libs.json.JsPath;
 import play.mvc.*;
+import scala.Console;
 
 @Singleton
 public class QuestionController extends Controller {
@@ -37,12 +38,14 @@ public class QuestionController extends Controller {
         JsonNode jsonRequest = request().body().asJson();
         String category = jsonRequest.findPath("category").asText();
 
+        Console.print("NOME DA CATEGORIA: " + category + "\n");
+
         if (category == null)
             return badRequest("Missing parameter [category]");
 
         // Get all questions:
         QuestionService service = new QuestionServiceImpl();
-        Iterable<Question> questions = service.getQuestionsFromCategory();
+        Iterable<Question> questions = service.getQuestionsFromCategory(category);
 
         // Get random question:
         List<Question> questionList = new ArrayList<>();
