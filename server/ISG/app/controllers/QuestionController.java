@@ -2,13 +2,14 @@ package controllers;
 
 import javax.inject.*;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import neo4j.models.Question;
 import neo4j.services.QuestionService;
 import neo4j.services.QuestionServiceImpl;
-import java.util.Collections;
-import java.util.Map;
-import play.libs.Json;
-import com.fasterxml.jackson.databind.JsonNode;
+
+import java.util.*;
+
+import play.api.libs.json.JsPath;
 import play.mvc.*;
 
 @Singleton
@@ -32,11 +33,23 @@ public class QuestionController extends Controller {
     @BodyParser.Of(BodyParser.Json.class)
     public Result getNextQuestion()
     {
-        QuestionService service = new QuestionServiceImpl();
+        // Parse the parameters:
+        JsonNode jsonRequest = request().body().asJson();
+        String category = jsonRequest.findPath("category").asText();
 
+        if (category == null)
+            return badRequest("Missing parameter [category]");
+
+        // Get all questions:
+        QuestionService service = new QuestionServiceImpl();
         Iterable<Question> questions = service.getQuestionsFromCategory();
 
-        return ok(questions.toString());
+        // Get random question:
+        List<Question> questionList = new ArrayList<>();
+        questions.forEach(questionList::add);
+        Question randomQuestion = questionList.get(new Random().nextInt(questionList.size()));
+
+        return ok(randomQuestion.toString() + category);
     }
 
 
