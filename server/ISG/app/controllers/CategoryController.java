@@ -23,7 +23,6 @@ public class CategoryController extends Controller {
 
         Iterable<Category> res = service.findAll();
 
-
         return ok(res.toString());
     }
 
@@ -40,7 +39,6 @@ public class CategoryController extends Controller {
 
     public Result createOrUpdateCategory()
     {
-
         JsonNode json = request().body().asJson();
         if(json == null) {
             JsonNode obj =  Json.parse("{\"error\":\"INVALID NAME\", \"msg\":\"This category name already exists!\"}");
