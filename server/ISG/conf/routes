@@ -11,7 +11,7 @@ GET     /addQuestion                        controllers.QuestionController.creat
 GET     /deleteQuestion/:id                 controllers.QuestionController.deleteQuestion(id: Long)
 
 # Get the next question
-POST    /getNextQuestion                    controllers.QuestionController.getNextQuestion
+POST    /api/get_next_question              controllers.QuestionController.getNextQuestion
 
 GET     /allCategories                      controllers.CategoryController.retrieveAllCategories
 GET     /category/:id                       controllers.CategoryController.retrieveCategory(id: Long)
