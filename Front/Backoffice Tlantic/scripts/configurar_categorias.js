@@ -1,3 +1,9 @@
+var Categorias = ["Televisão", "Computador", "Micro-ondas", "Frigorífico", "Telemóvel", "Colunas", "Rádio",
+  "Televisão", "Computador", "Frigorífico", "Telemóvel", "Colunas", "Rádio", "Televisão", "Computador", "Micro-ondas", "Frigorífico",
+   "Telemóvel", "Colunas", "Rádio", "Televisão", "Computador", "Frigorífico", "Telemóvel", "Colunas", "Rádio"];
+catItems=ko.observableArray(Categorias);
+catItems.sort();
+
 function filter(){
 
   var ViewModel = function() {
@@ -5,16 +11,21 @@ function filter(){
 
       self.filter = ko.observable('');
 
-      self.items = ko.observableArray(["Televisão", "Computador", "Micro-ondas", "Frigorífico", "Telemóvel", "Colunas", "Rádio",
+      /*self.items = ko.observableArray(["Televisão", "Computador", "Micro-ondas", "Frigorífico", "Telemóvel", "Colunas", "Rádio",
         "Televisão", "Computador", "Frigorífico", "Telemóvel", "Colunas", "Rádio", "Televisão", "Computador", "Micro-ondas", "Frigorífico",
-         "Telemóvel", "Colunas", "Rádio", "Televisão", "Computador", "Frigorífico", "Telemóvel", "Colunas", "Rádio"]);
+         "Telemóvel", "Colunas", "Rádio", "Televisão", "Computador", "Frigorífico", "Telemóvel", "Colunas", "Rádio"]);*()
 
-      self.items.sort();
+      self.items.sort();*/
 
       self.filteredItems = ko.computed(function() {
-        var filter = self.filter().toLowerCase();
+        /*var filter = self.filter().toLowerCase();
         if(!filter) { return self.items(); }
         return self.items().filter(function(i) {
+          return i.toLowerCase().indexOf(filter) > -1;
+        });*/
+        var filter = self.filter().toLowerCase();
+        if(!filter) { return catItems(); }
+        return catItems().filter(function(i) {
           return i.toLowerCase().indexOf(filter) > -1;
         });
       });
@@ -97,7 +108,10 @@ function addCategory(){
     }
     var boxGroup = $('#boxOfGoodies');
 
+    categoryName = capitalizeFirstLetter(categoryName);
     boxGroup.append('<div class="box"><div class="box-header"><div class="row overflow-rows"><div class="col-sm-5 product-padding table-col-border table-col-border-left table-col-border-top color-backgorund-category col-size"><h3>'+categoryName+'</h3></div><div class="col-sm-3 text-center table-col-border table-col-border-top contain-button col-size"><button type="button" class="btn btn-block product-button addQuestion">Adicionar Pergunta</button></div><div class="col-sm-3 text-center table-col-border table-col-border-top contain-button col-size"><button type="button" class="btn btn-block product-button expandCategoria">Lista de Perguntas/Repostas <span class=" glyphicon glyphicon-menu-down"></span></button></div><div class="col-sm-1 table-col-border table-col-border-top contain-button col-size"><button type="button" class="btn btn-block product-button"><span class="glyphicon glyphicon-remove"></span></button></div></div></div><div class="box-body box-body-scroll"></div></div>');
+    catItems.push(categoryName);
+    catItems.sort();
 
     //Unbind all elements with the class and then rebbind to include the new element
     var addQuestionElement = boxGroup.find(".addQuestion");
@@ -119,6 +133,8 @@ function addQuestion(){
     }
     var boxParent = $( this ).parent().parent().parent().parent();
     var boxQuestions = boxParent.find(".box-body");
+
+    question=capitalizeFirstLetter(question);
     boxQuestions.append('<div class="box-of-questions"><div class="row configurar-row-margin"><div class="col-sm-7 table-col-border table-col-border-left col-size contain-button" ><button type="button" class="btn btn-block product-button categorias-inside-menu-button expandQuestion"><span class=" glyphicon glyphicon-menu-down"></span> P.: '+question+'</button></div><div class="col-sm-3 table-col-border col-size contain-button"><button type="button" class="btn btn-block product-button addAnswer">Adicionar resposta</button></div><div class="col-sm-1 table-col-border contain-button col-size "><button type="button" class="btn btn-block product-button"><span class="glyphicon glyphicon-remove"></span></button></div></div><div class="box answers-inside"></div></div>');
 
     //Unbind all elements with the class and then rebbind to include the new element
@@ -141,6 +157,8 @@ function addAnswer(){
     }
     var boxParent = $( this ).parent().parent().parent();
     var boxAnswers = boxParent.find('.answers-inside')
+
+    answer=capitalizeFirstLetter(answer);
     boxAnswers.append('<div class="div-with-answer"><div class="row configurar-row-margin"><div class="col-sm-7 table-col-border table-col-border-left col-size contain-button answer-box"><button type="button" class="btn btn-block product-button categorias-inside-menu-button answer-box expandAnswer"><span class=" glyphicon glyphicon-menu-down"></span> R.: '+answer+'</button></div><div class="col-sm-3 table-col-border col-size contain-button answer-box"><button type="button" class="btn btn-block product-button answer-box addCharacteristic">Adicionar carateristica</button></div><div class="col-sm-1 table-col-border contain-button col-size contain-button answer-box"><button type="button" class="btn btn-block product-button answer-box"><span class="glyphicon glyphicon-remove"></span></button></div></div><div class="box characteristics-inside"></div></div>');
 
     //Unbind all elements with the class and then rebbind to include the new element
@@ -178,4 +196,12 @@ function addCharacteristic(){
     boxCharacteristic.append('<div class="div-with-characteristics"><div class="row configurar-row-margin"><div class="col-sm-2 table-col-border table-col-border-left col-size"><h4>Caraterística</h4></div><div class="col-sm-2 table-col-border col-size"><h4>Score</h4></div><div class="col-sm-2 table-col-border col-size"><h4>Valor</h4></div><div class="col-sm-2 table-col-border col-size"><h4>Operador</h4></div><div class="col-sm-2 table-col-border col-size"><h4>Nome</h4></div><div class="col-sm-1 table-col-border contain-button col-size"><button type="button" class="btn btn-block product-button"><span class="glyphicon glyphicon-remove"></span></button></div><div class="col-sm-2 col-size"></div><div class="col-sm-2 table-col-border-right table-col-border-left col-size input-padding"><input type="text" class="form-control" placeholder="'+score+'"></div><div class="col-sm-2 table-col-border col-size input-padding"><input type="text" class="form-control" placeholder="'+value+'"></div><div class="col-sm-2 table-col-border col-size input-padding"><input type="text" class="form-control" placeholder="'+operator+'"></div><div class="col-sm-2 table-col-border col-size input-padding"><input type="text" class="form-control" placeholder="'+name+'"></div></div></div>');
 
   });
+}
+
+
+
+//UTILS
+
+function capitalizeFirstLetter(string) {
+    return string.charAt(0).toUpperCase() + string.slice(1);
 }
