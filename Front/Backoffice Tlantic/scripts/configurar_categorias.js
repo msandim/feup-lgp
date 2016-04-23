@@ -1,8 +1,78 @@
 //GLOBALS
 
+  //Trocar por serviço
   var categorias = ["Televisão", "Computador", "Micro-ondas", "Frigorífico", "Telemóvel", "Colunas", "Rádio",
   "Televisão", "Computador", "Frigorífico", "Telemóvel", "Colunas", "Rádio", "Televisão", "Computador", "Micro-ondas", "Frigorífico",
    "Telemóvel", "Colunas", "Rádio", "Televisão", "Computador", "Frigorífico", "Telemóvel", "Colunas", "Rádio"];
+
+   //Trocar por serviço
+   var questionArray =
+     [
+       {
+         "category":"Televisão",
+  "questions":[
+    {
+      "text":"Qual o tamanho da sua sala?",
+      "answers":[
+        {
+          "text":"Pequena",
+          "caracteristics":[
+            {
+              "name":"width (cm)",
+              "operator":"<",
+              "value":"400",
+              "score":"0.5"
+            },
+            {
+              "name":"resolution",
+              "operator":"=",
+              "value":"720p",
+              "score":"0.1"
+            }
+          ]
+        },
+        {
+          "text":"Média",
+          "caracteristics":[
+            {
+              "name":"width (cm)",
+              "operator":">",
+              "value":"200",
+              "score":"0.5"
+            },
+            {
+              "name":"resolution",
+              "operator":"=",
+              "value":"1080p",
+              "score":"0.1"
+            }
+          ]
+        },
+        {
+          "text":"Grande",
+          "caracteristics":[
+            {
+              "name":"width (cm)",
+              "operator":"<",
+              "value":"100",
+              "score":"0.5"
+            },
+            {
+              "name":"resolution",
+              "operator":"=",
+              "value":"2K",
+              "score":"0.1"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
+]
+;
+
+
 
    categorias.sort();
    catItems=ko.observableArray();
@@ -170,7 +240,6 @@ function addAnswer(){
     addCharacteristicElement.unbind("click", addCharacteristic());
     addCharacteristicElement.bind("click", addCharacteristic());
     var expandAnswerElement = $(":root").find(".expandAnswer");
-    console.log(expandAnswerElement.attr("id"));
     expandAnswerElement.unbind("click", expandAnswer());
     expandAnswerElement.bind("click", expandAnswer());
   });
@@ -220,10 +289,78 @@ function autoAddCategory(){
       var expandCategoriaElement = boxGroup.find(".expandCategoria");
       expandCategoriaElement.unbind("click", expandCategoria());
       expandCategoriaElement.bind("click", expandCategoria());
+
+      var lastChild = boxGroup.find(":last-child");
+
+      autoAddQuestions(categoryName,lastChild);
     });
   });
 }
 
+
+function autoAddQuestions(categoryName,lastChild){
+  var self = this;
+
+  questionArray.forEach(function(questionFor){
+
+    var boxQuestions = lastChild.find(".box-body");
+
+    if(questionFor['category']===categoryName){
+      questionFor['questions'].forEach(function(quest){
+        question=capitalizeFirstLetter(quest['text']);
+        boxQuestions.append('<div class="box-of-questions"><div class="row configurar-row-margin"><div class="col-sm-7 table-col-border table-col-border-left col-size contain-button" ><button type="button" class="btn btn-block product-button categorias-inside-menu-button expandQuestion"><span class=" glyphicon glyphicon-menu-down"></span> P.: '+question+'</button></div><div class="col-sm-3 table-col-border col-size contain-button"><button type="button" class="btn btn-block product-button addAnswer">Adicionar resposta</button></div><div class="col-sm-1 table-col-border contain-button col-size "><button type="button" class="btn btn-block product-button"><span class="glyphicon glyphicon-remove"></span></button></div></div><div class="box answers-inside"></div></div>');
+
+        //Unbind all elements with the class and then rebbind to include the new element
+        var addAnswerElement = $(":root").find(".addAnswer");
+        addAnswerElement.unbind("click", addAnswer());
+        addAnswerElement.bind("click", addAnswer());
+        var expandQuestionElement = $(":root").find(".expandQuestion");
+        expandQuestionElement.unbind("click", expandQuestion());
+        expandQuestionElement.bind("click", expandQuestion());
+
+        var newLastChild = boxQuestions.find(":last-child");
+        autoAddAnswers(quest['answers'],newLastChild);
+      });
+    }
+  });
+}
+
+
+function autoAddAnswers(answers,lastChild){
+  var self = this;
+
+  answers.forEach(function(singleAnswer){
+
+    var boxAnswers = lastChild.find(".answers-inside");
+
+    answer = capitalizeFirstLetter(singleAnswer['text']);
+    boxAnswers.append('<div class="div-with-answer"><div class="row configurar-row-margin"><div class="col-sm-7 table-col-border table-col-border-left col-size contain-button answer-box"><button type="button" class="btn btn-block product-button categorias-inside-menu-button answer-box expandAnswer"><span class=" glyphicon glyphicon-menu-down"></span> R.: '+answer+'</button></div><div class="col-sm-3 table-col-border col-size contain-button answer-box"><button type="button" class="btn btn-block product-button answer-box addCharacteristic">Adicionar carateristica</button></div><div class="col-sm-1 table-col-border contain-button col-size contain-button answer-box"><button type="button" class="btn btn-block product-button answer-box"><span class="glyphicon glyphicon-remove"></span></button></div></div><div class="box characteristics-inside"></div></div>');
+
+    //Unbind all elements with the class and then rebbind to include the new element
+    var addCharacteristicElement = $(":root").find(".addCharacteristic");
+    addCharacteristicElement.unbind("click", addCharacteristic());
+    addCharacteristicElement.bind("click", addCharacteristic());
+    var expandAnswerElement = $(":root").find(".expandAnswer");
+    expandAnswerElement.unbind("click", expandAnswer());
+    expandAnswerElement.bind("click", expandAnswer());
+
+    var newLastChild = boxAnswers.find(":last-child");
+    autoAddCharacteristics(singleAnswer['caracteristics'],newLastChild);
+
+  });
+}
+
+function autoAddCharacteristics(characteristics,lastChild){
+  var self = this;
+
+  characteristics.forEach(function(singleCharacteristic){
+
+    var boxCharacteristic = lastChild.find(".characteristics-inside");
+
+    boxCharacteristic.append('<div class="div-with-characteristics"><div class="row configurar-row-margin"><div class="col-sm-2 table-col-border table-col-border-left col-size"><h4>Caraterística</h4></div><div class="col-sm-2 table-col-border col-size"><h4>Score</h4></div><div class="col-sm-2 table-col-border col-size"><h4>Valor</h4></div><div class="col-sm-2 table-col-border col-size"><h4>Operador</h4></div><div class="col-sm-2 table-col-border col-size"><h4>Nome</h4></div><div class="col-sm-1 table-col-border contain-button col-size"><button type="button" class="btn btn-block product-button"><span class="glyphicon glyphicon-remove"></span></button></div><div class="col-sm-2 col-size"></div><div class="col-sm-2 table-col-border-right table-col-border-left col-size input-padding"><input type="text" class="form-control" placeholder="'+singleCharacteristic['score']+'"></div><div class="col-sm-2 table-col-border col-size input-padding"><input type="text" class="form-control" placeholder="'+singleCharacteristic['value']+'"></div><div class="col-sm-2 table-col-border col-size input-padding"><input type="text" class="form-control" placeholder="'+singleCharacteristic['operator']+'"></div><div class="col-sm-2 table-col-border col-size input-padding"><input type="text" class="form-control" placeholder="'+singleCharacteristic['name']+'"></div></div></div>');
+
+  });
+}
 
 //UTILS
 
