@@ -47,3 +47,46 @@ var app = {
         console.log('Received Event: ' + id);
     }
 };
+
+//GLOBALS
+
+//Trocar por serviço
+categoryArray =[
+  {
+    'name': "Televisão",
+    'image': "img/tv1.jpg"
+  },
+  {
+    'name': "Televisão",
+    'image': "img/tv1.jpg"
+  },
+  {
+    'name': "Televisão",
+    'image': "img/tv1.jpg"
+  },
+  {
+    'name': "Televisão",
+    'image': "img/tv2.jpg"
+  },
+  {
+    'name': "Televisão",
+    'image': "img/tv2.jpg"
+  },
+  {
+    'name': "Televisão",
+    'image': "img/tv2.jpg"
+  },
+  {
+    'name': "Televisão",
+    'image': "img/tv1.jpg"
+  }
+];
+
+
+function autoFillInterfaceSquare(){
+  var self=this;
+  categoryArray.forEach(function(category){
+    var interfaceSquare = $('.interface-square');
+    interfaceSquare.append('<div class="col-sm-4"><div class="thumbnail thumbnail-pad"><button type="button" class="btn btn-block button-pad"><a href="primeira_pergunta.html"><img src="'+category['image']+'" width ="200"><p class="text-center">'+category['name']+'</p></a></div></div>');
+  });
+}
