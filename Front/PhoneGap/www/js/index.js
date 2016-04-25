@@ -51,7 +51,7 @@ var app = {
 //GLOBALS
 
 //Trocar por serviço
-categoryArray =[
+var categoryArray =[
   {
     'name': "Televisão",
     'image': "img/tv1.jpg"
@@ -82,6 +82,11 @@ categoryArray =[
   }
 ];
 
+var toNextPage = {
+  'category':"",
+  'questions-answer':[],
+  'blacklist_questions':[]
+};
 
 function autoFillInterfaceSquare(){
   var self=this;

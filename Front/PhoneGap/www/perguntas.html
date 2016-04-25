@@ -46,22 +46,6 @@
 
 <body>
     <div class="main">
-      <h4 class="h4-above-title">Categoria: Televisão</h4>
-      <h1 class="h1-title">Qual é o tamanho do produto?</h1>
-      <!-- div que contem as respostas -->
-      <div class="interface-square interface-size">
-        <div class="row center-row">
-          <div class="col-sm-4">
-            <a href="hub.html"><button type="button" class="btn btn-default buttons" style="display: block; width: 100%;">Pequeno</button></a>
-          </div>
-          <div class="col-sm-4">
-            <a href="hub.html"><button type="button" class="btn btn-default buttons" style="display: block; width: 100%;">Médio</button></a>
-          </div>
-          <div class="col-sm-4">
-            <a href="hub.html"><button type="button" class="btn btn-default buttons" style="display: block; width: 100%;">Grande</button></a>
-          </div>
-        </div>
-      </div>
     <!-- div que contem os botões abaixo das categorias-->
     <div class="buttons-row">
       <div class="row">
@@ -73,8 +57,16 @@
       </div>
     </div>
   </div>
-    <script type="text/javascript" src="cordova.js"></script>
-    <script type="text/javascript" src="js/index.js"></script>
+
+  <!--SCRIPTS-->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/knockout/3.2.0/knockout-min.js"></script>
+  <script type="text/javascript" src="cordova.js"></script>
+  <script type="text/javascript" src="js/perguntas.js"></script>
+  <script type="text/javascript">
+      autoFillInterfaceSquare();
+  </script>
+
 </body>
 
 </html>
