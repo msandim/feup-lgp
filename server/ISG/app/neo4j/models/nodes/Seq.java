@@ -1,7 +1,7 @@
 package neo4j.models.nodes;
 
+import neo4j.models.Entity;
 import org.neo4j.ogm.annotation.EndNode;
-import org.neo4j.ogm.annotation.GraphId;
 import org.neo4j.ogm.annotation.StartNode;
 
 /**

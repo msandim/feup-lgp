@@ -1,5 +1,6 @@
 package neo4j.models.nodes;
 
+import neo4j.models.Entity;
 import neo4j.models.edges.ProductAttribute;
 import org.neo4j.ogm.annotation.*;
 
@@ -20,13 +21,17 @@ public class Product extends Entity
     @Relationship(type = "HAS")
     private Set<ProductAttribute> attributes;
 
+    @Relationship(type = "HAS_PRODUCTS", direction = Relationship.INCOMING)
+    private Category category;
+
     public Product() {}
 
-    public Product(String name, String EAN, Float price)
+    public Product(String name, String EAN, Float price, Category category)
     {
-        this.name=name;
+        this.name = name;
         this.EAN = EAN;
-        this.price=price;
+        this.price = price;
+        this.category = category;
     }
 
     public String getName() {

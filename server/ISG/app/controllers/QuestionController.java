@@ -3,9 +3,10 @@ package controllers;
 import javax.inject.*;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import neo4j.models.nodes.Category;
 import neo4j.models.nodes.Question;
+import neo4j.services.CategoryService;
 import neo4j.services.QuestionService;
-import neo4j.services.QuestionServiceImpl;
 
 import java.util.*;
 
@@ -14,8 +15,6 @@ import scala.Console;
 
 @Singleton
 public class QuestionController extends Controller {
-
-
 
     //public  QuestionService;
 
@@ -43,7 +42,7 @@ public class QuestionController extends Controller {
             return badRequest("Missing parameter [category]");
 
         // Get all questions:
-        QuestionService service = new QuestionServiceImpl();
+        QuestionService service = new QuestionService();
         Iterable<Question> questions = service.getQuestionsFromCategory(category);
 
         // Get random question:
@@ -57,7 +56,7 @@ public class QuestionController extends Controller {
 
     public Result retrieveAllQuestions()
     {
-        QuestionService service = new QuestionServiceImpl();
+        QuestionService service = new QuestionService();
 
 
         Iterable<Question> res = service.findAll();
@@ -68,7 +67,7 @@ public class QuestionController extends Controller {
 
     public Result getQuestionByCategory(String category)
     {
-        QuestionService service = new QuestionServiceImpl();
+        QuestionService service = new QuestionService();
 
         Iterable<Question> res = service.getQuestionsFromCategory(category);
 
@@ -77,32 +76,33 @@ public class QuestionController extends Controller {
 
     public Result retrieveQuestion(Long id)
     {
-        QuestionService service = new QuestionServiceImpl();
-
+        QuestionService service = new QuestionService();
 
         Question res = service.find(id);
-
 
         return ok(res.toString());
     }
 
-    public Result createOrUpdateQuestion(String questionText, String category)
+    public Result createOrUpdateQuestion(String text, String categoryCodename)
     {
-        QuestionService service = new QuestionServiceImpl();
+        // Get the category:
+        CategoryService categoryService = new CategoryService();
+        Category category = categoryService.findByCodename(categoryCodename);
 
-        Question temp = new Question(questionText, category);
-        service.createOrUpdate(temp);
+        if (category == null)
+            return ok("no");
 
+        QuestionService questionService = new QuestionService();
+        Question question = new Question(text, category);
 
-        return ok(service.createOrUpdate(temp).getText());
+        return ok(questionService.createOrUpdate(question).getText());
     }
 
     public Result deleteQuestion(Long id)
     {
-        QuestionService service = new QuestionServiceImpl();
+        QuestionService service = new QuestionService();
 
         service.delete(id);
-
 
         return ok(Long.toString(id));
     }

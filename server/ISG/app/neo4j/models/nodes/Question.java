@@ -4,6 +4,7 @@ package neo4j.models.nodes;
  * Created by Lycantropus on 14-04-2016.
  */
 
+import neo4j.models.Entity;
 import neo4j.models.edges.QuestionEdge;
 import org.neo4j.ogm.annotation.*;
 
@@ -20,28 +21,26 @@ public class Question extends Entity
     @Relationship(type = "FOLLOWS", direction = Relationship.OUTGOING)
     private Set<QuestionEdge> nextQuestions;
 
-    @Relationship(type = "FOLLOWS", direction = Relationship.OUTGOING)
+    @Relationship(type = "FOLLOWS", direction = Relationship.INCOMING)
     private Set<QuestionEdge> previousQuestions;
+
+    @Relationship(type = "HAS_QUESTIONS", direction = Relationship.INCOMING)
+    private Category category;
 
 
     public Question()
-    {
-        //this.nextQuestions= new HashSet<>();
-        //this.previousQuestions=new HashSet<>();
+    { }
 
-    }
-
-    public Question(String text, String category)
+    public Question(String text, Category category)
     {
-        this();
-        this.text=text;
-        //this.category=category;
+        this.text = text;
+        this.category = category;
     }
 
     @Override
     public String toString() {
         return "Question{" + "id=" + getId() + ", text=" + text +
-                //", category=" + category +
+                ", category=" + category +
                 //", nextQuestionsSize=" + nextQuestions.size() +
                 '}'+ '\n';
     }

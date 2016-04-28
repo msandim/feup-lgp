@@ -1,5 +1,6 @@
 package neo4j.models.nodes;
 
+import neo4j.models.Entity;
 import neo4j.models.edges.AnswerAttribute;
 import org.neo4j.ogm.annotation.*;
 

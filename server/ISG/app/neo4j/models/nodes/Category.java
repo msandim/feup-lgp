@@ -1,5 +1,6 @@
 package neo4j.models.nodes;
 
+import neo4j.models.Entity;
 import org.neo4j.ogm.annotation.*;
 
 import java.util.Set;
@@ -9,7 +10,8 @@ import java.util.Set;
  */
 
 @NodeEntity
-public class Category extends Entity {
+public class Category extends Entity
+{
 
     private String name;
     private String codename; // Keep this?
@@ -21,9 +23,10 @@ public class Category extends Entity {
 
     public Category() {}
 
-    public Category(String name)
+    public Category(String name, String codename)
     {
-        this.name=name;
+        this.name = name;
+        this.codename = codename;
     }
 
     @Override

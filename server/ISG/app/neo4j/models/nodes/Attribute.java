@@ -1,5 +1,6 @@
 package neo4j.models.nodes;
 
+import neo4j.models.Entity;
 import org.neo4j.ogm.annotation.Relationship;
 
 import java.util.Set;

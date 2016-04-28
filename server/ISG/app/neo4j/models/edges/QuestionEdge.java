@@ -1,6 +1,6 @@
 package neo4j.models.edges;
 
-import neo4j.models.nodes.Entity;
+import neo4j.models.Entity;
 import neo4j.models.nodes.Question;
 import org.neo4j.ogm.annotation.*;
 
