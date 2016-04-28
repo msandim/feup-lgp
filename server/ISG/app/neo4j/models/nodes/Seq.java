@@ -1,4 +1,4 @@
-package neo4j.models;
+package neo4j.models.nodes;
 
 import org.neo4j.ogm.annotation.EndNode;
 import org.neo4j.ogm.annotation.GraphId;
@@ -7,31 +7,24 @@ import org.neo4j.ogm.annotation.StartNode;
 /**
  * Created by Lycantropus on 14-04-2016.
  */
-public class Seq {
-
-    @GraphId
-    private Long id;
-
+public class Seq extends Entity
+{
     @StartNode
     private Question origin;
 
     @EndNode
     private Question destiny;
 
-    public Seq(){}
+    private Float varianceGain;
+
+    private Float SequenceEffectiveness;
+
+    public Seq() {}
 
     public Seq(Question origin, Question destiny)
     {
         this.origin=origin;
         this.destiny=destiny;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public Question getOrigin() {

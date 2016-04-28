@@ -3,16 +3,14 @@ package controllers;
 import javax.inject.*;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import neo4j.models.Question;
+import neo4j.models.nodes.Question;
 import neo4j.services.QuestionService;
 import neo4j.services.QuestionServiceImpl;
 
 import java.util.*;
 
-import play.api.libs.json.JsPath;
 import play.mvc.*;
 import scala.Console;
-import services.ApplicationTimer;
 
 @Singleton
 public class QuestionController extends Controller {

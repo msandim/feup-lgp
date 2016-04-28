@@ -1,14 +1,12 @@
 package controllers;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.util.JSONPObject;
-import neo4j.models.Category;
+import neo4j.models.nodes.Category;
 import neo4j.services.CategoryService;
 import neo4j.services.CategoryServiceImpl;
 //import org.neo4j.ogm.json.JSONObject;
 import play.libs.Json;
 import play.mvc.Controller;
-import play.mvc.Http;
 import play.mvc.Result;
 
 /**

@@ -1,7 +1,7 @@
 package neo4j.services;
 
 import neo4j.Neo4jSessionFactory;
-import neo4j.models.Entity;
+import neo4j.models.nodes.Entity;
 import org.neo4j.ogm.session.Session;
 
 /**

@@ -1,7 +1,6 @@
 package neo4j.services;
 
-import neo4j.models.Question;
-import java.util.Map;
+import neo4j.models.nodes.Question;
 
 /**
  * Created by Lycantropus on 14-04-2016.

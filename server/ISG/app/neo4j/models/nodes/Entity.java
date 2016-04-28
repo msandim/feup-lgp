@@ -1,4 +1,4 @@
-package neo4j.models;
+package neo4j.models.nodes;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 

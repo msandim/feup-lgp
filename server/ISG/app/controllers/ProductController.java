@@ -1,6 +1,6 @@
 package controllers;
 
-import neo4j.models.Product;
+import neo4j.models.nodes.Product;
 import neo4j.services.ProductService;
 import neo4j.services.ProductServiceImpl;
 import play.mvc.Controller;
