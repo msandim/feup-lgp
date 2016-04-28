@@ -1,11 +1,8 @@
 language: scala
 scala:
-  - 2.11.1
-  - 2.10.4
-  - 2.9.3
+  - 2.11.7
 jdk:
   - oraclejdk7
-  - openjdk6
 
 jdk:
     - oraclejdk7  # needed for local Neo4j 2.0+
