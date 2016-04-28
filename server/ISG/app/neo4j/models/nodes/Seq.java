@@ -15,10 +15,6 @@ public class Seq extends Entity
     @EndNode
     private Question destiny;
 
-    private Float varianceGain;
-
-    private Float SequenceEffectiveness;
-
     public Seq() {}
 
     public Seq(Question origin, Question destiny)
