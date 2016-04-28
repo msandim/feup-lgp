@@ -1,11 +1,6 @@
 language: scala
-scala:
-  - 2.11.7
 jdk:
-  - oraclejdk7
-
-jdk:
-    - oraclejdk7  # needed for local Neo4j 2.0+
+    - oraclejdk8
 
 before_install:
     # install Neo4j locally:
