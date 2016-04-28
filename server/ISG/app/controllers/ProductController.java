@@ -32,6 +32,8 @@ public class ProductController extends Controller {
     {
         ProductService service = new ProductService();
 
+        // TODO Falta append a categoria
+
         //Product temp = new Product (name, EAN, price, categoryCode);
 
         //return ok(service.createOrUpdate(temp).getName());

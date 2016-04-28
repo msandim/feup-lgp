@@ -92,6 +92,8 @@ public class QuestionController extends Controller {
         if (category == null)
             return ok("no");
 
+        // Falta retornos de jeito e de acordo com a especificacao
+
         QuestionService questionService = new QuestionService();
         Question question = new Question(text, category);
 

@@ -46,6 +46,8 @@ public class CategoryController extends Controller {
         service.createOrUpdate(temp);
         return ok("Ok");
 
+        // TODO Falta se already exists
+
         /*
         JsonNode json = request().body().asJson();
         if(json == null) {
