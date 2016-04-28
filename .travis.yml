@@ -1,0 +1,19 @@
+language: scala
+scala:
+  - 2.11.1
+  - 2.10.4
+  - 2.9.3
+jdk:
+  - oraclejdk7
+  - openjdk6
+
+jdk:
+    - oraclejdk7  # needed for local Neo4j 2.0+
+
+before_install:
+    # install Neo4j locally:
+    - wget dist.neo4j.org/neo4j-community-2.3.2-unix.tar.gz
+    - tar -xzf neo4j-community-2.3.2-unix.tar.gz
+    - neo4j-community-2.3.2/bin/neo4j start
+
+script: (cd server/ISG; sbt test)
