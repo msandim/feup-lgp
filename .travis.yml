@@ -2,10 +2,10 @@ language: scala
 jdk:
     - oraclejdk8
 
-before_install:
+#before_install:
     # install Neo4j locally:
-    - wget dist.neo4j.org/neo4j-community-2.3.2-unix.tar.gz
-    - tar -xzf neo4j-community-2.3.2-unix.tar.gz
-    - neo4j-community-2.3.2/bin/neo4j start
+#    - wget dist.neo4j.org/neo4j-community-2.3.2-unix.tar.gz
+#    - tar -xzf neo4j-community-2.3.2-unix.tar.gz
+#    - neo4j-community-2.3.2/bin/neo4j start
 
-script: (cd server/ISG; sbt test)
+#script: (cd server/ISG; sbt test)
