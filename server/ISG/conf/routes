@@ -3,22 +3,22 @@
 # ~~~~
 
 # An example controller showing a sample home page
-GET     /                                   controllers.HomeController.index
+GET     /                                       controllers.HomeController.index
 
-GET     /allQuestions                       controllers.QuestionController.retrieveAllQuestions
-GET     /question/:id                       controllers.QuestionController.retrieveQuestion(id: Long)
-GET     /addQuestion                        controllers.QuestionController.createOrUpdateQuestion(text: String, category: String)
-GET     /deleteQuestion/:id                 controllers.QuestionController.deleteQuestion(id: Long)
+GET     /api/allQuestions                       controllers.QuestionController.retrieveAllQuestions
+GET     /api/question/:id                       controllers.QuestionController.retrieveQuestion(id: Long)
+GET     /api/addQuestion                        controllers.QuestionController.createOrUpdateQuestion(text: String, categoryCodename: String)
+GET     /api/deleteQuestion/:id                 controllers.QuestionController.deleteQuestion(id: Long)
 
 # Get the next question
-POST    /api/get_next_question              controllers.QuestionController.getNextQuestion
+POST    /api/getNextQuestion                    controllers.QuestionController.getNextQuestion
 
-GET     /getQuestionsByCategory             controllers.QuestionController.getQuestionByCategory(category: String)
+GET     /api/getQuestionsByCategory             controllers.QuestionController.getQuestionByCategory(category: String)
 
-GET     /get_all_categories         controllers.CategoryController.retrieveAllCategories
-GET     /category/:id               controllers.CategoryController.retrieveCategory(id: Long)
-POST    /api/addc                   controllers.CategoryController.createOrUpdateCategory()
-GET     /deleteCategory/:id         controllers.CategoryController.deleteCategory(id: Long)
+GET     /api/allCategories                      controllers.CategoryController.retrieveAllCategories
+GET     /api/category/:id                       controllers.CategoryController.retrieveCategory(id: Long)
+GET     /api/addCategory                        controllers.CategoryController.createOrUpdateCategory(name: String, codename: String)
+GET     /api/deleteCategory/:id                 controllers.CategoryController.deleteCategory(id: Long)
 
 #GET     /allProducts                controllers.CategoryController.retrieveAllProducts
 #GET     /product/:id                controllers.CategoryController.retrieveProduct(id: Long)
@@ -26,7 +26,7 @@ GET     /deleteCategory/:id         controllers.CategoryController.deleteCategor
 #GET     /deleteProduct/:id          controllers.CategoryController.deleteProduct(id: Long)
 
 
-GET     /message                            controllers.AsyncController.message
+GET     /message                               controllers.AsyncController.message
 
 # Map static resources from the /public folder to the /assets URL path
-GET     /assets/*file                       controllers.Assets.versioned(path="/public", file: Asset)
+GET     /assets/*file                          controllers.Assets.versioned(path="/public", file: Asset)

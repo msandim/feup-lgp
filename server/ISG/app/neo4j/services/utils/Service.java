@@ -1,4 +1,4 @@
-package neo4j.services;
+package neo4j.services.utils;
 
 /**
  * Created by Lycantropus on 14-04-2016.
