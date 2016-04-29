@@ -1,14 +1,9 @@
 package controllers;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.util.JSONPObject;
-import neo4j.models.Category;
+import neo4j.models.nodes.Category;
 import neo4j.services.CategoryService;
-import neo4j.services.CategoryServiceImpl;
 //import org.neo4j.ogm.json.JSONObject;
-import play.libs.Json;
 import play.mvc.Controller;
-import play.mvc.Http;
 import play.mvc.Result;
 
 /**
@@ -18,8 +13,7 @@ public class CategoryController extends Controller {
 
     public Result retrieveAllCategories()
     {
-        CategoryService service = new CategoryServiceImpl();
-
+        CategoryService service = new CategoryService();
 
         Iterable<Category> res = service.findAll();
 
@@ -28,17 +22,33 @@ public class CategoryController extends Controller {
 
     public Result retrieveCategory(Long id)
     {
-        CategoryService service = new CategoryServiceImpl();
-
+        CategoryService service = new CategoryService();
 
         Category res = service.find(id);
-
 
         return ok(res.toString());
     }
 
-    public Result createOrUpdateCategory()
+    /*
+    public Result retrieveCategoryByCodename(String codename)
     {
+        CategoryService service = new CategoryService();
+
+        Category res = service.findByCodename(codename);
+
+        return ok(res.toString());
+    }*/
+
+    public Result createOrUpdateCategory(String name, String codename)
+    {
+        CategoryService service = new CategoryService();
+        Category temp = new Category(name, codename);
+        service.createOrUpdate(temp);
+        return ok("Ok");
+
+        // TODO Falta se already exists
+
+        /*
         JsonNode json = request().body().asJson();
         if(json == null) {
             JsonNode obj =  Json.parse("{\"error\":\"INVALID NAME\", \"msg\":\"This category name already exists!\"}");
@@ -49,19 +59,20 @@ public class CategoryController extends Controller {
                 return badRequest("Missing parameter [name]");
             } else {
 
-                CategoryService service = new CategoryServiceImpl();
-                Category temp = new Category (name);
+                CategoryService service = new CategoryService();
+                Category temp = new Category(name);
                 service.createOrUpdate(temp);
                 return ok();
 
             }
         }
+        */
     }
 
 
     public Result deleteCategory(Long id)
     {
-        CategoryService service = new CategoryServiceImpl();
+        CategoryService service = new CategoryService();
 
         service.delete(id);
 

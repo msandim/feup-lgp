@@ -48,6 +48,7 @@ var app = {
     }
 };
 
+/*
 //GLOBALS
 
 //Trocar por serviço
@@ -88,10 +89,12 @@ var toNextPage = {
   'blacklist_questions':[]
 };
 
-function autoFillInterfaceSquare(){
+function autoFillIndexPage(){
   var self=this;
+  $('.main').append('<h1 class="h1-title">Escolha uma categoria</h1><div class="interface-square interface-size"></div>');
   categoryArray.forEach(function(category){
     var interfaceSquare = $('.interface-square');
     interfaceSquare.append('<div class="col-sm-4"><div class="thumbnail thumbnail-pad"><button type="button" class="btn btn-block button-pad"><a href="primeira_pergunta.html"><img src="'+category['image']+'" width ="200"><p class="text-center">'+category['name']+'</p></a></div></div>');
   });
 }
+*/

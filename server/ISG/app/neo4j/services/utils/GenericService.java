@@ -1,8 +1,10 @@
-package neo4j.services;
+package neo4j.services.utils;
 
 import neo4j.Neo4jSessionFactory;
 import neo4j.models.Entity;
 import org.neo4j.ogm.session.Session;
+
+import java.util.Collection;
 
 /**
  * Created by Lycantropus on 14-04-2016.
@@ -18,7 +20,7 @@ public abstract class GenericService<T> implements Service<T> {
     }
 
     @Override
-    public Iterable<T> findAll() {
+    public Collection<T> findAll() {
         return session.loadAll(getEntityType(), DEPTH_LIST);
     }
 

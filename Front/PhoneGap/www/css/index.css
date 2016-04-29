@@ -190,10 +190,10 @@ html, body{
   vertical-align: center;
 }
 
-.sim-button{
+.yes-button{
   background-color: #99ff99;
 }
 
-.nao-button{
+.no-button{
   background-color: #ff8080;
 }
