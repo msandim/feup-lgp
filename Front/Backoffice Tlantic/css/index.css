@@ -271,7 +271,7 @@ body{
     -webkit-transition-duration: 0.4s; /* Safari */
     transition-duration: 0.4s;
     float: left;
-     background-color: white;
+    background-color: white;
     color: black;
     border: 2px solid #555555;
 }
