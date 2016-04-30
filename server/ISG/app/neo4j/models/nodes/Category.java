@@ -14,7 +14,7 @@ public class Category extends Entity
 {
 
     private String name;
-    private String codename; // Keep this?
+    private String code;
 
     @Relationship(type = "HAS_PRODUCTS")
     private Set<Product> products;
@@ -23,10 +23,10 @@ public class Category extends Entity
 
     public Category() {}
 
-    public Category(String name, String codename)
+    public Category(String name, String code)
     {
         this.name = name;
-        this.codename = codename;
+        this.code = code;
     }
 
     @Override

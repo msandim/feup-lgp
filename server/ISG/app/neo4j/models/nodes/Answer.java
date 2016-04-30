@@ -14,12 +14,23 @@ import java.util.Set;
 public class Answer extends Entity
 {
     private String name;
+
     private Float frequency;
 
     @Relationship(type = "INFLUENCES")
     private Set<AnswerAttribute> attributes;
 
-    public Answer() {}
+    public Answer(String name) {
+        this.name = name;
+    }
+
+    public Set<AnswerAttribute> getAttributes() {
+        return attributes;
+    }
+
+    public void setAttributes(Set<AnswerAttribute> attributes) {
+        this.attributes = attributes;
+    }
 
     @Override
     public String toString()
