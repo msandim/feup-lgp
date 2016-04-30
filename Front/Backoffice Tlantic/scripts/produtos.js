@@ -131,17 +131,25 @@ function addCategory() {
     var categoryName = $('.inputCatName').val();
     var CategoryExists = [];
     var nameCategory = false;
-    
+
     for (var i = 0; i < ProductsArray.length; i++) {
       CategoryExists.push(ProductsArray[i].category); 
     } 
+
+    if($('.inputCatName').hasClass('border')){
+       $('.inputCatName').removeClass('border');
+    }
     
     while(!nameCategory){
       for (var j = 0; j < CategoryExists.length; j++) {
-        if (CategoryExists[j] === categoryName) {
+        if (CategoryExists[j] === capitalizeFirstLetter(categoryName)) {
           nameCategory=false;
-          //alert("Nome da Categoria ja existe");
-          break;
+          $('.inputCatName').addClass("border");
+          
+          //edit value placeholder
+          $('.inputCatName').val("Nome da Categoria ja existe");
+          $('#myBtn').click();
+          return false;
         }
         else {
           nameCategory=true;
@@ -206,7 +214,6 @@ function autoAddCategory(){
       $(document).unbind("ready");
       $(document).bind("ready", function () { $("#my-file-selector").change(function(){var FileName = $(this).val().split('\\').pop(); $(this).parent().find('h4').text(FileName);}); });
 
-
       var lastChild = boxGroup.find(":last-child");
       //console.log("OLA " + lastChild.attr('class') );
       autoAddProducts(categoryName, lastChild);
@@ -239,7 +246,16 @@ $(document).ready(function(){
       var FileName = $(this).val().split('\\').pop();
       $(this).parent().find('h4').text(FileName);
    });
+
+    $('#InputButtonCatName').attr('disabled',true);
+    $('#ValidateCat').keyup(function(){
+        if($(this).val().length !=0)
+            $('#InputButtonCatName').attr('disabled', false);            
+        else
+            $('#InputButtonCatName').attr('disabled',true);
+    })
 });
+
 
 function removeProduct() {
   var self = this;
@@ -247,7 +263,7 @@ function removeProduct() {
        
     var nameCategory = $(this).parent().parent().find(":first-child").find(":first-child");
     var product = $(this).find('h3').text();
-    console.log("Cate " + nameCategory.find('h3:first').html() + " PROD " + product);
+    //console.log("Cate " + nameCategory.find('h3:first').html() + " PROD " + product);
 
       /*$.ajax({   
         url: '/api/removep/',
@@ -298,12 +314,24 @@ function AddModal() {
 
   // When the user clicks on <span> (x), close the modal
   span.onclick = function() {
+       if($('.inputCatName').hasClass('border')){
+         $('.inputCatName').removeClass('border');
+       }
+       //edit placeholder
+      $('.inputCatName').val('');
+      $('.inputCatName').attr("placeholder", ">");
       modal.style.display = "none";
   }
 
   // When the user clicks anywhere outside of the modal, close it
   window.onclick = function(event) {
       if (event.target == modal) {
+           if($('.inputCatName').hasClass('border')){
+               $('.inputCatName').removeClass('border');
+          }
+          //edit placeholder
+          $('.inputCatName').val('');
+          $('.inputCatName').attr("placeholder", ">");
           modal.style.display = "none";
       }
   }
