@@ -3,7 +3,6 @@ package controllers;
 import javax.inject.*;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import neo4j.models.edges.AnswerAttribute;
 import neo4j.models.nodes.Answer;
@@ -139,21 +138,29 @@ public class QuestionController extends Controller {
 
                     String chOperator = chNode.findValue("operator").asText();
 
+                    if (!AnswerAttribute.Operators.isValid(chOperator)) {
+                        result.put("Error", "Invalid operator");
+                        result.put("Message", "It must be equal one of these: < <= > >= = !=");
+                        return ok(result);
+                    }
+
                     String chValue = chNode.findValue("value").asText();
 
                     // TODO Verificar relação entre os operadores e valores
 
                     String chScore = chNode.findValue("score").asText();
 
-                    //verify if the score is a float
-                    if (NumberUtils.isNumber(chScore)) {
+                    //verify if the score is a number
+                    try {
+                        float f = Float.parseFloat(chScore);
+                        AnswerAttribute answerAttr = new AnswerAttribute(answer, attr, chOperator, chValue, f);
+                        answerAttrs.add(answerAttr);
+
+                    } catch (NumberFormatException nfe) {
                         result.put("Error", "Invalid answer score");
                         result.put("Message", "It must be a number");
                         return ok(result);
                     }
-
-                    AnswerAttribute answerAttr = new AnswerAttribute(answer, attr, chOperator, chValue, chScore);
-                    answerAttrs.add(answerAttr);
                 }
 
                 //setting answer attributes

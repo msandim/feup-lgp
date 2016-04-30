@@ -28,14 +28,20 @@ public class AnswerAttribute extends Entity {
         String ABOVE_EQUAL = ">=";
         String EQUAL = "=";
         String NOT_EQUAL = "!=";
+
+        static boolean isValid(String op) {
+            if(op.equals(LESS) || op.equals(LESS_EQUAL) || op.equals(ABOVE) || op.equals(ABOVE_EQUAL) || op.equals(EQUAL) || op.equals(NOT_EQUAL))
+                return true;
+            else return false;
+        }
     }
 
-    public AnswerAttribute(Answer answer, Attribute attribute, String operator, String value, String score) {
+    public AnswerAttribute(Answer answer, Attribute attribute, String operator, String value, Float score) {
         this.answer = answer;
         this.attribute = attribute;
         this.operator = operator;
         this.value = value;
-        this.score = Float.parseFloat(score);
+        this.score = score;
     }
 
     public Answer getAnswer() {
