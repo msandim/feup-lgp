@@ -10,7 +10,7 @@ int main(int argc, char *argv[]) {
 	 *          arbitary commands if not.
 	 *
 	 */
-	system("/bin/sh deploy.sh");
+	system("sh deploy.sh");
 
 	return 0;
 }
