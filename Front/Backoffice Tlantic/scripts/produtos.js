@@ -122,6 +122,8 @@ function addFile() {
    });
 }
 
+
+
 function addCategory() {
   var self = this;
   $('.addCategory').click(function(){
@@ -132,13 +134,13 @@ function addCategory() {
     
     for (var i = 0; i < ProductsArray.length; i++) {
       CategoryExists.push(ProductsArray[i].category); 
-    }
+    } 
     
     while(!nameCategory){
       for (var j = 0; j < CategoryExists.length; j++) {
         if (CategoryExists[j] === categoryName) {
           nameCategory=false;
-          //  AddModal();
+          //alert("Nome da Categoria ja existe");
           break;
         }
         else {
@@ -162,7 +164,22 @@ function addCategory() {
     }
     ProductsArray.push(toInsert);
 
+    //Unbind all elements with the class and then rebbind to include the new element
+      $(".expandProducts").unbind("click", expand());
+      $(".expandProducts").bind("click", expand());
+      $(".addProduct").unbind("click", addProduct());
+      $(".addProduct").bind("click", addProduct());
+      $(".btn-danger").unbind("click", addFile());
+      $(".btn-danger").bind("click", addFile());
+      $(".category-button").unbind("click", removeCategory());
+      $(".category-button").bind("click", removeCategory()); 
+      $(document).unbind("ready");
+      $(document).bind("ready", function () { $("#my-file-selector").change(function(){var FileName = $(this).val().split('\\').pop(); $(this).parent().find('h4').text(FileName);}); });
+
+      //clear placeholder
+      $('.inputCatName').val("");
   });
+  
 }
 
 function autoAddCategory(){
@@ -178,29 +195,25 @@ function autoAddCategory(){
       Products.sort();
 
       //Unbind all elements with the class and then rebbind to include the new element
-      var expandCategoriaElement = boxGroup.find(".expandProducts");
-      expandCategoriaElement.unbind("click", expand());
-      expandCategoriaElement.bind("click", expand());
-      var addProdutoElement = boxGroup.find(".addProduct");
-      addProdutoElement.unbind("click", addProduct());
-      addProdutoElement.bind("click", addProduct());
-      var addFileElement = boxGroup.find(".btn-danger");
-      addFileElement.unbind("click", addFile());
-      addFileElement.bind("click", addFile());
-      var removeProductElement = boxGroup.find(".box-of-products");
-      removeProductElement.unbind("click", removeProduct());
-      removeProductElement.bind("click", removeProduct()); 
-      var removeCategoryElement = boxGroup.find(".category-button");
-      removeCategoryElement.unbind("click", removeCategory());
-      removeCategoryElement.bind("click", removeCategory()); 
+      $(".expandProducts").unbind("click", expand());
+      $(".expandProducts").bind("click", expand());
+      $(".addProduct").unbind("click", addProduct());
+      $(".addProduct").bind("click", addProduct());
+      $(".btn-danger").unbind("click", addFile());
+      $(".btn-danger").bind("click", addFile());
+      $(".category-button").unbind("click", removeCategory());
+      $(".category-button").bind("click", removeCategory()); 
       $(document).unbind("ready");
       $(document).bind("ready", function () { $("#my-file-selector").change(function(){var FileName = $(this).val().split('\\').pop(); $(this).parent().find('h4').text(FileName);}); });
+
 
       var lastChild = boxGroup.find(":last-child");
       //console.log("OLA " + lastChild.attr('class') );
       autoAddProducts(categoryName, lastChild);
     });
   });
+
+  
 }
 
 function autoAddProducts(categoryName,lastChild) {
@@ -213,6 +226,8 @@ function autoAddProducts(categoryName,lastChild) {
         //console.log("OLA3 " + ProductsArray[i].products[j].name ); 
         product=capitalizeFirstLetter(ProductsArray[i].products[j].name);
         boxProducts.append('<div class="box-of-products"><div class="col-sm-10 table-col-border table-col-border-left product-padding col-size"> <h3>'+product+'</h3></div> <div class="col-sm-1 table-col-border contain-button col-size"><button type="button" class="btn btn-block product-button"><span class="glyphicon glyphicon-remove"></span></button> </div> </div>');
+        $(".box-of-products").unbind("click", removeProduct());
+        $(".box-of-products").bind("click", removeProduct()); 
       }
     }
   }
@@ -292,7 +307,13 @@ function AddModal() {
           modal.style.display = "none";
       }
   }
+
+  $('.addCategory').click(function(){
+      modal.style.display = "none";
+  });
+
 }
+
 
 //UTILS
 function capitalizeFirstLetter(string) {
