@@ -40,5 +40,11 @@ public abstract class GenericService<T> implements Service<T> {
         return find(((Entity) entity).getId());
     }
 
+    @Override
+    public T createOrUpdate(T entity, int DEPTH) {
+        session.save(entity, DEPTH);
+        return find(((Entity) entity).getId());
+    }
+
     public abstract Class<T> getEntityType();
 }

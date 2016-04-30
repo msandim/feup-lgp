@@ -7,7 +7,7 @@ GET     /                                       controllers.HomeController.index
 
 GET     /api/allQuestions                       controllers.QuestionController.retrieveAllQuestions
 GET     /api/question/:id                       controllers.QuestionController.retrieveQuestion(id: Long)
-GET     /api/addQuestion                        controllers.QuestionController.createOrUpdateQuestion(text: String, categoryCodename: String)
+POST     /api/addQuestion                        controllers.QuestionController.createOrUpdateQuestion
 GET     /api/deleteQuestion/:id                 controllers.QuestionController.deleteQuestion(id: Long)
 
 # Get the next question
@@ -17,7 +17,7 @@ GET     /api/getQuestionsByCategory             controllers.QuestionController.g
 
 GET     /api/allCategories                      controllers.CategoryController.retrieveAllCategories
 GET     /api/category/:id                       controllers.CategoryController.retrieveCategory(id: Long)
-GET     /api/addCategory                        controllers.CategoryController.createOrUpdateCategory(name: String, codename: String)
+GET     /api/addCategory                        controllers.CategoryController.createOrUpdateCategory(name: String, code: String)
 GET     /api/deleteCategory/:id                 controllers.CategoryController.deleteCategory(id: Long)
 
 #GET     /allProducts                controllers.CategoryController.retrieveAllProducts
