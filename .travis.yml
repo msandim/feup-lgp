@@ -7,5 +7,5 @@ jdk:
 #    - wget dist.neo4j.org/neo4j-community-2.3.2-unix.tar.gz
 #    - tar -xzf neo4j-community-2.3.2-unix.tar.gz
 #    - neo4j-community-2.3.2/bin/neo4j start
-# minha nossa. parece tar perto
+# nossa senhora dos commits
 script: (cd server/ISG; sbt compile)
