@@ -1,12 +1,14 @@
+#!/bin/bash
 
-cd /feup-lgp/server/ISG
+cd ~/feup-lgp/server/ISG
 
-# kill previous running app (if any)
+ls
+
 kill $(cat target/universal/isg-1.0-SNAPSHOT/RUNNING_PID)
 
-git pull
+git pull origin suicidal_deployment
 
-./activator dist
+activator dist
 
 cd target/universal/
 rm -r isg-1.0-SNAPSHOT
