@@ -11,8 +11,7 @@ import org.neo4j.ogm.annotation.*;
 import java.util.Set;
 
 @NodeEntity
-public class Question extends Entity
-{
+public class Question extends Entity {
     private String text;
 
     @Relationship(type = "HAS")
@@ -27,12 +26,10 @@ public class Question extends Entity
     @Relationship(type = "HAS_QUESTIONS", direction = Relationship.INCOMING)
     private Category category;
 
+    public Question() {
+    }
 
-    public Question()
-    { }
-
-    public Question(String text, Category category)
-    {
+    public Question(String text, Category category) {
         this.text = text;
         this.category = category;
     }
@@ -42,9 +39,40 @@ public class Question extends Entity
         return "Question{" + "id=" + getId() + ", text=" + text +
                 ", category=" + category +
                 //", nextQuestionsSize=" + nextQuestions.size() +
-                '}'+ '\n';
+                '}' + '\n';
     }
 
+    public Set<Answer> getAnswers() {
+        return answers;
+    }
+
+    public void setAnswers(Set<Answer> answers) {
+        this.answers = answers;
+    }
+
+    public Set<QuestionEdge> getNextQuestions() {
+        return nextQuestions;
+    }
+
+    public void setNextQuestions(Set<QuestionEdge> nextQuestions) {
+        this.nextQuestions = nextQuestions;
+    }
+
+    public Set<QuestionEdge> getPreviousQuestions() {
+        return previousQuestions;
+    }
+
+    public void setPreviousQuestions(Set<QuestionEdge> previousQuestions) {
+        this.previousQuestions = previousQuestions;
+    }
+
+    public Category getCategory() {
+        return category;
+    }
+
+    public void setCategory(Category category) {
+        this.category = category;
+    }
 
     public String getText() {
         return text;
@@ -53,32 +81,4 @@ public class Question extends Entity
     public void setText(String text) {
         this.text = text;
     }
-
-    /*public String getCategory() {
-        return category;
-    }
-
-    public void setCategory(String category) {
-        this.category = category;
-    }*/
-
-    /*public Set<Question> getNextQuestions() {
-        return nextQuestions;
-    }
-
-    public void setNextQuestions(Set<Question> nextQuestions) {
-        this.nextQuestions = nextQuestions;
-    }
-
-    public Set<Question> getPreviousQuestions() {
-        return previousQuestions;
-    }
-
-    public void setPreviousQuestions(Set<Question> previousQuestions) {
-        this.previousQuestions = previousQuestions;
-    }
-    */
-
-
-
 }

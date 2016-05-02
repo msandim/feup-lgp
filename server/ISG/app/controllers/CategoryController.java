@@ -39,10 +39,10 @@ public class CategoryController extends Controller {
         return ok(res.toString());
     }*/
 
-    public Result createOrUpdateCategory(String name, String codename)
+    public Result createOrUpdateCategory(String name, String code)
     {
         CategoryService service = new CategoryService();
-        Category temp = new Category(name, codename);
+        Category temp = new Category(name, code);
         service.createOrUpdate(temp);
         return ok("Ok");
 
