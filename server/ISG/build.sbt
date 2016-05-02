@@ -16,5 +16,10 @@ libraryDependencies ++= Seq(
   "org.neo4j" % "neo4j-ogm" % "2.0.1"
 )
 
+javaSource in Compile := baseDirectory.value / "app"
 
+javaSource in Test := baseDirectory.value / "test"
+
+baseDirectory in Test := baseDirectory.value / "test" / "resources"
 fork in run := true
+fork in Test := true
