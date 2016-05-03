@@ -185,8 +185,7 @@ public class QuestionController extends Controller {
 
         Iterable<Question> res = service.findAll();
 
-
-        return ok(res.toString());
+        return ok(Json.newArray());
     }
 
     public Result getQuestionByCategory(String category) {

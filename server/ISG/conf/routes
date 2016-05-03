@@ -6,19 +6,19 @@
 GET     /                                       controllers.HomeController.index
 
 GET     /api/allQuestions                       controllers.QuestionController.retrieveAllQuestions
-GET     /api/question/:id                       controllers.QuestionController.retrieveQuestion(id: Long)
-POST     /api/addQuestion                        controllers.QuestionController.createOrUpdateQuestion
-GET     /api/deleteQuestion/:id                 controllers.QuestionController.deleteQuestion(id: Long)
+POST    /api/addQuestions                       controllers.QuestionController.createOrUpdateQuestion
+GET     /api/question                           controllers.QuestionController.retrieveQuestion(id: Long)
+GET     /api/deleteQuestion                     controllers.QuestionController.deleteQuestion(id: Long)
 
 # Get the next question
 POST    /api/getNextQuestion                    controllers.QuestionController.getNextQuestion
 
-GET     /api/getQuestionsByCategory             controllers.QuestionController.getQuestionByCategory(category: String)
+GET     /api/questionsByCategory                controllers.QuestionController.getQuestionByCategory(category: String)
 
 GET     /api/allCategories                      controllers.CategoryController.retrieveAllCategories
-GET     /api/category/:id                       controllers.CategoryController.retrieveCategory(id: Long)
-GET     /api/addCategory                        controllers.CategoryController.createOrUpdateCategory(name: String, code: String)
-GET     /api/deleteCategory/:id                 controllers.CategoryController.deleteCategory(id: Long)
+GET     /api/category                           controllers.CategoryController.retrieveCategory(id: Long)
+POST    /api/addCategory                        controllers.CategoryController.createOrUpdateCategory(name: String, code: String)
+GET     /api/deleteCategory/                    controllers.CategoryController.deleteCategory(id: Long)
 
 #GET     /allProducts                controllers.CategoryController.retrieveAllProducts
 #GET     /product/:id                controllers.CategoryController.retrieveProduct(id: Long)

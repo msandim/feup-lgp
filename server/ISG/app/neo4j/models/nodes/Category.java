@@ -12,7 +12,6 @@ import java.util.Set;
 @NodeEntity
 public class Category extends Entity
 {
-
     private String name;
     private String code;
 
@@ -29,11 +28,6 @@ public class Category extends Entity
         this.code = code;
     }
 
-    @Override
-    public String toString() {
-        return "Category{" + "id=" + getId() + ", name=" + name + "} \n";
-    }
-
     public void setName(String name) {
         this.name = name;
     }
@@ -41,5 +35,10 @@ public class Category extends Entity
     public String getName()
     {
         return name;
+    }
+
+    public String getCode()
+    {
+        return code;
     }
 }
