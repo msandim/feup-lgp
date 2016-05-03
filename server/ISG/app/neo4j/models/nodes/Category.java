@@ -12,9 +12,8 @@ import java.util.Set;
 @NodeEntity
 public class Category extends Entity
 {
-
     private String name;
-    private String codename; // Keep this?
+    private String code;
 
     @Relationship(type = "HAS_PRODUCTS")
     private Set<Product> products;
@@ -23,15 +22,10 @@ public class Category extends Entity
 
     public Category() {}
 
-    public Category(String name, String codename)
+    public Category(String name, String code)
     {
         this.name = name;
-        this.codename = codename;
-    }
-
-    @Override
-    public String toString() {
-        return "Category{" + "id=" + getId() + ", name=" + name + "} \n";
+        this.code = code;
     }
 
     public void setName(String name) {
@@ -41,5 +35,10 @@ public class Category extends Entity
     public String getName()
     {
         return name;
+    }
+
+    public String getCode()
+    {
+        return code;
     }
 }
