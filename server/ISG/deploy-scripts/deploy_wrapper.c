@@ -10,7 +10,8 @@ int main(int argc, char *argv[]) {
 	 *          arbitary commands if not.
 	 *
 	 */
-	system("sh deploy.sh");
+	system("/bin/sh screen -X -S playserver");
+	system("/bin/sh deploy.sh");
 
 	return 0;
 }
