@@ -20,6 +20,8 @@ GET     /api/category                           controllers.CategoryController.r
 POST    /api/addCategory                        controllers.CategoryController.createOrUpdateCategory(name: String, code: String)
 GET     /api/deleteCategory/                    controllers.CategoryController.deleteCategory(id: Long)
 
+POST    /importcsv                              controllers.ProductController.importFromCsv()
+
 #GET     /allProducts                controllers.CategoryController.retrieveAllProducts
 #GET     /product/:id                controllers.CategoryController.retrieveProduct(id: Long)
 #GET     /addProduct/:name&:price    controllers.CategoryController.createOrUpdateProduct(name: String, price :Float)

@@ -64,22 +64,27 @@ public class ProductController extends Controller {
     {
 
         //return json message
-        ObjectNode result = Json.newObject();
+        Http.MultipartFormData result = request().body().asMultipartFormData();
+        Http.MultipartFormData.Part category = result.getFile("csv");
+
 
         // Get the category and verify if it exists
         CategoryService categoryService = new CategoryService();
 
-        JsonNode jsonRequest = request().body().asJson();
+        //JsonNode jsonRequest = request().body().asJson();
 
-        String catCode = jsonRequest.findPath("category").asText();
 
-        Category category = categoryService.findByCode(catCode);
 
+
+        /*System.out.print(category);
+
+        //Category category = categoryService.findByCode(catCode);
+        Result resultado = request().body().asJson(;
         if (category == null) {
             result.put("Error", "Invalid Category");
             result.put("Message", "There is no category with this code: " + catCode);
             return ok(result);
-        }
+        }*/
 
         Http.MultipartFormData body = request().body().asMultipartFormData();
         Http.MultipartFormData.FilePart csv = body.getFile("csv");
