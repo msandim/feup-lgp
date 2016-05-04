@@ -17,10 +17,10 @@ public class Question extends Entity {
     @Relationship(type = "HAS")
     private Set<Answer> answers;
 
-    @Relationship(type = "FOLLOWS", direction = Relationship.OUTGOING)
+    @Relationship(type = "CONNECTS", direction = Relationship.OUTGOING)
     private Set<QuestionEdge> nextQuestions;
 
-    @Relationship(type = "FOLLOWS", direction = Relationship.INCOMING)
+    @Relationship(type = "CONNECTS", direction = Relationship.INCOMING)
     private Set<QuestionEdge> previousQuestions;
 
     @Relationship(type = "HAS_QUESTIONS", direction = Relationship.INCOMING)

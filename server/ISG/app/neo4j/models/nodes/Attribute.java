@@ -12,7 +12,7 @@ public class Attribute extends Entity
 {
     private String name;
 
-    @Relationship(type = "HAS", direction = Relationship.INCOMING)
+    @Relationship(type = "VALUES", direction = Relationship.INCOMING)
     private Set<Product> products;
 
     public Attribute() {}

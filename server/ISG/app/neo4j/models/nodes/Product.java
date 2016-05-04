@@ -18,24 +18,8 @@ public class Product extends Entity
     private String EAN;
     private Float price;
 
-    @Relationship(type = "HAS")
+    @Relationship(type = "VALUES")
     private Set<ProductAttribute> attributes;
-
-    public Category getCategory() {
-        return category;
-    }
-
-    public void setCategory(Category category) {
-        this.category = category;
-    }
-
-    public Set<ProductAttribute> getAttributes() {
-        return attributes;
-    }
-
-    public void setAttributes(Set<ProductAttribute> attributes) {
-        this.attributes = attributes;
-    }
 
     @Relationship(type = "HAS_PRODUCTS", direction = Relationship.INCOMING)
     private Category category;
@@ -64,5 +48,21 @@ public class Product extends Entity
 
     public void setPrice(Float price) {
         this.price = price;
+    }
+
+    public Category getCategory() {
+        return category;
+    }
+
+    public void setCategory(Category category) {
+        this.category = category;
+    }
+
+    public Set<ProductAttribute> getAttributes() {
+        return attributes;
+    }
+
+    public void setAttributes(Set<ProductAttribute> attributes) {
+        this.attributes = attributes;
     }
 }

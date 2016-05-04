@@ -13,7 +13,7 @@ GET     /api/deleteQuestion                     controllers.QuestionController.d
 # Get the next question
 POST    /api/getNextQuestion                    controllers.QuestionController.getNextQuestion
 
-GET     /api/questionsByCategory                controllers.QuestionController.getQuestionByCategory(category: String)
+GET     /api/questionsByCategory                controllers.QuestionController.getQuestionByCategory(code: String)
 
 GET     /api/allCategories                      controllers.CategoryController.retrieveAllCategories
 GET     /api/category                           controllers.CategoryController.retrieveCategory(id: Long)

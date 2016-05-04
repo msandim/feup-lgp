@@ -15,9 +15,9 @@ import neo4j.services.QuestionService;
 
 import java.util.*;
 
-import org.apache.commons.lang3.math.NumberUtils;
 import play.libs.Json;
 import play.mvc.*;
+import play.mvc.Result;
 import scala.Console;
 
 @Singleton
@@ -38,6 +38,7 @@ public class QuestionController extends Controller {
 
     @BodyParser.Of(BodyParser.Json.class)
     public Result getNextQuestion() {
+        /*
         // Parse the parameters:
         JsonNode jsonRequest = request().body().asJson();
         String category = jsonRequest.findPath("category").asText();
@@ -49,7 +50,7 @@ public class QuestionController extends Controller {
 
         // Get all questions:
         QuestionService service = new QuestionService();
-        Iterable<Question> questions = service.getQuestionsFromCategory(category);
+        Iterable<Question> questions = service.findByCategoryCode(category);
 
         // Get random question:
         List<Question> questionList = new ArrayList<>();
@@ -57,6 +58,8 @@ public class QuestionController extends Controller {
         Question randomQuestion = questionList.get(new Random().nextInt(questionList.size()));
 
         return ok(randomQuestion.toString() + category);
+        */
+        return ok();
     }
 
     @BodyParser.Of(BodyParser.Json.class)
@@ -180,36 +183,49 @@ public class QuestionController extends Controller {
         return ok("Success");
     }
 
-    public Result retrieveAllQuestions() {
+    public Result retrieveAllQuestions()
+    {
+        // Retrieve all the questions in the system:
         QuestionService service = new QuestionService();
+        List<Question> questions = new ArrayList<>();
+        service.findAll().forEach(questions::add);
 
-        Iterable<Question> res = service.findAll();
-
-        return ok(Json.newArray());
+        return ok(Json.toJson(questions));
     }
 
-    public Result getQuestionByCategory(String category) {
+    // TODO
+    public Result getQuestionByCategory(String code)
+    {
         QuestionService service = new QuestionService();
+        List<Map<String, Object>> questions = new ArrayList<>();
+        service.findByCategoryCode(code).forEach(questions::add);
 
-        Iterable<Question> res = service.getQuestionsFromCategory(category);
+        for(Map<String, Object> q: questions)
+        {
+            Console.println("MAIS UM");
+            for (Map.Entry<String, Object> entry : q.entrySet())
+            {
+                Console.println(entry.getKey() + "**" + entry.getValue() + "***" + entry.getValue().getClass());
+            }
+        }
 
-        return ok(res.toString());
+        return ok(Json.toJson(questions));
     }
 
-    public Result retrieveQuestion(Long id) {
+    // TODO ver o que retorna se n existir a questao com este ID
+    public Result retrieveQuestion(Long id)
+    {
         QuestionService service = new QuestionService();
+        Question question = service.find(id);
 
-        Question res = service.find(id);
-
-        return ok(res.toString());
+        return ok(Json.toJson(question));
     }
 
-    public Result deleteQuestion(Long id) {
+    public Result deleteQuestion(Long id)
+    {
         QuestionService service = new QuestionService();
-
         service.delete(id);
-
-        return ok(Long.toString(id));
+        return ok(Json.toJson(id));
     }
 
 }
