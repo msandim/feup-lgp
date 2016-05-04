@@ -2,10 +2,12 @@ package controllers;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+
 import neo4j.models.nodes.Category;
 import neo4j.models.nodes.Product;
 import neo4j.services.CategoryService;
 import neo4j.services.ProductService;
+import play.Logger;
 import play.libs.Json;
 import play.mvc.BodyParser;
 import play.mvc.Controller;
@@ -13,6 +15,9 @@ import play.mvc.Http;
 import play.mvc.Result;
 
 import java.io.File;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Lycantropus on 17-04-2016.
@@ -59,32 +64,27 @@ public class ProductController extends Controller {
     }
 
 
-    @BodyParser.Of(BodyParser.MultipartFormData.class)
+    //@BodyParser.Of(BodyParser.FormUrlEncoded.class)
     public Result importFromCsv()
     {
 
-        //return json message
-        Http.MultipartFormData result = request().body().asMultipartFormData();
-        Http.MultipartFormData.Part category = result.getFile("csv");
+        //getting the body and try to parse not files
+        Map<String, String[]> result = request().body().asMultipartFormData().asFormUrlEncoded();
 
 
         // Get the category and verify if it exists
         CategoryService categoryService = new CategoryService();
 
-        //JsonNode jsonRequest = request().body().asJson();
 
 
+        //Category category = categoryService.findByCode(catCode);return ok("deu");
+        Map<String, String> errorMsg = new HashMap<>();
 
-
-        /*System.out.print(category);
-
-        //Category category = categoryService.findByCode(catCode);
-        Result resultado = request().body().asJson(;
-        if (category == null) {
-            result.put("Error", "Invalid Category");
-            result.put("Message", "There is no category with this code: " + catCode);
-            return ok(result);
-        }*/
+        if (result.get("category") == null) {
+            errorMsg.put("Error", "Invalid Category");
+            errorMsg.put("Message", "There is no category with this code: ");
+            return ok(errorMsg.toString());
+        }
 
         Http.MultipartFormData body = request().body().asMultipartFormData();
         Http.MultipartFormData.FilePart csv = body.getFile("csv");

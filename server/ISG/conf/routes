@@ -17,7 +17,7 @@ GET     /api/questionsByCategory                controllers.QuestionController.g
 
 GET     /api/allCategories                      controllers.CategoryController.retrieveAllCategories
 GET     /api/category                           controllers.CategoryController.retrieveCategory(id: Long)
-POST    /api/addCategory                        controllers.CategoryController.createOrUpdateCategory(name: String, code: String)
+POST    /api/addCategory                        controllers.CategoryController.createOrUpdateCategory
 GET     /api/deleteCategory/                    controllers.CategoryController.deleteCategory(id: Long)
 
 POST    /importcsv                              controllers.ProductController.importFromCsv()
