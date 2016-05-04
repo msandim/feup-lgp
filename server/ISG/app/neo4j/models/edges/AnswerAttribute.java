@@ -36,6 +36,8 @@ public class AnswerAttribute extends Entity {
         }
     }
 
+    public AnswerAttribute() { }
+
     public AnswerAttribute(Answer answer, Attribute attribute, String operator, String value, Float score) {
         this.answer = answer;
         this.attribute = attribute;

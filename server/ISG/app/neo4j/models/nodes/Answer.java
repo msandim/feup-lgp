@@ -13,15 +13,17 @@ import java.util.Set;
 @NodeEntity
 public class Answer extends Entity
 {
-    private String name;
+    private String text;
 
     private Float frequency;
 
     @Relationship(type = "INFLUENCES")
     private Set<AnswerAttribute> attributes;
 
+    public Answer() { }
+
     public Answer(String name) {
-        this.name = name;
+        this.text = name;
     }
 
     public Set<AnswerAttribute> getAttributes() {
@@ -36,17 +38,17 @@ public class Answer extends Entity
     public String toString()
     {
         return "Answer{" + "id=" + getId()
-                + ", name=" + name
+                + ", name=" + text
                 + ", frequency=" + frequency
                 + "}\n";
     }
 
-    public String getName() {
-        return name;
+    public String getText() {
+        return text;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setText(String text) {
+        this.text = text;
     }
 
     public void setFrequency(Float frequency)

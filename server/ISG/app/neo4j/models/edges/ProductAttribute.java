@@ -7,7 +7,7 @@ import org.neo4j.ogm.annotation.*;
 /**
  * Created by Miguel on 27-04-2016.
  */
-@RelationshipEntity(type = "HAS")
+@RelationshipEntity(type = "VALUES")
 public class ProductAttribute extends Entity
 {
     @StartNode
