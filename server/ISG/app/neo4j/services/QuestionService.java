@@ -23,10 +23,8 @@ public class QuestionService extends GenericService<Question>
         return Question.class;
     }
 
-    public Result findByCategoryCode(String code)
+    public Iterable<Question> findByCategoryCode(String code)
     {
-        String query = new StringBuilder("MATCH (pr)-[x:INFLUENCES]->(a) return pr,x").toString();
-        return Neo4jSessionFactory.getInstance().getNeo4jSession().query(query, Collections.EMPTY_MAP);
-        //return Neo4jSessionFactory.getInstance().getNeo4jSession().loadAll(getEntityType(), 2);
+        return Neo4jSessionFactory.getInstance().getNeo4jSession().query(getEntityType(), "MATCH (q:Question)-[x:HAS]->(a:Answer)-[i:INFLUENCES]->(t:Attribute) RETURN q,x,a,i,t", Collections.EMPTY_MAP);
     }
 }

@@ -1,9 +1,11 @@
 package neo4j.models.nodes;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import neo4j.models.Entity;
 import neo4j.models.edges.AnswerAttribute;
 import org.neo4j.ogm.annotation.*;
 
+import java.util.HashSet;
 import java.util.Set;
 
 /**
@@ -18,7 +20,7 @@ public class Answer extends Entity
     private Float frequency;
 
     @Relationship(type = "INFLUENCES")
-    private Set<AnswerAttribute> attributes;
+    private Set<AnswerAttribute> attributes = new HashSet<>();
 
     public Answer() { }
 

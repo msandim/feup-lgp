@@ -196,20 +196,32 @@ public class QuestionController extends Controller {
     // TODO
     public Result getQuestionByCategory(String code)
     {
+
         QuestionService service = new QuestionService();
-        List<Map<String, Object>> questions = new ArrayList<>();
+        //List<Map<String, Object>> questions = new ArrayList<>();
+        List<Question> questions = new ArrayList<>();
         service.findByCategoryCode(code).forEach(questions::add);
 
+        /*
         for(Map<String, Object> q: questions)
         {
             Console.println("MAIS UM");
             for (Map.Entry<String, Object> entry : q.entrySet())
             {
-                Console.println(entry.getKey() + "**" + entry.getValue() + "***" + entry.getValue().getClass());
+                Console.println(entry.getKey() + " ** " + entry.getValue() + " *** " + entry.getValue().getClass());
             }
-        }
+        }*/
 
         return ok(Json.toJson(questions));
+
+
+        /*
+        QuestionService service = new QuestionService();
+        List<Answer> questions = new ArrayList<>();
+        service.findByCategoryCode(code).forEach(questions::add);
+
+        return ok(Json.toJson(questions));
+        */
     }
 
     // TODO ver o que retorna se n existir a questao com este ID

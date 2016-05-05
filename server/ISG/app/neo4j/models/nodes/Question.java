@@ -4,10 +4,12 @@ package neo4j.models.nodes;
  * Created by Lycantropus on 14-04-2016.
  */
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import neo4j.models.Entity;
 import neo4j.models.edges.QuestionEdge;
 import org.neo4j.ogm.annotation.*;
 
+import java.util.HashSet;
 import java.util.Set;
 
 @NodeEntity
@@ -15,15 +17,17 @@ public class Question extends Entity {
     private String text;
 
     @Relationship(type = "HAS")
-    private Set<Answer> answers;
+    private Set<Answer> answers = new HashSet<>();
 
     @Relationship(type = "CONNECTS", direction = Relationship.OUTGOING)
-    private Set<QuestionEdge> nextQuestions;
+    @JsonIgnore
+    private Set<QuestionEdge> nextQuestions = new HashSet<>();
 
-    @Relationship(type = "CONNECTS", direction = Relationship.INCOMING)
-    private Set<QuestionEdge> previousQuestions;
+    //@Relationship(type = "CONNECTS", direction = Relationship.INCOMING)
+    //private Set<QuestionEdge> previousQuestions;
 
-    @Relationship(type = "HAS_QUESTIONS", direction = Relationship.INCOMING)
+    //@Relationship(type = "HAS_QUESTIONS", direction = Relationship.INCOMING)
+    @JsonIgnore
     private Category category;
 
     public Question() {
@@ -38,7 +42,7 @@ public class Question extends Entity {
     public String toString() {
         return "Question{" + "id=" + getId() + ", text=" + text +
                 ", category=" + category +
-                //", nextQuestionsSize=" + nextQuestions.size() +
+                ", answers_Size=" + answers.size() +
                 '}' + '\n';
     }
 
@@ -58,6 +62,7 @@ public class Question extends Entity {
         this.nextQuestions = nextQuestions;
     }
 
+    /*
     public Set<QuestionEdge> getPreviousQuestions() {
         return previousQuestions;
     }
@@ -65,6 +70,7 @@ public class Question extends Entity {
     public void setPreviousQuestions(Set<QuestionEdge> previousQuestions) {
         this.previousQuestions = previousQuestions;
     }
+    */
 
     public Category getCategory() {
         return category;

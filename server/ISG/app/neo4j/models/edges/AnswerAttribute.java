@@ -1,5 +1,6 @@
 package neo4j.models.edges;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import neo4j.models.Entity;
 import neo4j.models.nodes.*;
 import org.neo4j.ogm.annotation.*;
@@ -10,6 +11,7 @@ import org.neo4j.ogm.annotation.*;
 @RelationshipEntity(type = "INFLUENCES")
 public class AnswerAttribute extends Entity {
     @StartNode
+    @JsonIgnore
     private Answer answer;
 
     @EndNode

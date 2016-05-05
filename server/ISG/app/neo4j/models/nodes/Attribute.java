@@ -1,8 +1,10 @@
 package neo4j.models.nodes;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import neo4j.models.Entity;
 import org.neo4j.ogm.annotation.Relationship;
 
+import java.util.HashSet;
 import java.util.Set;
 
 /**
@@ -13,7 +15,8 @@ public class Attribute extends Entity
     private String name;
 
     @Relationship(type = "VALUES", direction = Relationship.INCOMING)
-    private Set<Product> products;
+    @JsonIgnore
+    private Set<Product> products = new HashSet<>();
 
     public Attribute() {}
 
