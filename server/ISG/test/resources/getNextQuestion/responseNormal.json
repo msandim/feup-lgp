@@ -1,0 +1,37 @@
+{
+  "question":{
+    "id":"1",
+    "text":"Qual o tamanho da sua sala?"
+  },
+  "answers":[
+    {
+      "id":"1",
+      "text":"Pequena"
+    },
+    {
+      "id":"2",
+      "text":"Média"
+    },
+    {
+      "id":"3",
+      "text":"Grande"
+    }
+  ],
+  "products":[
+    {
+      "EAN":"001",
+      "name":"TV1",
+      "score":0.7
+    },
+    {
+      "EAN":"003",
+      "name":"TV3",
+      "score":0.5
+    },
+    {
+      "EAN":"002",
+      "name":"TV2",
+      "score":0.1
+    }
+  ]
+}

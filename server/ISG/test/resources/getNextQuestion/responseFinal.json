@@ -1,0 +1,22 @@
+{
+  "question":null,
+  "answers":null,
+  "products":[
+    {
+      "EAN":"001",
+      "name":"TV1",
+      "score":0.7
+    },
+    {
+      "EAN":"003",
+      "name":"TV3",
+      "score":0.5
+    },
+    {
+      "EAN":"002",
+      "name":"TV2",
+      "score":0.1
+    }
+  ]
+
+}

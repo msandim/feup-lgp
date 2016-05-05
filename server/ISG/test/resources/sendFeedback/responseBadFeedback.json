@@ -1,0 +1,4 @@
+{
+  "error":"INVALID_FEEDBACK_VALUE",
+  "msg":"The value you supplied for the feedback is invalid (it must be either 0 or 1)!"
+}

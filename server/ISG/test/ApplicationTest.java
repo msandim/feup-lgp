@@ -1,3 +1,4 @@
+import org.junit.Ignore;
 import org.junit.Test;
 import play.test.WithServer;
 import play.twirl.api.Content;
@@ -12,6 +13,7 @@ import static org.junit.Assert.assertTrue;
  * If you are interested in mocking a whole application, see the wiki for more details.
  *
  */
+@Ignore
 public class ApplicationTest {
 
     @Test

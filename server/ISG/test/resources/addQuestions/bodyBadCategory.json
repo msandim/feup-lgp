@@ -6,7 +6,7 @@
       "answers":[
         {
           "text":"Pequena",
-          "caracteristics":[
+          "attributes":[
             {
               "name":"width (cm)",
               "operator":"<",
@@ -23,7 +23,7 @@
         },
         {
           "text":"Média",
-          "caracteristics":[
+          "attributes":[
             {
               "name":"width (cm)",
               "operator":">",
@@ -40,7 +40,7 @@
         },
         {
           "text":"Grande",
-          "caracteristics":[
+          "attributes":[
             {
               "name":"width (cm)",
               "operator":"<",
