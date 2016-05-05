@@ -65,4 +65,12 @@ public class Product extends Entity
     public void setAttributes(Set<ProductAttribute> attributes) {
         this.attributes = attributes;
     }
+
+    public String getEAN() {
+        return EAN;
+    }
+
+    public void setEAN(String EAN) {
+        this.EAN = EAN;
+    }
 }

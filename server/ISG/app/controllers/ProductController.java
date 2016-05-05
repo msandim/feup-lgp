@@ -3,8 +3,10 @@ package controllers;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
+import neo4j.models.nodes.Attribute;
 import neo4j.models.nodes.Category;
 import neo4j.models.nodes.Product;
+import neo4j.services.AttributeService;
 import neo4j.services.CategoryService;
 import neo4j.services.ProductService;
 import play.Logger;
@@ -14,10 +16,11 @@ import play.mvc.Controller;
 import play.mvc.Http;
 import play.mvc.Result;
 
-import java.io.File;
+import java.io.*;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Vector;
 
 /**
  * Created by Lycantropus on 17-04-2016.
@@ -80,23 +83,113 @@ public class ProductController extends Controller {
         //Category category = categoryService.findByCode(catCode);return ok("deu");
         Map<String, String> errorMsg = new HashMap<>();
 
-        if (result.get("category") == null) {
+        if (result.get("code") == null) {
+            errorMsg.put("Error", "missing attribute keyword");
+            errorMsg.put("Message", "There is no code: ");
+            return ok(errorMsg.toString());
+        }
+
+        if (result.get("code")[0] == null)
+        {
+            errorMsg.put("Error", "Invalid Category");
+            errorMsg.put("Message", "There is no category with this code: ");
+            return ok(errorMsg.toString());
+        }
+        String categoryCode = result.get("code")[0];
+        Logger.debug("primeiro: "+ result.get("code")[0]);
+
+        Http.MultipartFormData body = request().body().asMultipartFormData();
+        Http.MultipartFormData.FilePart csv = body.getFile("csv");
+
+        //Category targetCategory =
+        if(categoryService.findByCode(categoryCode)==null){
             errorMsg.put("Error", "Invalid Category");
             errorMsg.put("Message", "There is no category with this code: ");
             return ok(errorMsg.toString());
         }
 
-        Http.MultipartFormData body = request().body().asMultipartFormData();
-        Http.MultipartFormData.FilePart csv = body.getFile("csv");
+        Category targetCategory =categoryService.findByCode(categoryCode);
 
-        
+
         if (csv != null) {
             String fileName = csv.getFilename();
             String contentType = csv.getContentType();
             File file = (File) csv.getFile();
-            return ok("File uploaded");
+
+
+            BufferedReader br = null;
+            String line = "";
+            String cvsSplitBy = ";";
+            AttributeService attributeService = new AttributeService();
+            ProductService productService = new ProductService();
+            Vector<String> attributeNames= new Vector<>();
+
+            try {
+
+                br = new BufferedReader(new FileReader(file));
+                int linecounter=0;
+                while ((line = br.readLine()) != null) {
+                    linecounter++;
+                    // use comma as separator
+                    String[] product = line.split(cvsSplitBy);
+                    int tokencounter =0;
+                    if(linecounter==1)
+                    {
+                        for(String produto : product){
+                            if(tokencounter!=0 && tokencounter!=3 && tokencounter!=4 ){
+                                attributeService.createOrUpdate(new Attribute(produto));
+                                attributeNames.add(produto);
+                                //Logger.debug("linha "+ linecounter+" |token= " + tokencounter+ " {cena] " + produto + "]");
+                            }
+
+                            tokencounter++;
+                        }
+                    }
+                    else
+                    {
+                        Vector<String> values= new Vector<>();
+                        for(String feature : product){
+                            if(tokencounter==0 || tokencounter==3 || tokencounter==4){
+                                values.add(feature);
+                                Logger.debug("linha "+ linecounter+" |token= " + tokencounter+ " {cena] " + feature + "]");
+                            }
+
+                            tokencounter++;
+                        }
+                        String tmpPrice = values.get(2).replace(',', '.');
+
+                        values.set(2, tmpPrice);
+                        productService.createOrUpdate(new Product(values.get(1), values.get(0), Float.parseFloat(values.get(2)), targetCategory));
+                    }
+
+                }
+
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            } finally {
+                if (br != null) {
+                    try {
+                        br.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+
+            Logger.debug("Done");
+
         } else {
             return ok( "Missing file");
         }
+
+
+        Logger.debug("antes");
+        Logger.debug("segundo: " + targetCategory.getName());
+
+
+
+        return ok();
     }
 }
