@@ -3,6 +3,7 @@ package controllers;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
+import neo4j.Neo4jSessionFactory;
 import neo4j.models.edges.ProductAttribute;
 import neo4j.models.nodes.Attribute;
 import neo4j.models.nodes.Category;
@@ -122,6 +123,10 @@ public class ProductController extends Controller {
             ProductService productService = new ProductService();
             Vector<String> attributeNames= new Vector<>();
 
+            String query = new StringBuilder("MATCH (c:Category{name:\' " + targetCategory.getName()+ "\'})-[:HAS_PRODUCTS]->(p:Product)-[:VALUES]->(a:Attribute) detach delete p, a").toString();
+            Neo4jSessionFactory.getInstance().getNeo4jSession().query(query, Collections.EMPTY_MAP);
+
+
             try {
 
                 br = new BufferedReader(new FileReader(file));
@@ -171,7 +176,12 @@ public class ProductController extends Controller {
                         for(int i = 0; i< attributeNames.size(); i++)
                         {
                             Attribute tempAttribute = attributeService.findByName(attributeNames.get(i));
-                            tempSet.add(new ProductAttribute(nodeProduct, tempAttribute, attributeValues.get(i)));
+                            if(attributeValues.get(i)!= "NA" &&
+                                    attributeValues.get(i)!= " "){
+                                tempSet.add(new ProductAttribute(nodeProduct, tempAttribute, attributeValues.get(i)));
+                            }
+
+
                         }
 
                         nodeProduct.setAttributes(tempSet);
