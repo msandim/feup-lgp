@@ -193,7 +193,6 @@ public class QuestionController extends Controller {
         return ok(Json.toJson(questions));
     }
 
-    // TODO
     public Result getQuestionByCategory(String code)
     {
 

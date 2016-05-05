@@ -24,10 +24,10 @@ public class CategoryController extends Controller {
         service.findAll().forEach(categories::add);
 
         // Return JSON with name and code:
-        ArrayNode jsonArray = Json.newArray();
-        categories.forEach(x -> jsonArray.add(Json.newObject().put("name", x.getName()).put("code", x.getCode())));
+        //ArrayNode jsonArray = Json.newArray();
+        //categories.forEach(x -> jsonArray.add(Json.newObject().put("name", x.getName()).put("code", x.getCode())));
 
-        return ok(jsonArray);
+        return ok(Json.toJson(categories));
     }
 
     public Result retrieveCategory(Long id)

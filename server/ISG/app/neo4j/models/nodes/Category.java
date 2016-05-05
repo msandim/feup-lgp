@@ -1,5 +1,6 @@
 package neo4j.models.nodes;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import neo4j.models.Entity;
 import org.neo4j.ogm.annotation.*;
 
@@ -16,8 +17,11 @@ public class Category extends Entity
     private String code;
 
     @Relationship(type = "HAS_PRODUCTS")
+    @JsonIgnore
     private Set<Product> products;
+
     @Relationship(type = "HAS_QUESTIONS")
+    @JsonIgnore
     private Set<Question> questions;
 
     public Category() {}
