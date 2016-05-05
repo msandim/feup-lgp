@@ -3,6 +3,7 @@ package controllers;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
+import neo4j.models.edges.ProductAttribute;
 import neo4j.models.nodes.Attribute;
 import neo4j.models.nodes.Category;
 import neo4j.models.nodes.Product;
@@ -17,10 +18,7 @@ import play.mvc.Http;
 import play.mvc.Result;
 
 import java.io.*;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Vector;
+import java.util.*;
 
 /**
  * Created by Lycantropus on 17-04-2016.
@@ -148,10 +146,15 @@ public class ProductController extends Controller {
                     else
                     {
                         Vector<String> values= new Vector<>();
+                        Vector<String> attributeValues = new Vector<>();
                         for(String feature : product){
                             if(tokencounter==0 || tokencounter==3 || tokencounter==4){
                                 values.add(feature);
                                 Logger.debug("linha "+ linecounter+" |token= " + tokencounter+ " {cena] " + feature + "]");
+                            }
+                            else
+                            {
+                                attributeValues.add(feature);
                             }
 
                             tokencounter++;
@@ -159,7 +162,21 @@ public class ProductController extends Controller {
                         String tmpPrice = values.get(2).replace(',', '.');
 
                         values.set(2, tmpPrice);
-                        productService.createOrUpdate(new Product(values.get(1), values.get(0), Float.parseFloat(values.get(2)), targetCategory));
+
+                        Set<ProductAttribute> tempSet= new HashSet<>();
+
+                        Product nodeProduct = new Product(values.get(1), values.get(0), Float.parseFloat(values.get(2)), targetCategory);
+                        Logger.debug("attribute names: " + attributeNames.size());
+                        Logger.debug("attribute values: " + attributeValues.size());
+                        for(int i = 0; i< attributeNames.size(); i++)
+                        {
+                            Attribute tempAttribute = attributeService.findByName(attributeNames.get(i));
+                            tempSet.add(new ProductAttribute(nodeProduct, tempAttribute, attributeValues.get(i)));
+                        }
+
+                        nodeProduct.setAttributes(tempSet);
+
+                        productService.createOrUpdate(nodeProduct);
                     }
 
                 }

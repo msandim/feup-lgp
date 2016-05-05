@@ -17,4 +17,11 @@ public class ProductAttribute extends Entity
     private Attribute attribute;
 
     private String value;
+
+    public ProductAttribute(Product product, Attribute attribute,String value)
+    {
+        this.product=product;
+        this.attribute=attribute;
+        this.value=value;
+    }
 }

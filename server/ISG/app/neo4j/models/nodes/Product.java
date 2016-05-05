@@ -18,7 +18,7 @@ public class Product extends Entity
     private String EAN;
     private Float price;
 
-    @Relationship(type = "VALUES")
+    @Relationship(type = "VALUES", direction = Relationship.OUTGOING)
     private Set<ProductAttribute> attributes;
 
     @Relationship(type = "HAS_PRODUCTS", direction = Relationship.INCOMING)
@@ -32,6 +32,7 @@ public class Product extends Entity
         this.EAN = EAN;
         this.price = price;
         this.category = category;
+
     }
 
     public String getName() {
