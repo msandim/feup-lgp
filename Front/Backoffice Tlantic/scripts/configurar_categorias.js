@@ -166,11 +166,40 @@ function expandAnswer() {
 
 function addCategory(){
   var self = this;
-  $('#addCategory').click(function(){
-    var categoryName;
-    while(!categoryName){
-      categoryName = prompt("Nome da Categoria:");
+  $('.AddCategory').click(function(){
+    
+    var categoryName = $('.inputCatName').val();
+    var CategoryExists = [];
+    var nameCategory = false;
+
+    for (var i = 0; i < categoryArray.length; i++) {
+      CategoryExists.push(categoryArray[i].category); 
+    } 
+
+    if($('.inputCatName').hasClass('border')){
+       $('.inputCatName').removeClass('border');
     }
+    
+    while(!nameCategory){
+      for (var j = 0; j < CategoryExists.length; j++) {
+        if (CategoryExists[j] === capitalizeFirstLetter(categoryName)) {
+          nameCategory=false;
+          $('.inputCatName').addClass("border");
+          
+          //edit value placeholder
+          $('.inputCatName').val('');
+          $('.inputCatName').attr("placeholder", "Nome da Categoria ja existe");
+           //disable button submit add category
+          $('#InputButtonCatName').attr("disabled", true);
+          $('#myBtn').click();
+          return false;
+        }
+        else {
+          nameCategory=true;
+        }
+      }
+    }
+
     var boxGroup = $('#boxOfGoodies');
 
     categoryName = capitalizeFirstLetter(categoryName);
@@ -197,7 +226,13 @@ function addCategory(){
     removeCategoryElement.unbind("click", removeCategory());
     removeCategoryElement.bind("click", removeCategory());
 
-  });
+    //clear placeholder
+    $('.inputCatName').val('');
+    $('.inputCatName').attr("placeholder", ">");
+
+    //disable button submit add category
+      $('#InputButtonCatName').attr("disabled", true);
+  }); 
 }
 
 function addQuestion(){
@@ -548,6 +583,73 @@ function removeCharacteristic() {
     $(this).parent().parent().parent().remove();
   });
 }
+
+function AddModal() {
+  // Get the modal
+  var modal = document.getElementById('myModal');
+
+  // Get the button that opens the modal
+  var btn = document.getElementById("myBtn");
+
+  // Get the <span> element that closes the modal
+  var span = document.getElementsByClassName("close")[0];
+
+  // When the user clicks the button, open the modal 
+  btn.onclick = function() {
+      modal.style.display = "block";
+  }
+
+  // When the user clicks on <span> (x), close the modal
+  span.onclick = function() {
+       if($('.inputCatName').hasClass('border')){
+         $('.inputCatName').removeClass('border');
+       }
+       //edit placeholder
+      $('.inputCatName').val('');
+      $('.inputCatName').attr("placeholder", ">");
+      //disable button submit add category
+      $('#InputButtonCatName').attr("disabled", true);
+      modal.style.display = "none";
+  }
+
+  // When the user clicks anywhere outside of the modal, close it
+  window.onclick = function(event) {
+      if (event.target == modal) {
+           if($('.inputCatName').hasClass('border')){
+               $('.inputCatName').removeClass('border');
+          }
+          //edit placeholder
+          $('.inputCatName').val('');
+          $('.inputCatName').attr("placeholder", ">");
+          //disable button submit add category
+          $('#InputButtonCatName').attr("disabled", true);
+          modal.style.display = "none";
+      }
+  }
+
+  $('.AddCategory').click(function(){
+      modal.style.display = "none";
+  });
+}
+
+//check input is empty and disable button submit
+$(document).ready(function() {
+    $('.modal-body input').keyup(function() {
+
+        var empty = false;
+        $('.modal-body input').each(function() {
+            if ($(this).val().length == 0) {
+                empty = true;
+            }
+        });
+
+        if (empty) {
+            $('#InputButtonCatName').attr('disabled', 'disabled');
+        } else {
+            $('#InputButtonCatName').attr('disabled', false);
+        }
+    });
+});
 
 //UTILS
 

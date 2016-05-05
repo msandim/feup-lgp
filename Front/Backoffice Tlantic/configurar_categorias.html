@@ -4,10 +4,12 @@
   <meta charset="utf-8" />
   <link rel="stylesheet" type="text/css" href="bootstrap/css/bootstrap.min.css" />
   <link rel="stylesheet" type="text/css" href="css/configurar_categorias.css" />
+  <link rel="stylesheet" type="text/css" href="css/index.css" />
 
   <!-- search dependencies-->
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/knockout/3.2.0/knockout-min.js"></script>
+  <script src="http://ajax.aspnetcdn.com/ajax/jquery.validate/1.11.1/jquery.validate.min.js"></script>
   <script type="text/javascript" src="scripts/configurar_categorias.js"></script>
 
   <title>Configurar categorias</title>
@@ -78,7 +80,25 @@
           <button type="button" class="btn btn-block down-button" id="saveChanges">Gravar Alterações</button>
         </div>
         <div class="col-xs-2 pull-right nodge-to-the-left">
-          <button type="button" class="btn btn-block down-button" id="addCategory">Adicionar Categoria</button>
+          <button id="myBtn" type="button" class="btn btn-block down-button AddModal">Adicionar Categoria</button>
+           <!-- The Modal -->
+          <div id="myModal" class="modal">
+
+            <!-- Modal content -->
+            <div class="modal-content">
+              <div class="modal-header">
+                <span class="close">×</span>
+                <h2>Adicione o Nome da Categoria: </h2>
+              </div>             
+                <div class="modal-body">
+                  <input class="inputCatName" id="ValidateCat" type="text" placeholder=">" required>
+                </div>
+                <div class="modal-footer">
+                  <button class="btn btn-default AddCategory" id="InputButtonCatName" >Adicionar</button>
+                </div>
+            </div>
+          </div>
+
         </div>
       </div>
     </div>
@@ -88,6 +108,7 @@
   <!-- Scripts-->
   <script type="text/javascript">
    filter();
+   AddModal();
    expandCategoria();
    expandQuestion();
    expandAnswer();
@@ -96,6 +117,7 @@
    addAnswer();
    addCharacteristic();
    autoAddCategory();
+   
   </script>
 
 </body>
