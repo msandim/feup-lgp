@@ -5,6 +5,8 @@ import neo4j.models.Entity;
 import neo4j.models.edges.ProductAttribute;
 import org.neo4j.ogm.annotation.*;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -20,10 +22,13 @@ public class Product extends Entity
     private Float price;
 
     @Relationship(type = "VALUES")
-    private Set<ProductAttribute> attributes;
+    private List<ProductAttribute> attributes = new ArrayList<>();
 
-    @Relationship(type = "HAS_PRODUCTS", direction = Relationship.INCOMING)
+    //@Relationship(type = "HAS_PRODUCTS", direction = Relationship.INCOMING)
     private Category category;
+
+    //@Transient
+    //private Float currentScore = (float) 0.0;
 
     public Product() {}
 
@@ -59,11 +64,43 @@ public class Product extends Entity
         this.category = category;
     }
 
-    public Set<ProductAttribute> getAttributes() {
+    public List<ProductAttribute> getAttributes() {
         return attributes;
     }
 
-    public void setAttributes(Set<ProductAttribute> attributes) {
+    public void setAttributes(List<ProductAttribute> attributes) {
         this.attributes = attributes;
+    }
+
+    public String getEAN()
+    {
+        return this.EAN;
+    }
+
+    // Hashcode of each product is the EAN's hashcode:
+    @Override
+    public int hashCode()
+    {
+        return this.EAN.hashCode();
+    }
+
+    // Two Products are the same if they have the same EAN:
+    @Override
+    public boolean equals(Object obj)
+    {
+        if (obj instanceof Product)
+        {
+            Product p = (Product) obj;
+            return (p.EAN.equals(this.EAN));
+        } else
+        {
+            return false;
+        }
+    }
+
+    @Override
+    public String toString()
+    {
+        return this.EAN;
     }
 }

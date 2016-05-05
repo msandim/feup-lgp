@@ -5,7 +5,9 @@ import neo4j.models.Entity;
 import neo4j.models.edges.AnswerAttribute;
 import org.neo4j.ogm.annotation.*;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -20,7 +22,7 @@ public class Answer extends Entity
     private Float frequency;
 
     @Relationship(type = "INFLUENCES")
-    private Set<AnswerAttribute> attributes = new HashSet<>();
+    private List<AnswerAttribute> attributes = new ArrayList<>();
 
     public Answer() { }
 
@@ -28,11 +30,11 @@ public class Answer extends Entity
         this.text = name;
     }
 
-    public Set<AnswerAttribute> getAttributes() {
+    public List<AnswerAttribute> getAttributes() {
         return attributes;
     }
 
-    public void setAttributes(Set<AnswerAttribute> attributes) {
+    public void setAttributes(List<AnswerAttribute> attributes) {
         this.attributes = attributes;
     }
 

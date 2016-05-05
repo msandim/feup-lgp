@@ -3,14 +3,13 @@ package controllers;
 import javax.inject.*;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import neo4j.models.edges.AnswerAttribute;
-import neo4j.models.nodes.Answer;
-import neo4j.models.nodes.Attribute;
-import neo4j.models.nodes.Category;
-import neo4j.models.nodes.Question;
+import neo4j.models.nodes.*;
 import neo4j.services.AttributeService;
 import neo4j.services.CategoryService;
+import neo4j.services.ProductService;
 import neo4j.services.QuestionService;
 
 import java.util.*;
@@ -19,6 +18,7 @@ import play.libs.Json;
 import play.mvc.*;
 import play.mvc.Result;
 import scala.Console;
+import utils.MapUtils;
 
 @Singleton
 public class QuestionController extends Controller {
@@ -38,32 +38,74 @@ public class QuestionController extends Controller {
 
     @BodyParser.Of(BodyParser.Json.class)
     public Result getNextQuestion() {
-        /*
+
         // Parse the parameters:
         JsonNode jsonRequest = request().body().asJson();
-        String category = jsonRequest.findPath("category").asText();
+        String category = jsonRequest.get("category").asText();
 
-        Console.print("NOME DA CATEGORIA: " + category + "\n");
+        JsonNode answers = jsonRequest.withArray("answers");
+        JsonNode blackListQuestions = jsonRequest.withArray("blacklist_questions");
 
         if (category == null)
             return badRequest("Missing parameter [category]");
 
-        // Get all questions:
-        QuestionService service = new QuestionService();
-        Iterable<Question> questions = service.findByCategoryCode(category);
+        ProductService productService = new ProductService();
 
-        // Get random question:
-        List<Question> questionList = new ArrayList<>();
-        questions.forEach(questionList::add);
-        Question randomQuestion = questionList.get(new Random().nextInt(questionList.size()));
+        // Return values initialized:
+        List<Map.Entry<Product, Float>> orderedProductScores = new ArrayList<>();
 
-        return ok(randomQuestion.toString() + category);
-        */
-        return ok();
+        // If we don't want the first question:
+        if (answers.elements().hasNext())
+        {
+            Map<Product, Float> productScores = productService.initializeProductScores(category);
+
+            for(JsonNode questionAnswer: answers)
+            {
+                String questionCode = questionAnswer.get("question").asText();
+                String answerCode = questionAnswer.get("answer").asText();
+
+                // Update the scores:
+                productService.updateScores(questionCode, answerCode, productScores);
+            }
+
+            // Retrieve the top X products with higher score:
+            orderedProductScores = MapUtils.orderByValueDecreasing(productScores);
+
+            // Return the next question:
+
+        }
+        else // If we want the first question:
+        {
+            // Get all questions:
+            QuestionService service = new QuestionService();
+            Iterable<Question> questions = service.findByCategoryCode(category);
+
+            // Get random question:
+            List<Question> questionList = new ArrayList<>();
+            questions.forEach(questionList::add);
+            Question randomQuestion = questionList.get(new Random().nextInt(questionList.size()));
+
+            return ok(randomQuestion.toString() + category);
+        }
+
+        // Do the return:
+        ObjectNode result = Json.newObject();
+        ArrayNode products = result.putArray("products");
+        orderedProductScores.forEach(x -> products.addObject()
+                .put("EAN", x.getKey().getEAN())
+                .put("name", x.getKey().getName())
+                .put("score", x.getValue()));
+
+        return ok(result);
     }
 
     @BodyParser.Of(BodyParser.Json.class)
     public Result createOrUpdateQuestion() {
+
+        // TODO mudar por causa dos ArrayLists
+
+        /*
+
         //return json message
         ObjectNode result = Json.newObject();
 
@@ -180,6 +222,9 @@ public class QuestionController extends Controller {
             QuestionService service = new QuestionService();
             service.createOrUpdate(question, 2);
         }
+
+        */
+
         return ok("Success");
     }
 
@@ -200,16 +245,6 @@ public class QuestionController extends Controller {
         //List<Map<String, Object>> questions = new ArrayList<>();
         List<Question> questions = new ArrayList<>();
         service.findByCategoryCode(code).forEach(questions::add);
-
-        /*
-        for(Map<String, Object> q: questions)
-        {
-            Console.println("MAIS UM");
-            for (Map.Entry<String, Object> entry : q.entrySet())
-            {
-                Console.println(entry.getKey() + " ** " + entry.getValue() + " *** " + entry.getValue().getClass());
-            }
-        }*/
 
         return ok(Json.toJson(questions));
 

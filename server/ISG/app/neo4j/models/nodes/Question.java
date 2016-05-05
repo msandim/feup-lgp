@@ -9,7 +9,9 @@ import neo4j.models.Entity;
 import neo4j.models.edges.QuestionEdge;
 import org.neo4j.ogm.annotation.*;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @NodeEntity
@@ -17,11 +19,11 @@ public class Question extends Entity {
     private String text;
 
     @Relationship(type = "HAS")
-    private Set<Answer> answers = new HashSet<>();
+    private List<Answer> answers = new ArrayList<>();
 
     @Relationship(type = "CONNECTS", direction = Relationship.OUTGOING)
     @JsonIgnore
-    private Set<QuestionEdge> nextQuestions = new HashSet<>();
+    private List<QuestionEdge> nextQuestions = new ArrayList<>();
 
     //@Relationship(type = "CONNECTS", direction = Relationship.INCOMING)
     //private Set<QuestionEdge> previousQuestions;
@@ -46,19 +48,19 @@ public class Question extends Entity {
                 '}' + '\n';
     }
 
-    public Set<Answer> getAnswers() {
+    public List<Answer> getAnswers() {
         return answers;
     }
 
-    public void setAnswers(Set<Answer> answers) {
+    public void setAnswers(List<Answer> answers) {
         this.answers = answers;
     }
 
-    public Set<QuestionEdge> getNextQuestions() {
+    public List<QuestionEdge> getNextQuestions() {
         return nextQuestions;
     }
 
-    public void setNextQuestions(Set<QuestionEdge> nextQuestions) {
+    public void setNextQuestions(List<QuestionEdge> nextQuestions) {
         this.nextQuestions = nextQuestions;
     }
 

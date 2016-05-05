@@ -2,10 +2,12 @@ package neo4j.models.nodes;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import neo4j.models.Entity;
+import neo4j.models.edges.AnswerAttribute;
+import neo4j.models.edges.ProductAttribute;
 import org.neo4j.ogm.annotation.Relationship;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Miguel on 27-04-2016.
@@ -16,7 +18,24 @@ public class Attribute extends Entity
 
     @Relationship(type = "VALUES", direction = Relationship.INCOMING)
     @JsonIgnore
-    private Set<Product> products = new HashSet<>();
+    private List<ProductAttribute> products = new ArrayList<>();
+
+    @Relationship(type = "INFLUENCES", direction = Relationship.INCOMING)
+    @JsonIgnore
+    private List<AnswerAttribute> answers = new ArrayList<>();
+
+    @JsonIgnore
+    private String type;
+
+    public interface Type {
+        String NUMERIC = "numeric";
+        String CATEGORICAL = "categorical";
+
+        static boolean isValid(String t)
+        {
+            return (t.equals(NUMERIC) || t.equals(CATEGORICAL));
+        }
+    }
 
     public Attribute() {}
 
@@ -34,16 +53,32 @@ public class Attribute extends Entity
         return name;
     }
 
-    public Set<Product> getProducts() {
+    public List<ProductAttribute> getProducts()
+    {
         return products;
     }
 
-    public void setProducts(Set<Product> products) {
+    public void setProducts(List<ProductAttribute> products) {
         this.products = products;
     }
 
-    @Override
+    @JsonIgnore
+    public List<AnswerAttribute> getAnswerAttributes()
+    {
+        return this.answers;
+    }
 
+    public String getType()
+    {
+        return this.type;
+    }
+
+    public void setType(String type)
+    {
+        this.type = type;
+    }
+
+    @Override
     public String toString() {
         return "Category{" + "id=" + getId() + ", name=" + name + "} \n";
     }
