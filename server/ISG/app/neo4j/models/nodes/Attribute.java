@@ -24,6 +24,17 @@ public class Attribute extends Entity
 
     private String type;
 
+    public interface Type{
+        String NUMERIC = "numeric";
+        String CATEGORICAL="categorical";
+
+        static boolean isValid(String t)
+        {
+            return (t.equals(NUMERIC) || t.equals(CATEGORICAL));
+        }
+    }
+
+
     public Attribute() {}
 
     public Attribute(String name)
@@ -53,7 +64,10 @@ public class Attribute extends Entity
     }
     public void setType(String type)
     {
-        this.type = type;
+        if(Type.isValid(type)){
+            this.type = type;
+        }
+
     }
     @Override
     public String toString() {
