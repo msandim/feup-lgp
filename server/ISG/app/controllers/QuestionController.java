@@ -46,7 +46,7 @@ public class QuestionController extends Controller {
         String category = jsonRequest.get("category").asText();
 
         JsonNode answers = jsonRequest.withArray("answers");
-        JsonNode blackListQuestions = jsonRequest.withArray("blacklist_questions");
+        //JsonNode blackListQuestions = jsonRequest.withArray("blacklist_questions");
 
         ProductService productService = new ProductService();
         CategoryService categoryService = new CategoryService();
@@ -98,7 +98,13 @@ public class QuestionController extends Controller {
         }
         // If we're seeking the first question:
         else
+        {
             nextQuestion = AlgorithmLogic.getFirstQuestion(category);
+
+            // If we can't even retrieve 1 question, we must give an error:
+            if (nextQuestion == null)
+                return badRequest(ControllerUtils.generalError("NO_QUESTIONS", "No questions available in this category!"));
+        }
 
         // *******************************************************************
         // *********************** Request Return ****************************

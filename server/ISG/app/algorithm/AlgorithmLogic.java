@@ -32,7 +32,7 @@ public class AlgorithmLogic
         questions.forEach(question ->
         {
             Float heuristicValue = getQuestionHeuristicValue(category, question);
-            Console.println("Heuristic for: " + question + " is " + heuristicValue);
+            Console.println("First Question * Heuristic for: " + question + " is " + heuristicValue);
             cumulativeRandom.add(heuristicValue, question);
         });
 
@@ -59,6 +59,7 @@ public class AlgorithmLogic
         if (questionEdges.isEmpty())
             return null;
 
+        // Calculate heuristic for each value:
         RandomCollection<Question> cumulativeRandom = new RandomCollection<>();
         questionEdges.forEach(questionEdge ->
         {
@@ -67,7 +68,7 @@ public class AlgorithmLogic
                     + (parameters.getBeta() * getVarianceGain(questionEdge))
                     + (parameters.getGamma() * getGoodSequenceRatio(questionEdge));
 
-            Console.println("Heuristic for: " + questionEdge.getNextQuestion() + " is " + heuristicValue);
+            Console.println("NextQuestion * Heuristic for: " + questionEdge.getNextQuestion() + " is " + heuristicValue);
             cumulativeRandom.add(heuristicValue, questionEdge.getNextQuestion());
         });
 
