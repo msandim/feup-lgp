@@ -1,8 +1,46 @@
 [
   {
+    "code":"q2",
+    "text":"Numero de crianças?",
+    "answers":[
+      {
+        "code":"2",
+        "text":"1 ou Mais",
+        "frequency":0.699999988079071,
+        "attributes":[
+          {
+            "attribute":{
+              "name":"Height (cm)"
+            },
+            "operator":">",
+            "value":"160",
+            "score":0.20000000298023224
+          }
+        ]
+      },
+      {
+        "code":"1",
+        "text":"Nenhuma",
+        "frequency":0.20999999344348907,
+        "attributes":[
+          {
+            "attribute":{
+              "name":"Width (cm)"
+            },
+            "operator":">=",
+            "value":"60",
+            "score":0.10000000149011612
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "code":"q1",
     "text":"Tamanho da sala?",
     "answers":[
       {
+        "code":"2",
         "text":"Grande",
         "frequency":0.20000000298023224,
         "attributes":[
@@ -17,6 +55,7 @@
         ]
       },
       {
+        "code":"1",
         "text":"Pequena",
         "frequency":0.44999998807907104,
         "attributes":[
@@ -35,39 +74,6 @@
             "operator":"<",
             "value":"60",
             "score":0.5
-          }
-        ]
-      }
-    ]
-  },
-  {
-    "text":"Numero de crianças?",
-    "answers":[
-      {
-        "text":"1 ou Mais",
-        "frequency":0.699999988079071,
-        "attributes":[
-          {
-            "attribute":{
-              "name":"Height (cm)"
-            },
-            "operator":">",
-            "value":"160",
-            "score":0.20000000298023224
-          }
-        ]
-      },
-      {
-        "text":"Nenhuma",
-        "frequency":0.20999999344348907,
-        "attributes":[
-          {
-            "attribute":{
-              "name":"Width (cm)"
-            },
-            "operator":">=",
-            "value":"60",
-            "score":0.10000000149011612
           }
         ]
       }
