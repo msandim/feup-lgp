@@ -4,6 +4,7 @@ import neo4j.models.Entity;
 import neo4j.models.edges.ProductAttribute;
 import org.neo4j.ogm.annotation.*;
 
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -19,7 +20,7 @@ public class Product extends Entity
     private Float price;
 
     @Relationship(type = "VALUES", direction = Relationship.OUTGOING)
-    private Set<ProductAttribute> attributes;
+    private List<ProductAttribute> attributes;
 
     @Relationship(type = "HAS_PRODUCTS", direction = Relationship.INCOMING)
     private Category category;
@@ -59,11 +60,11 @@ public class Product extends Entity
         this.category = category;
     }
 
-    public Set<ProductAttribute> getAttributes() {
+    public List<ProductAttribute> getAttributes() {
         return attributes;
     }
 
-    public void setAttributes(Set<ProductAttribute> attributes) {
+    public void setAttributes(List<ProductAttribute> attributes) {
         this.attributes = attributes;
     }
 

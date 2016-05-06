@@ -123,7 +123,8 @@ public class ProductController extends Controller {
             ProductService productService = new ProductService();
             Vector<String> attributeNames= new Vector<>();
 
-            String query = new StringBuilder("MATCH (c:Category{name:\' " + targetCategory.getName()+ "\'})-[:HAS_PRODUCTS]->(p:Product)-[:VALUES]->(a:Attribute) detach delete p, a").toString();
+            String query = new StringBuilder("MATCH (c:Category{name:\'" + targetCategory.getName()+ "\'})-[]->(p:Product)-[]->(a:Attribute) detach delete p, a").toString();
+            Logger.debug("query:" + query);
             Neo4jSessionFactory.getInstance().getNeo4jSession().query(query, Collections.EMPTY_MAP);
 
 
@@ -155,7 +156,7 @@ public class ProductController extends Controller {
                         for(String feature : product){
                             if(tokencounter==0 || tokencounter==3 || tokencounter==4){
                                 values.add(feature);
-                                Logger.debug("linha "+ linecounter+" |token= " + tokencounter+ " {cena] " + feature + "]");
+                                //Logger.debug("linha "+ linecounter+" |token= " + tokencounter+ " {cena] " + feature + "]");
                             }
                             else
                             {
@@ -168,11 +169,11 @@ public class ProductController extends Controller {
 
                         values.set(2, tmpPrice);
 
-                        Set<ProductAttribute> tempSet= new HashSet<>();
+                        List<ProductAttribute> tempSet= new ArrayList<>();
 
                         Product nodeProduct = new Product(values.get(1), values.get(0), Float.parseFloat(values.get(2)), targetCategory);
-                        Logger.debug("attribute names: " + attributeNames.size());
-                        Logger.debug("attribute values: " + attributeValues.size());
+                        //Logger.debug("attribute names: " + attributeNames.size());
+                        //Logger.debug("attribute values: " + attributeValues.size());
                         for(int i = 0; i< attributeNames.size(); i++)
                         {
                             Attribute tempAttribute = attributeService.findByName(attributeNames.get(i));
