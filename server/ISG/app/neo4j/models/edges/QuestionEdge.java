@@ -18,4 +18,44 @@ public class QuestionEdge extends Entity
 
     private Float varianceGain;
     private Float goodSequenceRatio;
+
+    public Question getNextQuestion()
+    {
+        return nextQuestion;
+    }
+
+    public Float getVarianceGain()
+    {
+        return varianceGain;
+    }
+
+    public Float goodSequenceGain()
+    {
+        return goodSequenceRatio;
+    }
+
+    private String getCode()
+    {
+        return previousQuestion.getCode() + "-" + nextQuestion.getCode();
+    }
+
+    @Override
+    public int hashCode()
+    {
+        return getCode().hashCode();
+    }
+
+    // Two Questions are the same if they have the same code:
+    @Override
+    public boolean equals(Object obj)
+    {
+        if (obj instanceof QuestionEdge)
+        {
+            QuestionEdge qe = (QuestionEdge) obj;
+            return (qe.getCode().equals(this.getCode()));
+        } else
+        {
+            return false;
+        }
+    }
 }

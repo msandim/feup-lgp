@@ -9,10 +9,7 @@ import neo4j.models.nodes.Product;
 import neo4j.services.utils.GenericService;
 import scala.Console;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by Lycantropus on 17-04-2016.
@@ -24,7 +21,7 @@ public class ProductService extends GenericService<Product>
         return Product.class;
     }
 
-    public Long getNumberByCategory(String code)
+    public Long getNumberOfProductsByCategory(String code)
     {
         String query = new StringBuilder("MATCH (n:Product)<-[:HAS_PRODUCTS]-(c:Category) WHERE c.code = \'")
                 .append(code)
@@ -96,6 +93,44 @@ public class ProductService extends GenericService<Product>
         }
 
         return true;
+    }
+
+    public int getNumProductsAffected(Answer answer)
+    {
+        Set<Product> totalProducts = new HashSet<>();
+
+        for(AnswerAttribute answerAttribute: answer.getAttributes())
+        {
+            Attribute attribute = answerAttribute.getAttribute();
+
+            String attributeType = attribute.getType();
+            String conditionOperator = answerAttribute.getOperator();
+            String conditionValue = answerAttribute.getValue();
+
+            // For each product that has a value for this attribute:
+            for (ProductAttribute productAttribute : attribute.getProducts())
+            {
+                Product product = productAttribute.getProduct();
+                String productValue = productAttribute.getValue();
+
+                // If this product is selected by the condition implied in the relationship between
+                // the Answer and the Attribute, let's add to our set (which filters repeated ones):
+                if (isProductSelected(attributeType, conditionOperator, conditionValue, productValue))
+                    totalProducts.add(product);
+            }
+        }
+
+        return totalProducts.size();
+    }
+
+    public Float getMediumScore(Answer answer)
+    {
+        Float mediumScore = (float) 0.0;
+        for(AnswerAttribute answerAttribute: answer.getAttributes())
+        {
+            mediumScore += answerAttribute.getScore();
+        }
+        return mediumScore / answer.getAttributes().size();
     }
 
     private boolean isProductSelected(String attributeType, String conditionOperator, String conditionValue, String productValue)

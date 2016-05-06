@@ -4,6 +4,8 @@ DELETE n;
 
 // Restriction: every Attribute node is only connected to products of the same category:
 
+CREATE (x:AlgorithmParameters {alfa: 0.333, beta: 0.333, gamma: 0.333})
+
 // Create categories:
 CREATE (c1:Category {code: 'tvs', name: 'Televisions'})
 CREATE (c2:Category {code: 'dws', name: 'Dish Washers'})
@@ -45,7 +47,7 @@ CREATE (a11)-[:INFLUENCES {operator: '<', value: '60', score: 0.5}]->(at1)
 CREATE (a11)-[:INFLUENCES {operator: '=', value: '720p', score: 0.2}]->(at3)
 CREATE (a12)-[:INFLUENCES {operator: '!=', value: '1080p', score: 0.3}]->(at3)
 // (Q2)
-CREATE (q2)-[:HAS]->(a21:Answer {code: '1', text: 'Nenhuma', frequency: 0.21})
+CREATE (q2)-[:HAS]->(a21:Answer {code: '1', text: 'Nenhuma', frequency: 0.3})
 CREATE (q2)-[:HAS]->(a22:Answer {code: '2', text: '1 ou Mais', frequency: 0.7})
 CREATE (a21)-[:INFLUENCES {operator: '>=', value: '60', score: 0.1}]->(at1)
 CREATE (a22)-[:INFLUENCES {operator: '>', value: '160', score: 0.2}]->(at2)

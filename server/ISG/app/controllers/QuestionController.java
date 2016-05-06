@@ -1,60 +1,72 @@
 package controllers;
 
-import javax.inject.*;
-
+import algorithm.AlgorithmLogic;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import neo4j.models.edges.AnswerAttribute;
-import neo4j.models.nodes.*;
-import neo4j.services.AttributeService;
+import neo4j.models.nodes.Product;
+import neo4j.models.nodes.Question;
 import neo4j.services.CategoryService;
 import neo4j.services.ProductService;
 import neo4j.services.QuestionService;
-
-import java.util.*;
-
 import play.libs.Json;
-import play.mvc.*;
+import play.mvc.BodyParser;
+import play.mvc.Controller;
 import play.mvc.Result;
-import scala.Console;
+import utils.ControllerUtils;
 import utils.MapUtils;
+
+import javax.inject.Singleton;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 @Singleton
 public class QuestionController extends Controller {
 
-    //public  QuestionService;
-
-    /*@Inject
-    public CountController(Counter counter) {
-       this.counter = counter;
-       // SessionFactory sessionFactory = new SessionFactory("neo4j.models");
-        //Session session = sessionFactory.openSession();
-        //this.quest = session.load(Question.class, new Long(193));
-
-       // this.quest = session.load(Question.class, new Long(193));
-
-    }*/
-
     @BodyParser.Of(BodyParser.Json.class)
-    public Result getNextQuestion() {
+    public Result getNextQuestion()
+    {
+        // *******************************************************************
+        // ********************* Parsing and error handling ******************
 
-        // Parse the parameters:
         JsonNode jsonRequest = request().body().asJson();
+
+        // ** Sintatic Error handling **:
+        if (jsonRequest.get("category") == null)
+            return badRequest(ControllerUtils.missingField("category"));
+
+        if (jsonRequest.get("answers") == null || !jsonRequest.get("answers").isArray())
+            return badRequest(ControllerUtils.missingField("answers"));
+
+        //if (jsonRequest.get("blacklist_questions") == null || jsonRequest.get("blacklist_questions").isArray())
+        //    return badRequest(ControllerUtils.missingField("blacklist_questions"));
+
+        // Get the parameters:
         String category = jsonRequest.get("category").asText();
 
         JsonNode answers = jsonRequest.withArray("answers");
         JsonNode blackListQuestions = jsonRequest.withArray("blacklist_questions");
 
-        if (category == null)
-            return badRequest("Missing parameter [category]");
-
         ProductService productService = new ProductService();
+        CategoryService categoryService = new CategoryService();
 
-        // Return values initialized:
+        // **Semantic Error handling **:
+        if (categoryService.findByCode(category) == null)
+            return badRequest(ControllerUtils.generalError("INVALID_CATEGORY","Category not found!"));
+
+
+        // *******************************************************************
+        // ********************* Request Processing **************************
+
+        // Initialize any necessary return values:
+        Question nextQuestion = null;
         List<Map.Entry<Product, Float>> orderedProductScores = new ArrayList<>();
 
-        // If we don't want the first question:
+        // Initialize local variables:
+        List<String> answeredQuestionCodes = new ArrayList<>();
+
+        // If we're not seeking the first question
         if (answers.elements().hasNext())
         {
             Map<Product, Float> productScores = productService.initializeProductScores(category);
@@ -64,32 +76,47 @@ public class QuestionController extends Controller {
                 String questionCode = questionAnswer.get("question").asText();
                 String answerCode = questionAnswer.get("answer").asText();
 
+                if (questionCode == null)
+                    return badRequest(ControllerUtils.missingField("question"));
+
+                if (answerCode == null)
+                    return badRequest(ControllerUtils.missingField("answer"));
+
                 // Update the scores:
-                productService.updateScores(questionCode, answerCode, productScores);
+                if (!productService.updateScores(questionCode, answerCode, productScores))
+                    return badRequest(ControllerUtils.generalError("INVALID_QUESTION_ANSWER", "One of the question ID or answer ID you supplied is not valid!"));
+
+                // Add the question code the answered question list:
+                answeredQuestionCodes.add(questionCode);
             }
 
             // Retrieve the top X products with higher score:
             orderedProductScores = MapUtils.orderByValueDecreasing(productScores);
 
             // Return the next question:
-
+            nextQuestion = AlgorithmLogic.getNextQuestion(category, answeredQuestionCodes);
         }
-        else // If we want the first question:
-        {
-            // Get all questions:
-            QuestionService service = new QuestionService();
-            Iterable<Question> questions = service.findByCategoryCode(category);
+        // If we're seeking the first question:
+        else
+            nextQuestion = AlgorithmLogic.getFirstQuestion(category);
 
-            // Get random question:
-            List<Question> questionList = new ArrayList<>();
-            questions.forEach(questionList::add);
-            Question randomQuestion = questionList.get(new Random().nextInt(questionList.size()));
+        // *******************************************************************
+        // *********************** Request Return ****************************
 
-            return ok(randomQuestion.toString() + category);
-        }
-
-        // Do the return:
         ObjectNode result = Json.newObject();
+        ObjectNode questionNode = result.putObject("question");
+        ArrayNode answersNode = result.putArray("answers");
+
+        // If the algorithm didn't end, let's present the next question:
+        if (nextQuestion != null)
+        {
+            questionNode.put("code", nextQuestion.getCode()).put("text", nextQuestion.getText());
+            nextQuestion.getAnswers().forEach(
+                    answer -> answersNode.addObject()
+                            .put("code", answer.getCode())
+                            .put("text", answer.getText()));
+        }
+
         ArrayNode products = result.putArray("products");
         orderedProductScores.forEach(x -> products.addObject()
                 .put("EAN", x.getKey().getEAN())
@@ -240,22 +267,8 @@ public class QuestionController extends Controller {
 
     public Result getQuestionByCategory(String code)
     {
-
         QuestionService service = new QuestionService();
-        //List<Map<String, Object>> questions = new ArrayList<>();
-        List<Question> questions = new ArrayList<>();
-        service.findByCategoryCode(code).forEach(questions::add);
-
-        return ok(Json.toJson(questions));
-
-
-        /*
-        QuestionService service = new QuestionService();
-        List<Answer> questions = new ArrayList<>();
-        service.findByCategoryCode(code).forEach(questions::add);
-
-        return ok(Json.toJson(questions));
-        */
+        return ok(Json.toJson(service.findByCategoryCode(code, false)));
     }
 
     // TODO ver o que retorna se n existir a questao com este ID

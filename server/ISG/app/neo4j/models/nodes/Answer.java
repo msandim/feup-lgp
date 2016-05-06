@@ -1,5 +1,6 @@
 package neo4j.models.nodes;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import neo4j.models.Entity;
 import neo4j.models.edges.AnswerAttribute;
@@ -17,8 +18,10 @@ import java.util.Set;
 @NodeEntity
 public class Answer extends Entity
 {
+    private String code;
     private String text;
 
+    @JsonIgnore
     private Float frequency;
 
     @Relationship(type = "INFLUENCES")
@@ -45,6 +48,16 @@ public class Answer extends Entity
                 + ", name=" + text
                 + ", frequency=" + frequency
                 + "}\n";
+    }
+
+    public String getCode()
+    {
+        return code;
+    }
+
+    public void setCode(String code)
+    {
+        this.code = code;
     }
 
     public String getText() {

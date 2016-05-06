@@ -15,7 +15,9 @@ import java.util.List;
 import java.util.Set;
 
 @NodeEntity
-public class Question extends Entity {
+public class Question extends Entity
+{
+    private String code;
     private String text;
 
     @Relationship(type = "HAS")
@@ -28,24 +30,16 @@ public class Question extends Entity {
     //@Relationship(type = "CONNECTS", direction = Relationship.INCOMING)
     //private Set<QuestionEdge> previousQuestions;
 
-    //@Relationship(type = "HAS_QUESTIONS", direction = Relationship.INCOMING)
-    @JsonIgnore
-    private Category category;
-
     public Question() {
     }
 
-    public Question(String text, Category category) {
+    public Question(String text) {
         this.text = text;
-        this.category = category;
     }
 
     @Override
     public String toString() {
-        return "Question{" + "id=" + getId() + ", text=" + text +
-                ", category=" + category +
-                ", answers_Size=" + answers.size() +
-                '}' + '\n';
+        return code;
     }
 
     public List<Answer> getAnswers() {
@@ -74,19 +68,42 @@ public class Question extends Entity {
     }
     */
 
-    public Category getCategory() {
-        return category;
-    }
-
-    public void setCategory(Category category) {
-        this.category = category;
-    }
-
     public String getText() {
         return text;
     }
 
     public void setText(String text) {
         this.text = text;
+    }
+
+    public String getCode()
+    {
+        return code;
+    }
+
+    public void setCode(String code)
+    {
+        this.code = code;
+    }
+
+    // Hashcode of each Question is the code's hashcode:
+    @Override
+    public int hashCode()
+    {
+        return this.code.hashCode();
+    }
+
+    // Two Questions are the same if they have the same code:
+    @Override
+    public boolean equals(Object obj)
+    {
+        if (obj instanceof Question)
+        {
+            Question q = (Question) obj;
+            return (q.code.equals(this.code));
+        } else
+        {
+            return false;
+        }
     }
 }
