@@ -261,6 +261,7 @@ public class QuestionController extends Controller {
         return ok("Success");
     }
 
+    /*
     public Result retrieveAllQuestions()
     {
         // Retrieve all the questions in the system:
@@ -270,14 +271,21 @@ public class QuestionController extends Controller {
 
         return ok(Json.toJson(questions));
     }
+    */
 
-    public Result getQuestionByCategory(String code)
+    public Result getQuestionsByCategory(String code)
     {
-        QuestionService service = new QuestionService();
-        return ok(Json.toJson(service.findByCategoryCode(code, false)));
+        QuestionService questionService = new QuestionService();
+        CategoryService categoryService = new CategoryService();
+
+        if (categoryService.findByCode(code) == null)
+            return badRequest(ControllerUtils.generalError("INVALID_CATEGORY", "Category not found!"));
+
+        return ok(Json.toJson(questionService.findByCategoryCode(code, false)));
     }
 
     // TODO ver o que retorna se n existir a questao com este ID
+    /*
     public Result retrieveQuestion(Long id)
     {
         QuestionService service = new QuestionService();
@@ -285,6 +293,7 @@ public class QuestionController extends Controller {
 
         return ok(Json.toJson(question));
     }
+    */
 
     public Result deleteQuestion(Long id)
     {

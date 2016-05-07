@@ -4,6 +4,7 @@ import neo4j.Neo4jSessionFactory;
 import neo4j.models.edges.QuestionEdge;
 import neo4j.models.nodes.Question;
 import neo4j.services.utils.GenericService;
+import scala.Console;
 
 import java.util.ArrayList;
 import java.util.Collections;
