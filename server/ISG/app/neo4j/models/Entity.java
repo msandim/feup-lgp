@@ -1,5 +1,6 @@
 package neo4j.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
@@ -7,7 +8,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  */
 public abstract class Entity {
 
-    @JsonProperty("id")
+    //@JsonProperty("id")
+    @JsonIgnore
     private Long id;
 
     public Long getId() {

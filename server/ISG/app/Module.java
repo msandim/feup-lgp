@@ -27,9 +27,9 @@ public class Module extends AbstractModule {
         // Set AtomicCounter as the implementation for Counter.
         //bind(Counter.class).to(AtomicCounter.class);
 
-        bind(QuestionService.class).to(QuestionServiceImpl.class).in(Scopes.SINGLETON);
-        bind(CategoryService.class).to(CategoryServiceImpl.class).in(Scopes.SINGLETON);
-        bind(ProductService.class).to(ProductServiceImpl.class).in(Scopes.SINGLETON);
+        //bind(QuestionService.class).to(QuestionService.class).in(Scopes.SINGLETON);
+        //bind(CategoryServiceCoco.class).to(CategoryService.class).in(Scopes.SINGLETON);
+        //bind(ProductService.class).to(ProductService.class).in(Scopes.SINGLETON);
     }
 
 }
