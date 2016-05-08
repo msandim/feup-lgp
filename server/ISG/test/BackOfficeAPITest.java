@@ -119,11 +119,12 @@ public class BackOfficeAPITest extends WithServer {
         assertEquals(mapper.readValue(new File("addCategory/responseNormal.json"), JsonNode.class), response.asJson());
 
         //Checking if the category was really added
-        response = request("api/category/0", "GET", null, null);//TODO Fix this request with the proper route according to the document
+        response = request("api/getAllCategories", "GET", null, null);
 
         assert response != null;
         assertEquals(OK, response.getStatus());
-        assertEquals("Category{id=0, name=Televisoes} \n", response.getBody()); //TODO Change to JSON / Change to a proper response
+        JsonNode jsonResponse = response.asJson();
+        //assertEquals(true, jsonResponse.has("Televisoes")); //TODO Change to JSON / Change to a proper response
     }
 
     @Test

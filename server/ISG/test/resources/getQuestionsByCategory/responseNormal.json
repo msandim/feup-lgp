@@ -6,7 +6,6 @@
       {
         "code":"2",
         "text":"1 ou Mais",
-        "frequency":0.699999988079071,
         "attributes":[
           {
             "attribute":{
@@ -21,7 +20,6 @@
       {
         "code":"1",
         "text":"Nenhuma",
-        "frequency":0.20999999344348907,
         "attributes":[
           {
             "attribute":{
@@ -42,7 +40,6 @@
       {
         "code":"2",
         "text":"Grande",
-        "frequency":0.20000000298023224,
         "attributes":[
           {
             "attribute":{
@@ -57,7 +54,6 @@
       {
         "code":"1",
         "text":"Pequena",
-        "frequency":0.44999998807907104,
         "attributes":[
           {
             "attribute":{

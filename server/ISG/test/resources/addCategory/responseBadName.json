@@ -1,4 +1,4 @@
 {
-  "error":"INVALID_NAME",
-  "msg":"This category name already exists!"
+  "error":"INVALID_CODE",
+  "msg":"This category code already exists!"
 }

@@ -1,10 +1,17 @@
 [
   {
-    "name":"Produto 1",
-    "EAN":"123456"
+    "name":"TV2",
+    "price":120.5,
+    "ean":"002"
   },
   {
-    "name":"Produto 12",
-    "EAN":"1234567"
+    "name":"TV1",
+    "price":49.5,
+    "ean":"001"
+  },
+  {
+    "name":"TV3",
+    "price":50,
+    "ean":"003"
   }
 ]

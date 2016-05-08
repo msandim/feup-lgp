@@ -1,4 +1,4 @@
 {
   "error":"INVALID_CATEGORY",
-  "msg":"There is no category with this name!"
+  "msg":"Category not found!"
 }

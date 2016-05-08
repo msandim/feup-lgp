@@ -1,6 +1,6 @@
 {
-  "question":null,
-  "answers":null,
+  "question":{},
+  "answers":[],
   "products":[
     {
       "EAN":"001",
