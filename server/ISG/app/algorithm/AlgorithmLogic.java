@@ -100,7 +100,7 @@ public class AlgorithmLogic
 
         for(Answer answer: question.getAnswers())
         {
-            Float frequency = answer.getFrequency();
+            Float frequency = getFrequency(answer);
             Float productRatio = ((float) service.getNumProductsAffected(answer)) / totalNumberOfProducts;
             Float mediumScore = service.getMediumScore(answer);
 
@@ -113,6 +113,12 @@ public class AlgorithmLogic
         }
 
         return metricResult;
+    }
+
+    private static Float getFrequency(Answer answer)
+    {
+        // TODO this will be more complicated:
+        return answer.getFrequency();
     }
 
     private static Float getVarianceGain(QuestionEdge questionEdge)
