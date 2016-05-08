@@ -1,11 +1,14 @@
 package neo4j.models.nodes;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import neo4j.models.Entity;
 import neo4j.models.edges.AnswerAttribute;
 import org.neo4j.ogm.annotation.*;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -15,12 +18,14 @@ import java.util.Set;
 @NodeEntity
 public class Answer extends Entity
 {
+    private String code;
     private String text;
 
+    @JsonIgnore
     private Float frequency;
 
     @Relationship(type = "INFLUENCES")
-    private Set<AnswerAttribute> attributes = new HashSet<>();
+    private List<AnswerAttribute> attributes = new ArrayList<>();
 
     public Answer() { }
 
@@ -28,11 +33,11 @@ public class Answer extends Entity
         this.text = name;
     }
 
-    public Set<AnswerAttribute> getAttributes() {
+    public List<AnswerAttribute> getAttributes() {
         return attributes;
     }
 
-    public void setAttributes(Set<AnswerAttribute> attributes) {
+    public void setAttributes(List<AnswerAttribute> attributes) {
         this.attributes = attributes;
     }
 
@@ -43,6 +48,16 @@ public class Answer extends Entity
                 + ", name=" + text
                 + ", frequency=" + frequency
                 + "}\n";
+    }
+
+    public String getCode()
+    {
+        return code;
+    }
+
+    public void setCode(String code)
+    {
+        this.code = code;
     }
 
     public String getText() {
