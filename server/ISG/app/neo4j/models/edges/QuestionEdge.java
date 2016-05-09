@@ -19,9 +19,26 @@ public class QuestionEdge extends Entity
     private Float varianceGain;
     private Float goodSequenceRatio;
 
+    public QuestionEdge(Question in, Question out) {
+        this.previousQuestion = in;
+        this.nextQuestion = out;
+    }
+
     public Question getNextQuestion()
     {
         return nextQuestion;
+    }
+
+    public void setNextQuestion(Question nextQuestion) {
+        this.nextQuestion = nextQuestion;
+    }
+
+    public Question getPreviousQuestion() {
+        return previousQuestion;
+    }
+
+    public void setPreviousQuestion(Question previousQuestion) {
+        this.previousQuestion = previousQuestion;
     }
 
     public Float getVarianceGain()

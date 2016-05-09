@@ -8,6 +8,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import neo4j.models.Entity;
 import neo4j.models.edges.QuestionEdge;
 import org.neo4j.ogm.annotation.*;
+import utils.IdGenerator;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -31,10 +32,12 @@ public class Question extends Entity
     //private Set<QuestionEdge> previousQuestions;
 
     public Question() {
+        this.code = IdGenerator.generate();
     }
 
     public Question(String text) {
         this.text = text;
+        this.code = IdGenerator.generate();
     }
 
     @Override

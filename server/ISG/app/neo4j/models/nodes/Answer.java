@@ -1,15 +1,13 @@
 package neo4j.models.nodes;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import neo4j.models.Entity;
 import neo4j.models.edges.AnswerAttribute;
 import org.neo4j.ogm.annotation.*;
+import utils.IdGenerator;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 /**
  * Created by Miguel on 26-04-2016.
@@ -27,10 +25,11 @@ public class Answer extends Entity
     @Relationship(type = "INFLUENCES")
     private List<AnswerAttribute> attributes = new ArrayList<>();
 
-    public Answer() { }
+    public Answer() {this.code = IdGenerator.generate();}
 
     public Answer(String name) {
         this.text = name;
+        this.code = IdGenerator.generate();
     }
 
     public List<AnswerAttribute> getAttributes() {

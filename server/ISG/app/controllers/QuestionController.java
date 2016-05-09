@@ -128,36 +128,35 @@ public class QuestionController extends Controller {
     @BodyParser.Of(BodyParser.Json.class)
     public Result createOrUpdateQuestion() {
 
-        //return json message
-        ObjectNode result = Json.newObject();
-
-        // Get the category and verify if it exists
-        CategoryService categoryService = new CategoryService();
 
         JsonNode jsonRequest = request().body().asJson();
 
-        String catCode = jsonRequest.findPath("category").asText();
+        // Service initialization
+        CategoryService categoryService = new CategoryService();
+        QuestionService questionService = new QuestionService();
+        AttributeService attrService = new AttributeService();
 
-        Category category = categoryService.findByCode(catCode);
+        // Get the category and verify if it exists
 
-        if (category == null) {
-            result.put("Error", "Invalid Category");
-            result.put("Message", "There is no category with this code: " + catCode);
-            return ok(result);
-        }
+        String categoryCode = jsonRequest.findPath("category").asText();
+
+        Category category = categoryService.findByCode(categoryCode);
+
+        if (category == null)
+            return badRequest(ControllerUtils.generalError("INVALID_CATEGORY","Category not found!"));
 
         //parse questions
         JsonNode questionsNode = jsonRequest.findPath("questions");
 
-        Iterator<JsonNode> itQt = questionsNode.elements();
+        Iterator<JsonNode> itQuestion = questionsNode.elements();
 
         //iterate through questions
-        while (itQt.hasNext()) {
+        while (itQuestion.hasNext()) {
 
-            JsonNode qtNode = itQt.next();
+            JsonNode qtNode = itQuestion.next();
 
             String questionText = qtNode.findPath("text").asText();
-            //TODO ligar à categoria e às perguntas da categoria
+
             //create question object
             Question question = new Question(questionText);
 
@@ -166,67 +165,71 @@ public class QuestionController extends Controller {
 
             List<Answer> answers = new ArrayList<>();
 
-            Iterator<JsonNode> itAn = answersNode.elements();
+            Iterator<JsonNode> itAnswer = answersNode.elements();
 
             //iterate through answers
-            while (itAn.hasNext()) {
+            while (itAnswer.hasNext()) {
 
-                JsonNode anNode = itAn.next();
+                JsonNode answerNode = itAnswer.next();
 
-                String answerText = anNode.findValue("text").asText();
+                String answerText = answerNode.findValue("text").asText();
 
                 //create answer object
                 Answer answer = new Answer(answerText);
 
-                JsonNode characteristics = anNode.findPath("characteristics");
+                JsonNode characteristics = answerNode.findPath("characteristics");
 
                 List<AnswerAttribute> answerAttrs = new ArrayList<>();
 
-                Iterator<JsonNode> itCh = characteristics.elements();
+                Iterator<JsonNode> itCharacteristics = characteristics.elements();
 
                 //iterate through characteristics
-                while (itCh.hasNext()) {
+                while (itCharacteristics.hasNext()) {
 
-                    JsonNode chNode = itCh.next();
+                    JsonNode characteristicsNode = itCharacteristics.next();
 
-                    String chName = chNode.findValue("name").asText();
+                    String characteristicsName = characteristicsNode.findValue("name").asText();
 
                     //verify if the attribute exists in the database
 
-                    AttributeService attrService = new AttributeService();
+                    Attribute attr = attrService.findByName(characteristicsName);
 
-                    Attribute attr = attrService.findByName(chName);
+                    if (attr == null)
+                        return badRequest(ControllerUtils.generalError("INVALID_ATTRIBUTE", "There is no attribute with this name: " + characteristicsName));
 
-                    if (attr == null) {
-                        result.put("Error", "Invalid Attribute");
-                        result.put("Message", "There is no attribute with this name: " + chName);
-                        return ok(result);
+                    //validate operator
+                    String characteristicsOperator = characteristicsNode.findValue("operator").asText();
+
+                    if (!AnswerAttribute.Operators.isValid(characteristicsOperator))
+                        return badRequest(ControllerUtils.generalError("INVALID_OPERATOR", "Operators must be equal to one of these: < <= > >= = !="));
+
+                    //validate value
+                    String characteristicsValue = characteristicsNode.findValue("value").asText();
+
+                    //validate attribute operator relation
+                    if(!(attr.getType().equals(Attribute.Type.CATEGORICAL) && AnswerAttribute.Operators.isValidForCategorical(characteristicsOperator)))
+                        return badRequest(ControllerUtils.generalError("INVALID_ATTRIBUTE_OPERATOR_RELATION", "This operator is not valid"));
+
+                    //validate attribute
+                    if(attr.getType().equals(Attribute.Type.NUMERIC)) {
+                        try {
+                            float f = Float.parseFloat(characteristicsValue);
+
+                        } catch (NumberFormatException nfe) {
+                            return badRequest(ControllerUtils.generalError("INVALID_SCORE", "Score must be parsable to float"));
+                        }
                     }
 
-                    String chOperator = chNode.findValue("operator").asText();
+                    String chScore = characteristicsNode.findValue("score").asText();
 
-                    if (!AnswerAttribute.Operators.isValid(chOperator)) {
-                        result.put("Error", "Invalid operator");
-                        result.put("Message", "It must be equal one of these: < <= > >= = !=");
-                        return ok(result);
-                    }
-
-                    String chValue = chNode.findValue("value").asText();
-
-                    // TODO Verificar relação entre os operadores e valores
-
-                    String chScore = chNode.findValue("score").asText();
-
-                    //verify if the score is a number
+                    //verify if the score is a valid number
                     try {
                         float f = Float.parseFloat(chScore);
-                        AnswerAttribute answerAttr = new AnswerAttribute(answer, attr, chOperator, chValue, f);
+                        AnswerAttribute answerAttr = new AnswerAttribute(answer, attr, characteristicsOperator, characteristicsValue, f);
                         answerAttrs.add(answerAttr);
 
                     } catch (NumberFormatException nfe) {
-                        result.put("Error", "Invalid answer score");
-                        result.put("Message", "It must be a number");
-                        return ok(result);
+                        return badRequest(ControllerUtils.generalError("INVALID_SCORE", "Score must be parsable to float"));
                     }
                 }
 
@@ -240,9 +243,11 @@ public class QuestionController extends Controller {
             //connecting answers to question
             question.setAnswers(answers);
 
+            //connecting same category questions
+            question.setNextQuestions(questionService.findByCategoryCode(categoryCode, false));
+
             //adding answer to DB
-            QuestionService service = new QuestionService();
-            service.createOrUpdate(question, 2);
+            questionService.createOrUpdate(question, 2);
         }
 
         return ok("Success");
