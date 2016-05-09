@@ -108,7 +108,7 @@ public class AlgorithmLogic
             if (productRatio > 1)
                 Console.println("******* ERROR PRODUCT RATIO ABOVE 1 ***************");
 
-            // If the productRatio is 0, then part to add from this answer is 0 because it doesn't affect any product!
+            // If the productRatio is 0, then the part to add from this answer is 0 because it doesn't affect any product!
             if (productRatio != 0)
                 metricResult += frequency * (1 - productRatio) * mediumScore;
         }
@@ -118,7 +118,10 @@ public class AlgorithmLogic
 
     public static Float getFrequency(Question question, Answer answer)
     {
-        return ((float) answer.getNumberOfTimesChosen())/question.getNumberOfTimesChosen();
+        if (question.getNumberOfTimesChosen() == 0)
+            return (float) 0;
+        else
+            return ((float) answer.getNumberOfTimesChosen())/question.getNumberOfTimesChosen();
     }
 
     private static Float getVarianceGain(QuestionEdge questionEdge)
@@ -128,6 +131,9 @@ public class AlgorithmLogic
 
     private static Float getGoodSequenceRatio(QuestionEdge questionEdge)
     {
-        return ((float) questionEdge.getNumberOfTimesGoodFeedback())/questionEdge.getNumberOfTimesChosen();
+        if (questionEdge.getNumberOfTimesChosen() == 0)
+            return (float) 0;
+        else
+            return ((float) questionEdge.getNumberOfTimesGoodFeedback())/questionEdge.getNumberOfTimesChosen();
     }
 }
