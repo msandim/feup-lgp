@@ -12,7 +12,7 @@
 
 [Slack](https://lgp-2.slack.com)
 
-[Travis CI - Continuous Integration]()
+[Travis CI - Continuous Integration](https://travis-ci.com/msandim/feup-lgp)
 
 [ISG Server Instance](http://104.167.113.111:9000)
 

@@ -129,17 +129,28 @@ function addCategory() {
     var categoryName = $('.inputCatName').val();
     var CategoryExists = [];
     var nameCategory = false;
-    
+
     for (var i = 0; i < ProductsArray.length; i++) {
       CategoryExists.push(ProductsArray[i].category); 
+    } 
+
+    if($('.inputCatName').hasClass('border')){
+       $('.inputCatName').removeClass('border');
     }
     
     while(!nameCategory){
       for (var j = 0; j < CategoryExists.length; j++) {
-        if (CategoryExists[j] === categoryName) {
+        if (CategoryExists[j] === capitalizeFirstLetter(categoryName)) {
           nameCategory=false;
-          //  AddModal();
-          break;
+          $('.inputCatName').addClass("border");
+          
+          //edit value placeholder
+          $('.inputCatName').val('');
+          $('.inputCatName').attr("placeholder", "Nome da Categoria ja existe");
+          //disable button submit add category
+          $('#InputButtonCatName').attr("disabled", true);
+          $('#myBtn').click();
+          return false;
         }
         else {
           nameCategory=true;
@@ -162,7 +173,26 @@ function addCategory() {
     }
     ProductsArray.push(toInsert);
 
+    //Unbind all elements with the class and then rebbind to include the new element
+      $(".expandProducts").unbind("click", expand());
+      $(".expandProducts").bind("click", expand());
+      $(".addProduct").unbind("click", addProduct());
+      $(".addProduct").bind("click", addProduct());
+      $(".btn-danger").unbind("click", addFile());
+      $(".btn-danger").bind("click", addFile());
+      $(".category-button").unbind("click", removeCategory());
+      $(".category-button").bind("click", removeCategory()); 
+      $(document).unbind("ready");
+      $(document).bind("ready", function () { $("#my-file-selector").change(function(){var FileName = $(this).val().split('\\').pop(); $(this).parent().find('h4').text(FileName);}); });
+     
+      //clear placeholder
+      $('.inputCatName').val('');
+      $('.inputCatName').attr("placeholder", ">");
+
+      //disable button submit add category
+      $('#InputButtonCatName').attr("disabled", true);
   });
+  
 }
 
 function autoAddCategory(){
@@ -178,29 +208,23 @@ function autoAddCategory(){
       Products.sort();
 
       //Unbind all elements with the class and then rebbind to include the new element
-      var expandCategoriaElement = boxGroup.find(".expandProducts");
-      expandCategoriaElement.unbind("click", expand());
-      expandCategoriaElement.bind("click", expand());
-      var addProdutoElement = boxGroup.find(".addProduct");
-      addProdutoElement.unbind("click", addProduct());
-      addProdutoElement.bind("click", addProduct());
-      var addFileElement = boxGroup.find(".btn-danger");
-      addFileElement.unbind("click", addFile());
-      addFileElement.bind("click", addFile());
-      var removeProductElement = boxGroup.find(".box-of-products");
-      removeProductElement.unbind("click", removeProduct());
-      removeProductElement.bind("click", removeProduct()); 
-      var removeCategoryElement = boxGroup.find(".category-button");
-      removeCategoryElement.unbind("click", removeCategory());
-      removeCategoryElement.bind("click", removeCategory()); 
+      $(".expandProducts").unbind("click", expand());
+      $(".expandProducts").bind("click", expand());
+      $(".addProduct").unbind("click", addProduct());
+      $(".addProduct").bind("click", addProduct());
+      $(".btn-danger").unbind("click", addFile());
+      $(".btn-danger").bind("click", addFile());
+      $(".category-button").unbind("click", removeCategory());
+      $(".category-button").bind("click", removeCategory()); 
       $(document).unbind("ready");
       $(document).bind("ready", function () { $("#my-file-selector").change(function(){var FileName = $(this).val().split('\\').pop(); $(this).parent().find('h4').text(FileName);}); });
 
-      var lastChild = boxGroup.find(":last-child");
+       var lastChild = boxGroup.find(":last-child");
       //console.log("OLA " + lastChild.attr('class') );
       autoAddProducts(categoryName, lastChild);
     });
   });
+
 }
 
 function autoAddProducts(categoryName,lastChild) {
@@ -213,6 +237,8 @@ function autoAddProducts(categoryName,lastChild) {
         //console.log("OLA3 " + ProductsArray[i].products[j].name ); 
         product=capitalizeFirstLetter(ProductsArray[i].products[j].name);
         boxProducts.append('<div class="box-of-products"><div class="col-sm-10 table-col-border table-col-border-left product-padding col-size"> <h3>'+product+'</h3></div> <div class="col-sm-1 table-col-border contain-button col-size"><button type="button" class="btn btn-block product-button"><span class="glyphicon glyphicon-remove"></span></button> </div> </div>');
+        $(".box-of-products").unbind("click", removeProduct());
+        $(".box-of-products").bind("click", removeProduct()); 
       }
     }
   }
@@ -226,13 +252,33 @@ $(document).ready(function(){
    });
 });
 
+//check input is empty and disable button submit
+$(document).ready(function() {
+    $('.modal-body input').keyup(function() {
+
+        var empty = false;
+        $('.modal-body input').each(function() {
+            if ($(this).val().length == 0) {
+                empty = true;
+            }
+        });
+
+        if (empty) {
+            $('#InputButtonCatName').attr('disabled', 'disabled');
+        } else {
+            $('#InputButtonCatName').attr('disabled', false);
+        }
+    });
+});
+
+
 function removeProduct() {
   var self = this;
   $('.box-of-products').click(function(){
        
     var nameCategory = $(this).parent().parent().find(":first-child").find(":first-child");
     var product = $(this).find('h3').text();
-    console.log("Cate " + nameCategory.find('h3:first').html() + " PROD " + product);
+    //console.log("Cate " + nameCategory.find('h3:first').html() + " PROD " + product);
 
       /*$.ajax({   
         url: '/api/removep/',
@@ -283,16 +329,38 @@ function AddModal() {
 
   // When the user clicks on <span> (x), close the modal
   span.onclick = function() {
+       if($('.inputCatName').hasClass('border')){
+         $('.inputCatName').removeClass('border');
+       }
+       //edit placeholder
+      $('.inputCatName').val('');
+      $('.inputCatName').attr("placeholder", ">");
+      //disable button submit add category
+      $('#InputButtonCatName').attr("disabled", true);
       modal.style.display = "none";
   }
 
   // When the user clicks anywhere outside of the modal, close it
   window.onclick = function(event) {
       if (event.target == modal) {
+           if($('.inputCatName').hasClass('border')){
+               $('.inputCatName').removeClass('border');
+          }
+          //edit placeholder
+          $('.inputCatName').val('');
+          $('.inputCatName').attr("placeholder", ">");
+          //disable button submit add category
+          $('#InputButtonCatName').attr("disabled", true);
           modal.style.display = "none";
       }
   }
+
+  $('.addCategory').click(function(){
+      modal.style.display = "none";
+  });
+
 }
+
 
 //UTILS
 function capitalizeFirstLetter(string) {
