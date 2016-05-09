@@ -16,8 +16,9 @@ public class QuestionEdge extends Entity
     @EndNode
     private Question nextQuestion;
 
-    private Float varianceGain;
-    private Float goodSequenceRatio;
+    private Float varianceGainMean = (float) 0.0;
+    private Long numberOfTimesChosen = (long) 0;
+    private Long numberOfTimesGoodFeedback = (long) 0;
 
     public QuestionEdge(Question in, Question out) {
         this.previousQuestion = in;
@@ -41,14 +42,30 @@ public class QuestionEdge extends Entity
         this.previousQuestion = previousQuestion;
     }
 
-    public Float getVarianceGain()
+    public Float getVarianceGainMean()
+
     {
-        return varianceGain;
+        return varianceGainMean;
     }
 
-    public Float goodSequenceGain()
+    public void incNumberOfTimesChosen()
     {
-        return goodSequenceRatio;
+        numberOfTimesChosen++;
+    }
+
+    public Long getNumberOfTimesChosen()
+    {
+        return numberOfTimesChosen;
+    }
+
+    public void incNumberOfTimesGoodFeedback()
+    {
+        numberOfTimesGoodFeedback++;
+    }
+
+    public Long getNumberOfTimesGoodFeedback()
+    {
+        return numberOfTimesGoodFeedback;
     }
 
     private String getCode()
