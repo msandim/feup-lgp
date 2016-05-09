@@ -6,6 +6,7 @@ import neo4j.models.nodes.Answer;
 import neo4j.models.nodes.Question;
 import neo4j.services.AlgorithmParametersService;
 import neo4j.services.ProductService;
+import neo4j.services.QuestionEdgeService;
 import neo4j.services.QuestionService;
 import scala.Console;
 import utils.RandomCollection;
@@ -43,14 +44,14 @@ public class AlgorithmLogic
     public static Question getNextQuestion(String category, List<String> answeredQuestionCodes)
     {
         AlgorithmParametersService algorithmService = new AlgorithmParametersService();
-        QuestionService questionService = new QuestionService();
+        QuestionEdgeService questionEdgeService = new QuestionEdgeService();
 
         // Get algorithm parameters:
         AlgorithmParameters parameters = algorithmService.getAlgorithmParameters();
 
         // Get all the question connections from the current question:
         String lastQuestionCode = answeredQuestionCodes.get(answeredQuestionCodes.size() - 1);
-        List<QuestionEdge> questionEdges = questionService.getNextQuestions(lastQuestionCode);
+        List<QuestionEdge> questionEdges = questionEdgeService.getNextQuestions(lastQuestionCode);
 
         // Remove the questions connections already answered:
         removeAnsweredQuestions(questionEdges, answeredQuestionCodes);
@@ -100,7 +101,7 @@ public class AlgorithmLogic
 
         for(Answer answer: question.getAnswers())
         {
-            Float frequency = getFrequency(answer);
+            Float frequency = getFrequency(question, answer);
             Float productRatio = ((float) service.getNumProductsAffected(answer)) / totalNumberOfProducts;
             Float mediumScore = service.getMediumScore(answer);
 
@@ -115,21 +116,18 @@ public class AlgorithmLogic
         return metricResult;
     }
 
-    private static Float getFrequency(Answer answer)
+    public static Float getFrequency(Question question, Answer answer)
     {
-        // TODO this will be more complicated:
-        return answer.getFrequency();
+        return ((float) answer.getNumberOfTimesChosen())/question.getNumberOfTimesChosen();
     }
 
     private static Float getVarianceGain(QuestionEdge questionEdge)
     {
-        // TODO this will be more complicated:
-        return questionEdge.getVarianceGain();
+        return questionEdge.getVarianceGainMean();
     }
 
     private static Float getGoodSequenceRatio(QuestionEdge questionEdge)
     {
-        // TODO this will be more complicated:
-        return questionEdge.goodSequenceGain();
+        return ((float) questionEdge.getNumberOfTimesGoodFeedback())/questionEdge.getNumberOfTimesChosen();
     }
 }

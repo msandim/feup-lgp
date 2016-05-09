@@ -4,11 +4,11 @@ import algorithm.AlgorithmLogic;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import neo4j.models.edges.QuestionEdge;
+import neo4j.models.nodes.Answer;
 import neo4j.models.nodes.Product;
 import neo4j.models.nodes.Question;
-import neo4j.services.CategoryService;
-import neo4j.services.ProductService;
-import neo4j.services.QuestionService;
+import neo4j.services.*;
 import play.libs.Json;
 import play.mvc.BodyParser;
 import play.mvc.Controller;
@@ -18,6 +18,7 @@ import utils.MapUtils;
 
 import javax.inject.Singleton;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -44,7 +45,6 @@ public class QuestionController extends Controller {
 
         // Get the parameters:
         String category = jsonRequest.get("category").asText();
-
         JsonNode answers = jsonRequest.withArray("answers");
         //JsonNode blackListQuestions = jsonRequest.withArray("blacklist_questions");
 
@@ -84,7 +84,8 @@ public class QuestionController extends Controller {
 
                 // Update the scores:
                 if (!productService.updateScores(questionCode, answerCode, productScores))
-                    return badRequest(ControllerUtils.generalError("INVALID_QUESTION_ANSWER", "One of the question ID or answer ID you supplied is not valid!"));
+                    return badRequest(ControllerUtils.generalError("INVALID_QUESTION_ANSWER",
+                            "One of the question ID or answer ID you supplied is not valid!"));
 
                 // Add the question code the answered question list:
                 answeredQuestionCodes.add(questionCode);
@@ -103,7 +104,8 @@ public class QuestionController extends Controller {
 
             // If we can't even retrieve 1 question, we must give an error:
             if (nextQuestion == null)
-                return badRequest(ControllerUtils.generalError("NO_QUESTIONS", "No questions available in this category!"));
+                return badRequest(ControllerUtils.generalError("NO_QUESTIONS",
+                        "No questions available in this category!"));
         }
 
         // *******************************************************************
@@ -132,6 +134,116 @@ public class QuestionController extends Controller {
         return ok(result);
     }
 
+    @BodyParser.Of(BodyParser.Json.class)
+    public Result sendFeedback()
+    {
+        // *******************************************************************
+        // ********************* Parsing and error handling ******************
+
+        JsonNode jsonRequest = request().body().asJson();
+
+        // ** Error handling **:
+        if (jsonRequest.get("category") == null)
+            return badRequest(ControllerUtils.missingField("category"));
+
+        if (jsonRequest.get("feedback") == null)
+            return badRequest(ControllerUtils.missingField("feedback"));
+
+        if (jsonRequest.get("answers") == null || !jsonRequest.get("answers").isArray())
+            return badRequest(ControllerUtils.missingField("answers"));
+
+        // Get the parameters:
+        String category = jsonRequest.get("category").asText();
+        int feedback = jsonRequest.get("feedback").asInt(-1);
+        List<JsonNode> answers = new ArrayList<>();
+        jsonRequest.withArray("answers").forEach(answers::add);
+
+        // ** More error handling **:
+        if (feedback != 0 && feedback != 1)
+            return badRequest(ControllerUtils.generalError("INVALID_FEEDBACK_VALUE",
+                    "The value you supplied for the feedback is invalid (it must be either 0 or 1)!"));
+
+        if (answers.isEmpty())
+            return badRequest(ControllerUtils.generalError("EMPTY_ANSWER_LIST",
+                    "The answer list you supplied does not have any answers!"));
+
+        ProductService productService = new ProductService();
+        CategoryService categoryService = new CategoryService();
+        QuestionService questionService = new QuestionService();
+        QuestionEdgeService questionEdgeService = new QuestionEdgeService();
+        AnswerService answerService = new AnswerService();
+
+        if (categoryService.findByCode(category) == null)
+            return badRequest(ControllerUtils.generalError("INVALID_CATEGORY","Category not found!"));
+
+        // *******************************************************************
+        // ********************* Request Processing **************************
+
+        Map<Question, Answer> sequence = new LinkedHashMap<>();
+        Question lastQuestion = null;
+        Map<Product, Float> productScores = productService.initializeProductScores(category);
+
+        //for(JsonNode questionAnswer: answers)
+        for(JsonNode questionAnswer: answers)
+        {
+            String questionCode = questionAnswer.get("question").asText();
+            String answerCode = questionAnswer.get("answer").asText();
+
+            if (questionCode == null)
+                return badRequest(ControllerUtils.missingField("question"));
+
+            if (answerCode == null)
+                return badRequest(ControllerUtils.missingField("answer"));
+
+            // Update the scores:
+            if (!productService.updateScores(questionCode, answerCode, productScores))
+                return badRequest(ControllerUtils.generalError("INVALID_QUESTION_ANSWER",
+                        "One of the question ID or answer ID you supplied is not valid!"));
+
+            // BEGIN TRANSACTION
+
+            Question currentQuestion = questionService.findByCode(questionCode);
+            Answer currentAnswer = answerService.findByCode(questionCode, answerCode);
+
+            if (currentQuestion == null || currentAnswer == null)
+                return badRequest(ControllerUtils.generalError("INVALID_QUESTION_ANSWER",
+                        "One of the question ID or answer ID you supplied is not valid!"));
+
+            currentQuestion.incNumberOfTimesChosen();
+            currentAnswer.incNumberOfTimesChosen();
+
+            // Update Question and Answer::
+            questionService.createOrUpdate(currentQuestion, 0);
+            answerService.createOrUpdate(currentAnswer, 0);
+
+            // If we're not in the first node, let's retrieve the edge between the last question and the current,
+            // and update:
+            if (lastQuestion != null)
+            {
+                QuestionEdge questionEdge =
+                        questionEdgeService.getQuestionEdge(lastQuestion.getCode(), questionCode);
+
+                if (questionEdge == null)
+                    return badRequest(ControllerUtils.generalError("INVALID_SEQUENCE",
+                            "The sequence you supplied is not valid!"));
+
+                questionEdge.incNumberOfTimesChosen();
+                //questionEdge. // TODO the variance this is missing!
+
+                if (feedback == 1)
+                    questionEdge.incNumberOfTimesGoodFeedback();
+
+                // Update Edge:
+                questionEdgeService.createOrUpdate(questionEdge, 0);
+            }
+
+            lastQuestion = currentQuestion;
+
+            // COMMIT
+        }
+
+        return ok(Json.newObject());
+    }
 
 
     @BodyParser.Of(BodyParser.Json.class)

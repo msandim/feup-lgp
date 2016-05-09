@@ -20,6 +20,9 @@ public class Question extends Entity
     private String code;
     private String text;
 
+    @JsonIgnore
+    private Long numberOfTimesChosen = (long) 0;
+
     @Relationship(type = "HAS")
     private List<Answer> answers = new ArrayList<>();
 
@@ -58,16 +61,6 @@ public class Question extends Entity
         this.nextQuestions = nextQuestions;
     }
 
-    /*
-    public Set<QuestionEdge> getPreviousQuestions() {
-        return previousQuestions;
-    }
-
-    public void setPreviousQuestions(Set<QuestionEdge> previousQuestions) {
-        this.previousQuestions = previousQuestions;
-    }
-    */
-
     public String getText() {
         return text;
     }
@@ -84,6 +77,16 @@ public class Question extends Entity
     public void setCode(String code)
     {
         this.code = code;
+    }
+
+    public void incNumberOfTimesChosen()
+    {
+        numberOfTimesChosen++;
+    }
+
+    public Long getNumberOfTimesChosen()
+    {
+        return numberOfTimesChosen;
     }
 
     // Hashcode of each Question is the code's hashcode:
