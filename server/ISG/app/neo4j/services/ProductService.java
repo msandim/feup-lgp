@@ -139,11 +139,13 @@ public class ProductService extends GenericService<Product>
 
     public Float getMediumScore(Answer answer)
     {
+        if (answer.getAttributes().isEmpty())
+            return (float) 0.0;
+
         Float mediumScore = (float) 0.0;
         for(AnswerAttribute answerAttribute: answer.getAttributes())
-        {
             mediumScore += answerAttribute.getScore();
-        }
+
         return mediumScore / answer.getAttributes().size();
     }
 

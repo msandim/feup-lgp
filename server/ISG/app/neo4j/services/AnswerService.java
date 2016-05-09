@@ -8,6 +8,7 @@ import org.neo4j.ogm.cypher.Filter;
 import org.neo4j.ogm.cypher.Filters;
 
 import java.util.Collections;
+import java.util.Iterator;
 
 /**
  * Created by Miguel on 03-05-2016.
@@ -19,9 +20,20 @@ public class AnswerService extends GenericService<Answer>
         return Answer.class;
     }
 
-    /*
-    public Iterable<Answer> findByQuestionId(Long id)
+    public Answer findByCode(String questionCode, String answerCode)
     {
-        return findAllDetailedWithFilters(new Filters().add(new Filter().))
-    }*/
+        String query = new StringBuilder("MATCH (q: Question)-[:HAS]->(a: Answer) where q.code = '")
+                .append(questionCode)
+                .append("' and a.code = '")
+                .append(answerCode)
+                .append("' return a").toString();
+
+        Iterator<Answer> iterator =
+                Neo4jSessionFactory.getInstance().getNeo4jSession().query(getEntityType(), query, Collections.EMPTY_MAP).iterator();
+
+        if (iterator.hasNext())
+            return iterator.next();
+        else
+            return null;
+    }
 }

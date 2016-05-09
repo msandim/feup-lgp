@@ -50,7 +50,7 @@ public class CategoryController extends Controller {
 
         return ok(res.toString());
     }*/
-    
+
     public Result createCategory(String name, String code)
     {
         CategoryService categoryService = new CategoryService();
