@@ -203,8 +203,8 @@ function addCategory(){
     var boxGroup = $('#boxOfGoodies');
 
     categoryName = capitalizeFirstLetter(categoryName);
-    boxGroup.append('<div class="box"><div class="row"><div class="col-xs-4 table-col-border-first table-col-size table-contain-h3"><h3>'+categoryName+'</h3></div><div class="col-xs-3 table-col-border-first table-col-size table-contain-button"><button type="button" class="btn btn-block table-button addQuestion">Adicionar Pergunta</button></div><div class="col-xs-4 table-col-border-first table-col-size table-contain-button"><button type="button" class="btn btn-block table-button expandCategoria">Lista de Perguntas/Repostas <span class=" glyphicon glyphicon-menu-down"></span></button></div><div class="col-xs-1 table-col-border-end-first table-col-size table-contain-button"><button type="button" class="btn btn-block table-button removeCategory"><span class="glyphicon glyphicon-remove"></span></button></div></div><div class="box-of-questions"><div class="container-fluid"></div></div></div>');
-
+    boxGroup.append('<div class="box"><div class="row"><div class="col-xs-4 table-col-border-first table-col-size table-contain-h3"><h3>'+categoryName+'</h3></div><div class="col-xs-3 table-col-border-first table-col-size table-contain-button"><button type="button" href="#" class="btn btn-block table-button toggle-login inputQuestion">Adicionar Pergunta</button><div style="display:none" class="login"><div id="triangle"></div><h1>Nova Pergunta</h1><input type="text" class="value" placeholder=">" required/><input class="addQuestion" type="submit" value="Adicionar" /></div></div><div class="col-xs-4 table-col-border-first table-col-size table-contain-button"><button type="button" class="btn btn-block table-button expandCategoria">Lista de Perguntas/Repostas <span class=" glyphicon glyphicon-menu-down"></span></button></div><div class="col-xs-1 table-col-border-end-first table-col-size table-contain-button"><button type="button" class="btn btn-block table-button removeCategory"><span class="glyphicon glyphicon-remove"></span></button></div></div><div class="box-of-questions"><div class="container-fluid"></div></div></div>');
+        
     //Add new category to arrays
     catItems.push(categoryName);
     catItems.sort();
@@ -225,23 +225,24 @@ function addCategory(){
     var removeCategoryElement = boxGroup.find(".removeCategory");
     removeCategoryElement.unbind("click", removeCategory());
     removeCategoryElement.bind("click", removeCategory());
-
+    $(document).unbind("ready");
+    $(document).bind("ready", function () { $('.toggle-login').click(function(){ $(this).next(".login").toggle(); }); $('.addQuestion').click(function(){ $('.login').hide();});});
+        
     //clear placeholder
     $('.inputCatName').val('');
     $('.inputCatName').attr("placeholder", ">");
 
     //disable button submit add category
-      $('#InputButtonCatName').attr("disabled", true);
+    $('#InputButtonCatName').attr("disabled", true);
   }); 
 }
 
 function addQuestion(){
   var self = this;
   $('.addQuestion').click(function(){
-    var question;
-    while(!question){
-      question = prompt("Pergunta:");
-    }
+    
+    var question = $('.value').val();
+    
     var boxParent = $( this ).closest('.box');
     var boxQuestions = boxParent.find(".box-of-questions").find(">:first-child");
 
@@ -272,7 +273,7 @@ function addQuestion(){
     var removeQuestionElement = boxQuestions.find(".removeQuestion");
     removeQuestionElement.unbind("click", removeQuestion());
     removeQuestionElement.bind("click", removeQuestion());
-
+    
   });
 }
 
@@ -389,7 +390,8 @@ function autoAddCategory(){
       var boxGroup = $('#boxOfGoodies');
 
       categoryName = capitalizeFirstLetter(category['category']);
-      boxGroup.append('<div class="box"><div class="row"><div class="col-xs-4 table-col-border-first table-col-size table-contain-h3"><h3>'+categoryName+'</h3></div><div class="col-xs-3 table-col-border-first table-col-size table-contain-button"><button type="button" class="btn btn-block table-button addQuestion">Adicionar Pergunta</button></div><div class="col-xs-4 table-col-border-first table-col-size table-contain-button"><button type="button" class="btn btn-block table-button expandCategoria">Lista de Perguntas/Repostas <span class=" glyphicon glyphicon-menu-down"></span></button></div><div class="col-xs-1 table-col-border-end-first table-col-size table-contain-button"><button type="button" class="btn btn-block table-button removeCategory"><span class="glyphicon glyphicon-remove"></span></button></div></div><div class="box-of-questions"><div class="container-fluid"></div></div></div>');
+       boxGroup.append('<div class="box"><div class="row"><div class="col-xs-4 table-col-border-first table-col-size table-contain-h3"><h3>'+categoryName+'</h3></div><div class="col-xs-3 table-col-border-first table-col-size table-contain-button"><button type="button" href="#" class="btn btn-block table-button toggle-login inputQuestion">Adicionar Pergunta</button><div style="display:none" class="login"><div id="triangle"></div><h1>Nova Pergunta</h1><input type="text" class="value" placeholder=">" required/><input class="addQuestion" type="submit" value="Adicionar" /></div></div><div class="col-xs-4 table-col-border-first table-col-size table-contain-button"><button type="button" class="btn btn-block table-button expandCategoria">Lista de Perguntas/Repostas <span class=" glyphicon glyphicon-menu-down"></span></button></div><div class="col-xs-1 table-col-border-end-first table-col-size table-contain-button"><button type="button" class="btn btn-block table-button removeCategory"><span class="glyphicon glyphicon-remove"></span></button></div></div><div class="box-of-questions"><div class="container-fluid"></div></div></div>');
+      
       catItems.push(categoryName);
       catItems.sort();
 
@@ -403,6 +405,9 @@ function autoAddCategory(){
       var removeCategoryElement = boxGroup.find(".removeCategory");
       removeCategoryElement.unbind("click", removeCategory());
       removeCategoryElement.bind("click", removeCategory());
+      $(document).unbind("ready");
+      $(document).bind("ready", function () { $('.toggle-login').click(function(){ $(this).next(".login").toggle(); }); $('.addQuestion').click(function(){ $('.login').hide();});});
+      
 
       var lastChild = boxGroup.find(">:last-child");
 
@@ -433,6 +438,7 @@ function autoAddQuestions(categoryName,lastChild){
         var removeQuestionElement = boxQuestions.find(".removeQuestion");
         removeQuestionElement.unbind("click", removeQuestion());
         removeQuestionElement.bind("click", removeQuestion());
+       
 
         var newLastChild = boxQuestions.find(":last-child");
         autoAddAnswers(quest['answers'],newLastChild);
@@ -650,6 +656,21 @@ $(document).ready(function() {
         }
     });
 });
+
+//
+$(document).ready(function() {
+  $('.toggle-login').click(function(){
+    $(this).next(".login").toggle();
+  });
+  $('.addQuestion').click(function(){
+    //edit value placeholder
+    $('.login').val('');
+    $('.login').attr("placeholder", ">");
+
+    $('.login').hide();
+  });
+});
+
 
 //UTILS
 

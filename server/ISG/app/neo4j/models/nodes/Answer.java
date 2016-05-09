@@ -20,7 +20,7 @@ public class Answer extends Entity
     private String text;
 
     @JsonIgnore
-    private Float frequency;
+    private Long numberOfTimesChosen = (long) 0.0;
 
     @Relationship(type = "INFLUENCES")
     private List<AnswerAttribute> attributes = new ArrayList<>();
@@ -38,15 +38,6 @@ public class Answer extends Entity
 
     public void setAttributes(List<AnswerAttribute> attributes) {
         this.attributes = attributes;
-    }
-
-    @Override
-    public String toString()
-    {
-        return "Answer{" + "id=" + getId()
-                + ", name=" + text
-                + ", frequency=" + frequency
-                + "}\n";
     }
 
     public String getCode()
@@ -86,13 +77,13 @@ public class Answer extends Entity
         this.text = text;
     }
 
-    public void setFrequency(Float frequency)
+    public void incNumberOfTimesChosen()
     {
-        this.frequency = frequency;
+        numberOfTimesChosen++;
     }
 
-    public Float getFrequency()
+    public Long getNumberOfTimesChosen()
     {
-        return frequency;
+        return numberOfTimesChosen;
     }
 }

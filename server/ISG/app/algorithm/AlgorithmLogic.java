@@ -6,6 +6,7 @@ import neo4j.models.nodes.Answer;
 import neo4j.models.nodes.Question;
 import neo4j.services.AlgorithmParametersService;
 import neo4j.services.ProductService;
+import neo4j.services.QuestionEdgeService;
 import neo4j.services.QuestionService;
 import scala.Console;
 import utils.RandomCollection;
@@ -32,7 +33,7 @@ public class AlgorithmLogic
         questions.forEach(question ->
         {
             Float heuristicValue = getQuestionHeuristicValue(category, question);
-            Console.println("Heuristic for: " + question + " is " + heuristicValue);
+            Console.println("First Question * Heuristic for: " + question + " is " + heuristicValue);
             cumulativeRandom.add(heuristicValue, question);
         });
 
@@ -43,14 +44,14 @@ public class AlgorithmLogic
     public static Question getNextQuestion(String category, List<String> answeredQuestionCodes)
     {
         AlgorithmParametersService algorithmService = new AlgorithmParametersService();
-        QuestionService questionService = new QuestionService();
+        QuestionEdgeService questionEdgeService = new QuestionEdgeService();
 
         // Get algorithm parameters:
         AlgorithmParameters parameters = algorithmService.getAlgorithmParameters();
 
         // Get all the question connections from the current question:
         String lastQuestionCode = answeredQuestionCodes.get(answeredQuestionCodes.size() - 1);
-        List<QuestionEdge> questionEdges = questionService.getNextQuestions(lastQuestionCode);
+        List<QuestionEdge> questionEdges = questionEdgeService.getNextQuestions(lastQuestionCode);
 
         // Remove the questions connections already answered:
         removeAnsweredQuestions(questionEdges, answeredQuestionCodes);
@@ -59,6 +60,7 @@ public class AlgorithmLogic
         if (questionEdges.isEmpty())
             return null;
 
+        // Calculate heuristic for each value:
         RandomCollection<Question> cumulativeRandom = new RandomCollection<>();
         questionEdges.forEach(questionEdge ->
         {
@@ -67,7 +69,7 @@ public class AlgorithmLogic
                     + (parameters.getBeta() * getVarianceGain(questionEdge))
                     + (parameters.getGamma() * getGoodSequenceRatio(questionEdge));
 
-            Console.println("Heuristic for: " + questionEdge.getNextQuestion() + " is " + heuristicValue);
+            Console.println("NextQuestion * Heuristic for: " + questionEdge.getNextQuestion() + " is " + heuristicValue);
             cumulativeRandom.add(heuristicValue, questionEdge.getNextQuestion());
         });
 
@@ -99,14 +101,15 @@ public class AlgorithmLogic
 
         for(Answer answer: question.getAnswers())
         {
-            Float frequency = answer.getFrequency();
-            Float productRatio = ((float) service.getNumProductsAffected(answer)) / totalNumberOfProducts;
+            Float frequency = getFrequency(question, answer);
+            Float productRatio = totalNumberOfProducts == 0 ? 0 :
+                    ((float) service.getNumProductsAffected(answer)) / totalNumberOfProducts;
             Float mediumScore = service.getMediumScore(answer);
 
             if (productRatio > 1)
                 Console.println("******* ERROR PRODUCT RATIO ABOVE 1 ***************");
 
-            // If the productRatio is 0, then part to add from this answer is 0 because it doesn't affect any product!
+            // If the productRatio is 0, then the part to add from this answer is 0 because it doesn't affect any product!
             if (productRatio != 0)
                 metricResult += frequency * (1 - productRatio) * mediumScore;
         }
@@ -114,15 +117,24 @@ public class AlgorithmLogic
         return metricResult;
     }
 
+    public static Float getFrequency(Question question, Answer answer)
+    {
+        if (question.getNumberOfTimesChosen() == 0)
+            return (float) 0;
+        else
+            return ((float) answer.getNumberOfTimesChosen()) / question.getNumberOfTimesChosen();
+    }
+
     private static Float getVarianceGain(QuestionEdge questionEdge)
     {
-        // TODO this will be more complicated:
-        return questionEdge.getVarianceGain();
+        return questionEdge.getVarianceGainMean();
     }
 
     private static Float getGoodSequenceRatio(QuestionEdge questionEdge)
     {
-        // TODO this will be more complicated:
-        return questionEdge.goodSequenceGain();
+        if (questionEdge.getNumberOfTimesChosen() == 0)
+            return (float) 0;
+        else
+            return ((float) questionEdge.getNumberOfTimesGoodFeedback()) / questionEdge.getNumberOfTimesChosen();
     }
 }
