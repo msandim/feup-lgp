@@ -60,6 +60,25 @@ public class Answer extends Entity
         this.code = code;
     }
 
+    @Override
+    public int hashCode()
+    {
+        return this.code.hashCode();
+    }
+
+    @Override
+    public boolean equals(Object obj)
+    {
+        if (obj instanceof Answer)
+        {
+            Answer a = (Answer) obj;
+            return (a.code.equals(this.code));
+        } else
+        {
+            return false;
+        }
+    }
+
     public String getText() {
         return text;
     }

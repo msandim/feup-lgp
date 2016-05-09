@@ -4,8 +4,9 @@ import algorithm.AlgorithmLogic;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import neo4j.models.nodes.Product;
-import neo4j.models.nodes.Question;
+import neo4j.models.edges.AnswerAttribute;
+import neo4j.models.nodes.*;
+import neo4j.services.AttributeService;
 import neo4j.services.CategoryService;
 import neo4j.services.ProductService;
 import neo4j.services.QuestionService;
@@ -17,9 +18,7 @@ import utils.ControllerUtils;
 import utils.MapUtils;
 
 import javax.inject.Singleton;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Singleton
 public class QuestionController extends Controller {
@@ -129,10 +128,6 @@ public class QuestionController extends Controller {
     @BodyParser.Of(BodyParser.Json.class)
     public Result createOrUpdateQuestion() {
 
-        // TODO mudar por causa dos ArrayLists
-
-        /*
-
         //return json message
         ObjectNode result = Json.newObject();
 
@@ -162,14 +157,14 @@ public class QuestionController extends Controller {
             JsonNode qtNode = itQt.next();
 
             String questionText = qtNode.findPath("text").asText();
-
+            //TODO ligar à categoria e às perguntas da categoria
             //create question object
-            Question question = new Question(questionText, category);
+            Question question = new Question(questionText);
 
             //parse answers
             JsonNode answersNode = qtNode.findPath("answers");
 
-            Set<Answer> answers = new HashSet<>();
+            List<Answer> answers = new ArrayList<>();
 
             Iterator<JsonNode> itAn = answersNode.elements();
 
@@ -185,7 +180,7 @@ public class QuestionController extends Controller {
 
                 JsonNode characteristics = anNode.findPath("characteristics");
 
-                Set<AnswerAttribute> answerAttrs = new HashSet<>();
+                List<AnswerAttribute> answerAttrs = new ArrayList<>();
 
                 Iterator<JsonNode> itCh = characteristics.elements();
 
@@ -249,8 +244,6 @@ public class QuestionController extends Controller {
             QuestionService service = new QuestionService();
             service.createOrUpdate(question, 2);
         }
-
-        */
 
         return ok("Success");
     }
