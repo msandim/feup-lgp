@@ -22,22 +22,20 @@ public class Product extends Entity
     private Float price;
 
     @Relationship(type = "VALUES")
+    @JsonIgnore
     private List<ProductAttribute> attributes = new ArrayList<>();
 
-    //@Relationship(type = "HAS_PRODUCTS", direction = Relationship.INCOMING)
-    private Category category;
 
     //@Transient
     //private Float currentScore = (float) 0.0;
 
     public Product() {}
 
-    public Product(String name, String EAN, Float price, Category category)
+    public Product(String name, String EAN, Float price)
     {
         this.name = name;
         this.EAN = EAN;
         this.price = price;
-        this.category = category;
     }
 
     public String getName() {
@@ -54,14 +52,6 @@ public class Product extends Entity
 
     public void setPrice(Float price) {
         this.price = price;
-    }
-
-    public Category getCategory() {
-        return category;
-    }
-
-    public void setCategory(Category category) {
-        this.category = category;
     }
 
     public List<ProductAttribute> getAttributes() {

@@ -31,6 +31,20 @@ public class ProductService extends GenericService<Product>
         return valor.iterator().next();
     }
 
+    public List<Product> findByCategoryCode(String code)
+    {
+        String query = new StringBuilder("MATCH (n:Product)<-[:HAS_PRODUCTS]-(c:Category) WHERE c.code = \'")
+                .append(code)
+                .append("\' RETURN n")
+                .toString();
+        Iterable<Product> productsIterator = Neo4jSessionFactory.getInstance().getNeo4jSession().query(Product.class, query, Collections.EMPTY_MAP);
+
+        List<Product> products = new ArrayList<>();
+        productsIterator.forEach(products::add);
+
+        return products;
+    }
+
     public Map<Product,Float> initializeProductScores(String category)
     {
         // MATCH (c:Category)-[:HAS_PRODUCTS]->(p:Product) WHERE c.code = 'tvs' RETURN p
@@ -125,11 +139,13 @@ public class ProductService extends GenericService<Product>
 
     public Float getMediumScore(Answer answer)
     {
+        if (answer.getAttributes().isEmpty())
+            return (float) 0.0;
+
         Float mediumScore = (float) 0.0;
         for(AnswerAttribute answerAttribute: answer.getAttributes())
-        {
             mediumScore += answerAttribute.getScore();
-        }
+
         return mediumScore / answer.getAttributes().size();
     }
 
