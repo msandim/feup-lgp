@@ -237,6 +237,7 @@ public class QuestionController extends Controller {
                 questionEdgeService.createOrUpdate(questionEdge, 0);
             }
 
+            sequence.put(currentQuestion, currentAnswer);
             lastQuestion = currentQuestion;
 
             // COMMIT
