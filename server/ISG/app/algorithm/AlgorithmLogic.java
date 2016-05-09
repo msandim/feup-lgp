@@ -102,7 +102,8 @@ public class AlgorithmLogic
         for(Answer answer: question.getAnswers())
         {
             Float frequency = getFrequency(question, answer);
-            Float productRatio = ((float) service.getNumProductsAffected(answer)) / totalNumberOfProducts;
+            Float productRatio = totalNumberOfProducts == 0 ? 0 :
+                    ((float) service.getNumProductsAffected(answer)) / totalNumberOfProducts;
             Float mediumScore = service.getMediumScore(answer);
 
             if (productRatio > 1)
@@ -121,7 +122,7 @@ public class AlgorithmLogic
         if (question.getNumberOfTimesChosen() == 0)
             return (float) 0;
         else
-            return ((float) answer.getNumberOfTimesChosen())/question.getNumberOfTimesChosen();
+            return ((float) answer.getNumberOfTimesChosen()) / question.getNumberOfTimesChosen();
     }
 
     private static Float getVarianceGain(QuestionEdge questionEdge)
@@ -134,6 +135,6 @@ public class AlgorithmLogic
         if (questionEdge.getNumberOfTimesChosen() == 0)
             return (float) 0;
         else
-            return ((float) questionEdge.getNumberOfTimesGoodFeedback())/questionEdge.getNumberOfTimesChosen();
+            return ((float) questionEdge.getNumberOfTimesGoodFeedback()) / questionEdge.getNumberOfTimesChosen();
     }
 }
