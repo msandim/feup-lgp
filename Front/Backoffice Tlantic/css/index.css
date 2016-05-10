@@ -320,7 +320,7 @@ body{
 
 .login{
   z-index: 1;
-  position: absolute;
+  position: fixed;
   width:350px;
   margin:0 auto;
   margin-top:8px;
@@ -362,7 +362,7 @@ input[class="value"]{
 
 }
 
-input[class="addQuestion"]{
+input[class="addQuestion"], input[class="addAnswer"] {
   width:100%;
   background:#ff3333;
   border:0;
@@ -375,6 +375,6 @@ input[class="addQuestion"]{
   -webkit-transition:background .3s;
 }
 
-input[class="addQuestion"]:hover{
+input[class="addQuestion"]:hover, input[class="addAnswer"]:hover {
   background:#FF0000;
 }

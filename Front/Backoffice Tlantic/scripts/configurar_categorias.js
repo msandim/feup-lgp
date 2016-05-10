@@ -248,8 +248,8 @@ function addQuestion(){
     var boxQuestions = boxParent.find(".box-of-questions").find(">:first-child");
 
     question=capitalizeFirstLetter(question);
-    boxQuestions.append('<div class="box"><div class="row"><div class="col-xs-7 table-col-border table-col-size table-contain-button"><button type="button" class="btn btn-block table-button expandQuestion"><span class=" glyphicon glyphicon-menu-down"></span>P.: '+question+'</button></div><div class="col-xs-3 table-col-border table-col-size table-contain-button"><button type="button" class="btn btn-block table-button addAnswer">Adicionar Resposta</button></div><div class="col-xs-1 table-col-border-end table-col-size table-contain-button"><button type="button" class="btn btn-block table-button removeQuestion"><span class="glyphicon glyphicon-remove"></span></button></div></div><div class="box-of-answers"><div class="container-fluid"></div></div></div>');
-
+    boxQuestions.append('<div class="box"><div class="row"><div class="col-xs-7 table-col-border table-col-size table-contain-button"><button type="button" class="btn btn-block table-button expandQuestion"><span class=" glyphicon glyphicon-menu-down"></span>P.: '+question+'</button></div><div class="col-xs-3 table-col-border table-col-size table-contain-button"><button type="button" href="#" class="btn btn-block table-button toggle-login inputQuestion">Adicionar Resposta</button><div style="display:none" class="login"><div id="triangle"></div><h1>Adicionar Resposta</h1><input type="text" class="value" placeholder=">" required/><input class="addAnswer" type="submit" value="Adicionar" /></div></div><div class="col-xs-1 table-col-border-end table-col-size table-contain-button"><button type="button" class="btn btn-block table-button removeQuestion"><span class="glyphicon glyphicon-remove"></span></button></div></div><div class="box-of-answers"><div class="container-fluid"></div></div></div>');
+    
     //Add question to array
     var categoryText= $(this).parent().parent().find('h3').text();
 
@@ -284,10 +284,10 @@ function addQuestion(){
 function addAnswer(){
   var self = this;
   $('.addAnswer').click(function(){
-    var answer;
-    while(!answer){
-      answer = prompt("Resposta:");
-    }
+   
+    var parent = $( this ).parent();
+    var answer = parent.children("input[type='text']").val();
+
     var boxParent = $( this ).closest('.box');
     var boxAnswers = boxParent.find('.box-of-answers').find('>:first-child');
 
@@ -325,6 +325,9 @@ function addAnswer(){
     removeAnswerElement.unbind("click", removeAnswer());
     removeAnswerElement.bind("click", removeAnswer());
 
+    //clear placeholder
+    parent.children("input[type='text']").val('');
+    parent.children("input[type='text']").attr("placeholder", ">");
   });
 }
 
@@ -429,8 +432,8 @@ function autoAddQuestions(categoryName,lastChild){
     if(questionFor['category']===categoryName){
       questionFor['questions'].forEach(function(quest){
         question=capitalizeFirstLetter(quest['text']);
-        boxQuestions.append('<div class="box"><div class="row"><div class="col-xs-7 table-col-border table-col-size table-contain-button"><button type="button" class="btn btn-block table-button expandQuestion"><span class=" glyphicon glyphicon-menu-down"></span>P.: '+question+'</button></div><div class="col-xs-3 table-col-border table-col-size table-contain-button"><button type="button" class="btn btn-block table-button addAnswer">Adicionar Resposta</button></div><div class="col-xs-1 table-col-border-end table-col-size table-contain-button"><button type="button" class="btn btn-block table-button removeQuestion"><span class="glyphicon glyphicon-remove"></span></button></div></div><div class="box-of-answers"><div class="container-fluid"></div></div></div>');
-
+         boxQuestions.append('<div class="box"><div class="row"><div class="col-xs-7 table-col-border table-col-size table-contain-button"><button type="button" class="btn btn-block table-button expandQuestion"><span class=" glyphicon glyphicon-menu-down"></span>P.: '+question+'</button></div><div class="col-xs-3 table-col-border table-col-size table-contain-button"><button type="button" href="#" class="btn btn-block table-button toggle-login inputQuestion">Adicionar Resposta</button><div style="display:none" class="login"><div id="triangle"></div><h1>Adicionar Resposta</h1><input type="text" class="value" placeholder=">" required/><input class="addAnswer" type="submit" value="Adicionar" /></div></div><div class="col-xs-1 table-col-border-end table-col-size table-contain-button"><button type="button" class="btn btn-block table-button removeQuestion"><span class="glyphicon glyphicon-remove"></span></button></div></div><div class="box-of-answers"><div class="container-fluid"></div></div></div>');
+    
         //Unbind all elements with the class and then rebbind to include the new element
         var addAnswerElement = $(":root").find(".addAnswer");
         addAnswerElement.unbind("click", addAnswer());
@@ -674,6 +677,14 @@ $(document).ready(function() {
   });*/
 
   $(document).on('click','.addQuestion',function(){
+      //edit value placeholder
+    $('.login').val('');
+    $('.login').attr("placeholder", ">");
+
+    $('.login').hide();
+  });
+
+  $(document).on('click','.addAnswer',function(){
       //edit value placeholder
     $('.login').val('');
     $('.login').attr("placeholder", ">");
