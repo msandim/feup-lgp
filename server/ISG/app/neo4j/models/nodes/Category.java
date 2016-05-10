@@ -1,8 +1,11 @@
 package neo4j.models.nodes;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import neo4j.models.Entity;
 import org.neo4j.ogm.annotation.*;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -16,9 +19,12 @@ public class Category extends Entity
     private String code;
 
     @Relationship(type = "HAS_PRODUCTS")
-    private Set<Product> products;
+    @JsonIgnore
+    private List<Product> products = new ArrayList<>();
+
     @Relationship(type = "HAS_QUESTIONS")
-    private Set<Question> questions;
+    @JsonIgnore
+    private List<Question> questions = new ArrayList<>();
 
     public Category() {}
 

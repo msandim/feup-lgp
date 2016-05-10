@@ -122,8 +122,6 @@ function addFile() {
    });
 }
 
-
-
 function addCategory() {
   var self = this;
   $('.addCategory').click(function(){
@@ -147,7 +145,10 @@ function addCategory() {
           $('.inputCatName').addClass("border");
           
           //edit value placeholder
-          $('.inputCatName').val("Nome da Categoria ja existe");
+          $('.inputCatName').val('');
+          $('.inputCatName').attr("placeholder", "Nome da Categoria ja existe");
+          //disable button submit add category
+          $('#InputButtonCatName').attr("disabled", true);
           $('#myBtn').click();
           return false;
         }
@@ -183,9 +184,13 @@ function addCategory() {
       $(".category-button").bind("click", removeCategory()); 
       $(document).unbind("ready");
       $(document).bind("ready", function () { $("#my-file-selector").change(function(){var FileName = $(this).val().split('\\').pop(); $(this).parent().find('h4').text(FileName);}); });
-
+     
       //clear placeholder
-      $('.inputCatName').val("");
+      $('.inputCatName').val('');
+      $('.inputCatName').attr("placeholder", ">");
+
+      //disable button submit add category
+      $('#InputButtonCatName').attr("disabled", true);
   });
   
 }
@@ -214,13 +219,12 @@ function autoAddCategory(){
       $(document).unbind("ready");
       $(document).bind("ready", function () { $("#my-file-selector").change(function(){var FileName = $(this).val().split('\\').pop(); $(this).parent().find('h4').text(FileName);}); });
 
-      var lastChild = boxGroup.find(":last-child");
+       var lastChild = boxGroup.find(":last-child");
       //console.log("OLA " + lastChild.attr('class') );
       autoAddProducts(categoryName, lastChild);
     });
   });
 
-  
 }
 
 function autoAddProducts(categoryName,lastChild) {
@@ -246,14 +250,25 @@ $(document).ready(function(){
       var FileName = $(this).val().split('\\').pop();
       $(this).parent().find('h4').text(FileName);
    });
+});
 
-    $('#InputButtonCatName').attr('disabled',true);
-    $('#ValidateCat').keyup(function(){
-        if($(this).val().length !=0)
-            $('#InputButtonCatName').attr('disabled', false);            
-        else
-            $('#InputButtonCatName').attr('disabled',true);
-    })
+//check input is empty and disable button submit
+$(document).ready(function() {
+    $('.modal-body input').keyup(function() {
+
+        var empty = false;
+        $('.modal-body input').each(function() {
+            if ($(this).val().length == 0) {
+                empty = true;
+            }
+        });
+
+        if (empty) {
+            $('#InputButtonCatName').attr('disabled', 'disabled');
+        } else {
+            $('#InputButtonCatName').attr('disabled', false);
+        }
+    });
 });
 
 
@@ -320,6 +335,8 @@ function AddModal() {
        //edit placeholder
       $('.inputCatName').val('');
       $('.inputCatName').attr("placeholder", ">");
+      //disable button submit add category
+      $('#InputButtonCatName').attr("disabled", true);
       modal.style.display = "none";
   }
 
@@ -332,6 +349,8 @@ function AddModal() {
           //edit placeholder
           $('.inputCatName').val('');
           $('.inputCatName').attr("placeholder", ">");
+          //disable button submit add category
+          $('#InputButtonCatName').attr("disabled", true);
           modal.style.display = "none";
       }
   }

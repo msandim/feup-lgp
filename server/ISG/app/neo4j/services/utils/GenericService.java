@@ -2,6 +2,7 @@ package neo4j.services.utils;
 
 import neo4j.Neo4jSessionFactory;
 import neo4j.models.Entity;
+import org.neo4j.ogm.cypher.Filters;
 import org.neo4j.ogm.session.Session;
 
 import java.util.Collection;
@@ -23,6 +24,9 @@ public abstract class GenericService<T> implements Service<T> {
     public Collection<T> findAll() {
         return session.loadAll(getEntityType(), DEPTH_LIST);
     }
+
+    @Override
+    public Collection<T> findAllDetailedWithFilters(Filters filters) { return session.loadAll(getEntityType(), filters, DEPTH_ENTITY); }
 
     @Override
     public T find(Long id) {
