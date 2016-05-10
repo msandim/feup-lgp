@@ -1,5 +1,6 @@
 package neo4j.models.edges;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import neo4j.models.Entity;
 import neo4j.models.nodes.*;
 import org.neo4j.ogm.annotation.*;
@@ -10,6 +11,7 @@ import org.neo4j.ogm.annotation.*;
 @RelationshipEntity(type = "INFLUENCES")
 public class AnswerAttribute extends Entity {
     @StartNode
+    @JsonIgnore
     private Answer answer;
 
     @EndNode
@@ -34,7 +36,15 @@ public class AnswerAttribute extends Entity {
                 return true;
             else return false;
         }
+
+        static boolean isValidForCategorical(String op) {
+            if(op.equals(EQUAL) || op.equals(NOT_EQUAL))
+                return true;
+            else return false;
+        }
     }
+
+    public AnswerAttribute() { }
 
     public AnswerAttribute(Answer answer, Attribute attribute, String operator, String value, Float score) {
         this.answer = answer;

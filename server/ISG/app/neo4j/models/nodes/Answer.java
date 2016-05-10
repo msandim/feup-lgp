@@ -1,10 +1,13 @@
 package neo4j.models.nodes;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import neo4j.models.Entity;
 import neo4j.models.edges.AnswerAttribute;
 import org.neo4j.ogm.annotation.*;
+import utils.IdGenerator;
 
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Miguel on 26-04-2016.
@@ -13,49 +16,74 @@ import java.util.Set;
 @NodeEntity
 public class Answer extends Entity
 {
-    private String name;
+    private String code;
+    private String text;
 
-    private Float frequency;
+    @JsonIgnore
+    private Long numberOfTimesChosen = (long) 0.0;
 
     @Relationship(type = "INFLUENCES")
-    private Set<AnswerAttribute> attributes;
+    private List<AnswerAttribute> attributes = new ArrayList<>();
+
+    public Answer() {this.code = IdGenerator.generate();}
 
     public Answer(String name) {
-        this.name = name;
+        this.text = name;
+        this.code = IdGenerator.generate();
     }
 
-    public Set<AnswerAttribute> getAttributes() {
+    public List<AnswerAttribute> getAttributes() {
         return attributes;
     }
 
-    public void setAttributes(Set<AnswerAttribute> attributes) {
+    public void setAttributes(List<AnswerAttribute> attributes) {
         this.attributes = attributes;
     }
 
+    public String getCode()
+    {
+        return code;
+    }
+
+    public void setCode(String code)
+    {
+        this.code = code;
+    }
+
     @Override
-    public String toString()
+    public int hashCode()
     {
-        return "Answer{" + "id=" + getId()
-                + ", name=" + name
-                + ", frequency=" + frequency
-                + "}\n";
+        return this.code.hashCode();
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public void setFrequency(Float frequency)
+    @Override
+    public boolean equals(Object obj)
     {
-        this.frequency = frequency;
+        if (obj instanceof Answer)
+        {
+            Answer a = (Answer) obj;
+            return (a.code.equals(this.code));
+        } else
+        {
+            return false;
+        }
     }
 
-    public Float getFrequency()
+    public String getText() {
+        return text;
+    }
+
+    public void setText(String text) {
+        this.text = text;
+    }
+
+    public void incNumberOfTimesChosen()
     {
-        return frequency;
+        numberOfTimesChosen++;
+    }
+
+    public Long getNumberOfTimesChosen()
+    {
+        return numberOfTimesChosen;
     }
 }
