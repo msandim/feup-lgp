@@ -225,9 +225,9 @@ function addCategory(){
     var removeCategoryElement = boxGroup.find(".removeCategory");
     removeCategoryElement.unbind("click", removeCategory());
     removeCategoryElement.bind("click", removeCategory());
-    $(document).unbind("ready");
-    $(document).bind("ready", function () { $('.toggle-login').click(function(){ $(this).next(".login").toggle(); }); $('.addQuestion').click(function(){ $('.login').hide();});});
-        
+       $(document).unbind("ready");
+      $(document).bind("ready", function () { $(document).on('click','.addQuestion',function(){$('.login').val('');  $('.login').attr("placeholder", ">"); $('.login').hide();}); $("document ").on("click", ".toggle-login", function(){$(this).next(".login").toggle(); });}); 
+
     //clear placeholder
     $('.inputCatName').val('');
     $('.inputCatName').attr("placeholder", ">");
@@ -241,7 +241,8 @@ function addQuestion(){
   var self = this;
   $('.addQuestion').click(function(){
     
-    var question = $('.value').val();
+    var parent = $( this ).parent();
+    var question = parent.children("input[type='text']").val();
     
     var boxParent = $( this ).closest('.box');
     var boxQuestions = boxParent.find(".box-of-questions").find(">:first-child");
@@ -274,6 +275,9 @@ function addQuestion(){
     removeQuestionElement.unbind("click", removeQuestion());
     removeQuestionElement.bind("click", removeQuestion());
     
+    //clear placeholder
+    parent.children("input[type='text']").val('');
+    parent.children("input[type='text']").attr("placeholder", ">");
   });
 }
 
@@ -406,8 +410,7 @@ function autoAddCategory(){
       removeCategoryElement.unbind("click", removeCategory());
       removeCategoryElement.bind("click", removeCategory());
       $(document).unbind("ready");
-      $(document).bind("ready", function () { $('.toggle-login').click(function(){ $(this).next(".login").toggle(); }); $('.addQuestion').click(function(){ $('.login').hide();});});
-      
+      $(document).bind("ready", function () { $(document).on('click','.addQuestion',function(){$('.login').val('');  $('.login').attr("placeholder", ">"); $('.login').hide();}); $("document ").on("click", ".toggle-login", function(){$(this).next(".login").toggle(); });}); 
 
       var lastChild = boxGroup.find(">:last-child");
 
@@ -659,7 +662,7 @@ $(document).ready(function() {
 
 //
 $(document).ready(function() {
-  $('.toggle-login').click(function(){
+  /*$('.toggle-login').click(function(){
     $(this).next(".login").toggle();
   });
   $('.addQuestion').click(function(){
@@ -668,7 +671,20 @@ $(document).ready(function() {
     $('.login').attr("placeholder", ">");
 
     $('.login').hide();
+  });*/
+
+  $(document).on('click','.addQuestion',function(){
+      //edit value placeholder
+    $('.login').val('');
+    $('.login').attr("placeholder", ">");
+
+    $('.login').hide();
   });
+
+  $(document).on('click','.toggle-login',function(){
+      $(this).next(".login").toggle();
+  });
+
 });
 
 
