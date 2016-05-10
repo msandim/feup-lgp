@@ -1,20 +1,53 @@
 import org.junit.*;
 
-public class MobileAPITest {
+public class MobileAPITest extends APITest{
 
-    //TODO add predefined database
-
-    @Test
-    @Ignore
+    @Test @Ignore
     public void testGetNextQuestion() throws Exception {
 
-        //POST request with body and no parameters
     }
 
-    @Test
-    @Ignore
+    @Test @Ignore
+    public void testGetNextQuestionFirstQuestion() throws Exception {
+
+    }
+
+    @Test @Ignore
+    public void testGetNextQuestionFinal() throws Exception {
+
+    }
+
+    @Test @Ignore
+    public void testGetNextQuestionNoQuestions() throws Exception {
+
+    }
+
+    @Test @Ignore
+    public void testGetNextQuestionBadCategory() throws Exception {
+
+    }
+
+    @Test @Ignore
+    public void testGetNextQuestionBadQuestionsAnswers() throws Exception {
+
+    }
+    @Test @Ignore
+    public void testGetNextQuestionBadBlacklistQuestions() throws Exception {
+
+    }
+
+    @Test @Ignore
     public void testSendFeedback() throws Exception {
 
-        //POST request with body and no parameters
+    }
+
+    @Test @Ignore
+    public void testSendFeedbackBadAnswers() throws Exception {
+
+    }
+
+    @Test @Ignore
+    public void testSendFeedbackBadFeedback() throws Exception {
+
     }
 }

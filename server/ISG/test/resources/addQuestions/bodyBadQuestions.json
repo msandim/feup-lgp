@@ -9,7 +9,7 @@
           "attributes":[
             {
               "name":"width (cm)",
-              "operator":"<",
+              "operator":"EQUAL",
               "value":"400",
               "score":"0.5"
             },
