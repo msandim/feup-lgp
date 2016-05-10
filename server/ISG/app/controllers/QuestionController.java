@@ -410,7 +410,7 @@ public class QuestionController extends Controller {
             questionService.createOrUpdate(question, 2);
         }
 
-        return ok("Success");
+        return ok(Json.newObject().put("Success", "Question successfully created"));
     }
 
     /*
