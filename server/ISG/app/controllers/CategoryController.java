@@ -1,5 +1,6 @@
 package controllers;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import neo4j.models.nodes.Category;
 import neo4j.services.CategoryService;
@@ -51,8 +52,14 @@ public class CategoryController extends Controller {
         return ok(res.toString());
     }*/
 
-    public Result createCategory(String name, String code)
+    @BodyParser.Of(BodyParser.Json.class)
+    public Result createCategory()
     {
+        JsonNode jsonRequest = request().body().asJson();
+
+        String name = jsonRequest.get("name").asText();
+        String code = jsonRequest.get("code").asText();
+
         CategoryService categoryService = new CategoryService();
 
         if (categoryService.findByCode(code) != null)

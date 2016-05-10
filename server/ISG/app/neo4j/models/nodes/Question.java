@@ -31,6 +31,10 @@ public class Question extends Entity
     @JsonIgnore
     private List<QuestionEdge> nextQuestions = new ArrayList<>();
 
+    @Relationship(type = "HAS_QUESTIONS", direction = Relationship.INCOMING)
+    @JsonIgnore
+    private Category category;
+
     //@Relationship(type = "CONNECTS", direction = Relationship.INCOMING)
     //private Set<QuestionEdge> previousQuestions;
 
@@ -90,6 +94,15 @@ public class Question extends Entity
     public Long getNumberOfTimesChosen()
     {
         return numberOfTimesChosen;
+    }
+
+
+    public Category getCategory() {
+        return category;
+    }
+
+    public void setCategory(Category category) {
+        this.category = category;
     }
 
     // Hashcode of each Question is the code's hashcode:

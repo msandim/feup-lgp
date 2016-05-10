@@ -250,18 +250,22 @@ public class QuestionController extends Controller {
     @BodyParser.Of(BodyParser.Json.class)
     public Result createOrUpdateQuestion() {
 
-
         JsonNode jsonRequest = request().body().asJson();
+
+        //detect missing or null values
+        if(jsonRequest.get("category") == null)
+            return badRequest(ControllerUtils.missingField("category"));
+        if(jsonRequest.get("questions") == null)
+            return badRequest(ControllerUtils.missingField("questions"));
 
         // Service initialization
         CategoryService categoryService = new CategoryService();
         QuestionService questionService = new QuestionService();
+        QuestionEdgeService questionEdgeService = new QuestionEdgeService();
         AttributeService attrService = new AttributeService();
 
         // Get the category and verify if it exists
-
         String categoryCode = jsonRequest.findPath("category").asText();
-
         Category category = categoryService.findByCode(categoryCode);
 
         if (category == null)
@@ -269,25 +273,36 @@ public class QuestionController extends Controller {
 
         //parse questions
         JsonNode questionsNode = jsonRequest.findPath("questions");
-
         Iterator<JsonNode> itQuestion = questionsNode.elements();
+
+        //if field is present but has no content
+        if(!itQuestion.hasNext())
+            return badRequest(ControllerUtils.generalError("NO_QUESTIONS","Questions not found!"));
 
         //iterate through questions
         while (itQuestion.hasNext()) {
 
-            JsonNode qtNode = itQuestion.next();
+            JsonNode questionNode = itQuestion.next();
 
-            String questionText = qtNode.findPath("text").asText();
+            String questionText = questionNode.findPath("text").asText();
 
             //create question object
             Question question = new Question(questionText);
 
+            //add question to category
+            question.setCategory(category);
+
             //parse answers
-            JsonNode answersNode = qtNode.findPath("answers");
+            JsonNode answersNode = questionNode.findPath("answers");
+
+            if(answersNode == null)
+                return badRequest(ControllerUtils.missingField("answers"));
 
             List<Answer> answers = new ArrayList<>();
-
             Iterator<JsonNode> itAnswer = answersNode.elements();
+
+            if(!itAnswer.hasNext())
+                return badRequest(ControllerUtils.generalError("NO_ANSWERS","Answers for the question not found!"));
 
             //iterate through answers
             while (itAnswer.hasNext()) {
@@ -299,38 +314,51 @@ public class QuestionController extends Controller {
                 //create answer object
                 Answer answer = new Answer(answerText);
 
-                JsonNode characteristics = answerNode.findPath("characteristics");
+                JsonNode characteristicsNode = answerNode.findPath("characteristics");
+
+                if(characteristicsNode == null)
+                    return badRequest(ControllerUtils.missingField("characteristics"));
 
                 List<AnswerAttribute> answerAttrs = new ArrayList<>();
+                Iterator<JsonNode> itCharacteristics = characteristicsNode.elements();
 
-                Iterator<JsonNode> itCharacteristics = characteristics.elements();
+                if(!itCharacteristics.hasNext())
+                    return badRequest(ControllerUtils.generalError("NO_CHARACTERISTICS","Characteristics for the answer not found!"));
 
                 //iterate through characteristics
                 while (itCharacteristics.hasNext()) {
 
-                    JsonNode characteristicsNode = itCharacteristics.next();
+                    JsonNode characteristicNode = itCharacteristics.next();
 
-                    String characteristicsName = characteristicsNode.findValue("name").asText();
+                    //detecting missing fields
+                    if(characteristicNode.findValue("name") == null)
+                        return badRequest(ControllerUtils.missingField("characteristic name"));
+                    if(characteristicNode.findValue("operator") == null)
+                        return badRequest(ControllerUtils.missingField("characteristic operator"));
+                    if(characteristicNode.findValue("value") == null)
+                        return badRequest(ControllerUtils.missingField("characteristic value"));
+                    if(characteristicNode.findValue("score") == null)
+                        return badRequest(ControllerUtils.missingField("characteristic score"));
 
                     //verify if the attribute exists in the database
-
-                    Attribute attr = attrService.findByName(characteristicsName);
+                    String characteristicName = characteristicNode.findValue("name").asText();
+                    Attribute attr = attrService.findByName(characteristicName);
 
                     if (attr == null)
-                        return badRequest(ControllerUtils.generalError("INVALID_ATTRIBUTE", "There is no attribute with this name: " + characteristicsName));
+                        return badRequest(ControllerUtils.generalError("INVALID_ATTRIBUTE", "There is no attribute with this name: " + characteristicName));
 
                     //validate operator
-                    String characteristicsOperator = characteristicsNode.findValue("operator").asText();
+                    String characteristicsOperator = characteristicNode.findValue("operator").asText();
 
                     if (!AnswerAttribute.Operators.isValid(characteristicsOperator))
                         return badRequest(ControllerUtils.generalError("INVALID_OPERATOR", "Operators must be equal to one of these: < <= > >= = !="));
 
                     //validate value
-                    String characteristicsValue = characteristicsNode.findValue("value").asText();
+                    String characteristicsValue = characteristicNode.findValue("value").asText();
 
                     //validate attribute operator relation
-                    if(!(attr.getType().equals(Attribute.Type.CATEGORICAL) && AnswerAttribute.Operators.isValidForCategorical(characteristicsOperator)))
-                        return badRequest(ControllerUtils.generalError("INVALID_ATTRIBUTE_OPERATOR_RELATION", "This operator is not valid"));
+                    if(attr.getType().equals(Attribute.Type.CATEGORICAL) && !AnswerAttribute.Operators.isValidForCategorical(characteristicsOperator))
+                        return badRequest(ControllerUtils.generalError("INVALID_ATTRIBUTE_OPERATOR_RELATION", "The operator(" + characteristicsOperator + ") is not valid with the attribute " + characteristicName));
 
                     //validate attribute
                     if(attr.getType().equals(Attribute.Type.NUMERIC)) {
@@ -338,11 +366,11 @@ public class QuestionController extends Controller {
                             float f = Float.parseFloat(characteristicsValue);
 
                         } catch (NumberFormatException nfe) {
-                            return badRequest(ControllerUtils.generalError("INVALID_SCORE", "Score must be parsable to float"));
+                            return badRequest(ControllerUtils.generalError("INVALID_VALUE", "Value must be parsable to float"));
                         }
                     }
 
-                    String chScore = characteristicsNode.findValue("score").asText();
+                    String chScore = characteristicNode.findValue("score").asText();
 
                     //verify if the score is a valid number
                     try {
@@ -365,8 +393,18 @@ public class QuestionController extends Controller {
             //connecting answers to question
             question.setAnswers(answers);
 
-            //connecting same category questions
-            //question.setNextQuestions(questionService.findByCategoryCode(categoryCode, false));
+           //connecting same category questions
+            List<Question> sameCategoryQuestions = questionService.findByCategoryCode(categoryCode, false);
+            if(sameCategoryQuestions != null) {
+                for (Question q: sameCategoryQuestions) {
+                    if(!q.equals(question)) {
+                        QuestionEdge questionEdge = new QuestionEdge(question, q);
+                        questionEdgeService.createOrUpdate(questionEdge, 0);
+                        questionEdge = new QuestionEdge(q, question);
+                        questionEdgeService.createOrUpdate(questionEdge, 0);
+                    }
+                }
+            }
 
             //adding answer to DB
             questionService.createOrUpdate(question, 2);

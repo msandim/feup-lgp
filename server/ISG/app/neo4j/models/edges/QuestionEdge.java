@@ -20,6 +20,10 @@ public class QuestionEdge extends Entity
     private Long numberOfTimesChosen = (long) 0;
     private Long numberOfTimesGoodFeedback = (long) 0;
 
+    public QuestionEdge() {
+
+    }
+
     public QuestionEdge(Question in, Question out) {
         this.previousQuestion = in;
         this.nextQuestion = out;
