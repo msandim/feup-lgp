@@ -1,10 +1,13 @@
 package neo4j.models.nodes;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import neo4j.models.Entity;
 import neo4j.models.edges.AnswerAttribute;
 import org.neo4j.ogm.annotation.*;
+import utils.IdGenerator;
 
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Miguel on 26-04-2016.
@@ -13,34 +16,57 @@ import java.util.Set;
 @NodeEntity
 public class Answer extends Entity
 {
+    private String code;
     private String text;
 
-    private Float frequency;
+    @JsonIgnore
+    private Long numberOfTimesChosen = (long) 0.0;
 
     @Relationship(type = "INFLUENCES")
-    private Set<AnswerAttribute> attributes;
+    private List<AnswerAttribute> attributes = new ArrayList<>();
 
-    public Answer() { }
+    public Answer() {this.code = IdGenerator.generate();}
 
     public Answer(String name) {
         this.text = name;
+        this.code = IdGenerator.generate();
     }
 
-    public Set<AnswerAttribute> getAttributes() {
+    public List<AnswerAttribute> getAttributes() {
         return attributes;
     }
 
-    public void setAttributes(Set<AnswerAttribute> attributes) {
+    public void setAttributes(List<AnswerAttribute> attributes) {
         this.attributes = attributes;
     }
 
-    @Override
-    public String toString()
+    public String getCode()
     {
-        return "Answer{" + "id=" + getId()
-                + ", name=" + text
-                + ", frequency=" + frequency
-                + "}\n";
+        return code;
+    }
+
+    public void setCode(String code)
+    {
+        this.code = code;
+    }
+
+    @Override
+    public int hashCode()
+    {
+        return this.code.hashCode();
+    }
+
+    @Override
+    public boolean equals(Object obj)
+    {
+        if (obj instanceof Answer)
+        {
+            Answer a = (Answer) obj;
+            return (a.code.equals(this.code));
+        } else
+        {
+            return false;
+        }
     }
 
     public String getText() {
@@ -51,13 +77,13 @@ public class Answer extends Entity
         this.text = text;
     }
 
-    public void setFrequency(Float frequency)
+    public void incNumberOfTimesChosen()
     {
-        this.frequency = frequency;
+        numberOfTimesChosen++;
     }
 
-    public Float getFrequency()
+    public Long getNumberOfTimesChosen()
     {
-        return frequency;
+        return numberOfTimesChosen;
     }
 }

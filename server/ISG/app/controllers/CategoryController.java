@@ -10,7 +10,12 @@ import play.libs.Json;
 import play.mvc.BodyParser;
 import play.mvc.Controller;
 import play.mvc.Result;
+
+import utils.ControllerUtils;
+
+
 import play.Logger;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,10 +32,10 @@ public class CategoryController extends Controller {
         service.findAll().forEach(categories::add);
 
         // Return JSON with name and code:
-        ArrayNode jsonArray = Json.newArray();
-        categories.forEach(x -> jsonArray.add(Json.newObject().put("name", x.getName()).put("code", x.getCode())));
+        //ArrayNode jsonArray = Json.newArray();
+        //categories.forEach(x -> jsonArray.add(Json.newObject().put("name", x.getName()).put("code", x.getCode())));
 
-        return ok(jsonArray);
+        return ok(Json.toJson(categories));
     }
 
     public Result retrieveCategory(Long id)
@@ -53,6 +58,24 @@ public class CategoryController extends Controller {
     }*/
 
     @BodyParser.Of(BodyParser.Json.class)
+    public Result createCategory() {
+        JsonNode jsonRequest = request().body().asJson();
+
+        String name = jsonRequest.get("name").asText();
+        String code = jsonRequest.get("code").asText();
+
+        CategoryService categoryService = new CategoryService();
+
+        if (categoryService.findByCode(code) != null)
+            return badRequest(ControllerUtils.generalError("INVALID_CODE", "This category code already exists!"));
+
+        // Save the category:
+        Category temp = new Category(name, code);
+        categoryService.createOrUpdate(temp);
+
+        return ok(Json.newObject());
+    }
+
     public Result createOrUpdateCategory()
     {
         /*CategoryService service = new CategoryService();
@@ -90,6 +113,7 @@ public class CategoryController extends Controller {
 
             }
         }
+
 
     }
 

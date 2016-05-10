@@ -1,9 +1,10 @@
 package neo4j.models.nodes;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import neo4j.models.Entity;
 import neo4j.models.edges.ProductAttribute;
 import org.neo4j.ogm.annotation.*;
-
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -19,13 +20,27 @@ public class Product extends Entity
     private String EAN;
     private Float price;
 
-    @Relationship(type = "VALUES", direction = Relationship.OUTGOING)
-    private List<ProductAttribute> attributes;
+
+    @Relationship(type = "VALUES")
+    @JsonIgnore
+    private List<ProductAttribute> attributes = new ArrayList<>();
 
     @Relationship(type = "HAS_PRODUCTS", direction = Relationship.INCOMING)
     private Category category;
 
+
+
+    //@Transient
+    //private Float currentScore = (float) 0.0;
+
     public Product() {}
+
+    public Product(String name, String EAN, Float price)
+    {
+        this.name = name;
+        this.EAN = EAN;
+        this.price = price;
+    }
 
     public Product(String name, String EAN, Float price, Category category)
     {
@@ -33,6 +48,7 @@ public class Product extends Entity
         this.EAN = EAN;
         this.price = price;
         this.category = category;
+
 
     }
 
@@ -52,12 +68,37 @@ public class Product extends Entity
         this.price = price;
     }
 
-    public Category getCategory() {
-        return category;
+
+
+    public String getEAN()
+    {
+        return this.EAN;
     }
 
-    public void setCategory(Category category) {
-        this.category = category;
+    // Hashcode of each product is the EAN's hashcode:
+    @Override
+    public int hashCode()
+    {
+        return this.EAN.hashCode();
+    }
+
+    // Two Products are the same if they have the same EAN:
+    @Override
+    public boolean equals(Object obj)
+    {
+        if (obj instanceof Product)
+        {
+            Product p = (Product) obj;
+            return (p.EAN.equals(this.EAN));
+        } else
+        {
+            return false;
+        }
+    }
+
+    @Override
+    public String toString() {
+        return this.EAN;
     }
 
     public List<ProductAttribute> getAttributes() {
@@ -66,13 +107,8 @@ public class Product extends Entity
 
     public void setAttributes(List<ProductAttribute> attributes) {
         this.attributes = attributes;
+
     }
 
-    public String getEAN() {
-        return EAN;
-    }
 
-    public void setEAN(String EAN) {
-        this.EAN = EAN;
-    }
 }

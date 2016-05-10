@@ -166,16 +166,45 @@ function expandAnswer() {
 
 function addCategory(){
   var self = this;
-  $('#addCategory').click(function(){
-    var categoryName;
-    while(!categoryName){
-      categoryName = prompt("Nome da Categoria:");
+  $('.AddCategory').click(function(){
+    
+    var categoryName = $('.inputCatName').val();
+    var CategoryExists = [];
+    var nameCategory = false;
+
+    for (var i = 0; i < categoryArray.length; i++) {
+      CategoryExists.push(categoryArray[i].category); 
+    } 
+
+    if($('.inputCatName').hasClass('border')){
+       $('.inputCatName').removeClass('border');
     }
+    
+    while(!nameCategory){
+      for (var j = 0; j < CategoryExists.length; j++) {
+        if (CategoryExists[j] === capitalizeFirstLetter(categoryName)) {
+          nameCategory=false;
+          $('.inputCatName').addClass("border");
+          
+          //edit value placeholder
+          $('.inputCatName').val('');
+          $('.inputCatName').attr("placeholder", "Nome da Categoria ja existe");
+           //disable button submit add category
+          $('#InputButtonCatName').attr("disabled", true);
+          $('#myBtn').click();
+          return false;
+        }
+        else {
+          nameCategory=true;
+        }
+      }
+    }
+
     var boxGroup = $('#boxOfGoodies');
 
     categoryName = capitalizeFirstLetter(categoryName);
-    boxGroup.append('<div class="box"><div class="row"><div class="col-xs-4 table-col-border-first table-col-size table-contain-h3"><h3>'+categoryName+'</h3></div><div class="col-xs-3 table-col-border-first table-col-size table-contain-button"><button type="button" class="btn btn-block table-button addQuestion">Adicionar Pergunta</button></div><div class="col-xs-4 table-col-border-first table-col-size table-contain-button"><button type="button" class="btn btn-block table-button expandCategoria">Lista de Perguntas/Repostas <span class=" glyphicon glyphicon-menu-down"></span></button></div><div class="col-xs-1 table-col-border-end-first table-col-size table-contain-button"><button type="button" class="btn btn-block table-button removeCategory"><span class="glyphicon glyphicon-remove"></span></button></div></div><div class="box-of-questions"><div class="container-fluid"></div></div></div>');
-
+    boxGroup.append('<div class="box"><div class="row"><div class="col-xs-4 table-col-border-first table-col-size table-contain-h3"><h3>'+categoryName+'</h3></div><div class="col-xs-3 table-col-border-first table-col-size table-contain-button"><button type="button" href="#" class="btn btn-block table-button toggle-login inputQuestion">Adicionar Pergunta</button><div style="display:none" class="login"><div id="triangle"></div><h1>Nova Pergunta</h1><input type="text" class="value" placeholder=">" required/><input class="addQuestion" type="submit" value="Adicionar" /></div></div><div class="col-xs-4 table-col-border-first table-col-size table-contain-button"><button type="button" class="btn btn-block table-button expandCategoria">Lista de Perguntas/Repostas <span class=" glyphicon glyphicon-menu-down"></span></button></div><div class="col-xs-1 table-col-border-end-first table-col-size table-contain-button"><button type="button" class="btn btn-block table-button removeCategory"><span class="glyphicon glyphicon-remove"></span></button></div></div><div class="box-of-questions"><div class="container-fluid"></div></div></div>');
+        
     //Add new category to arrays
     catItems.push(categoryName);
     catItems.sort();
@@ -196,17 +225,24 @@ function addCategory(){
     var removeCategoryElement = boxGroup.find(".removeCategory");
     removeCategoryElement.unbind("click", removeCategory());
     removeCategoryElement.bind("click", removeCategory());
+    $(document).unbind("ready");
+    $(document).bind("ready", function () { $('.toggle-login').click(function(){ $(this).next(".login").toggle(); }); $('.addQuestion').click(function(){ $('.login').hide();});});
+        
+    //clear placeholder
+    $('.inputCatName').val('');
+    $('.inputCatName').attr("placeholder", ">");
 
-  });
+    //disable button submit add category
+    $('#InputButtonCatName').attr("disabled", true);
+  }); 
 }
 
 function addQuestion(){
   var self = this;
   $('.addQuestion').click(function(){
-    var question;
-    while(!question){
-      question = prompt("Pergunta:");
-    }
+    
+    var question = $('.value').val();
+    
     var boxParent = $( this ).closest('.box');
     var boxQuestions = boxParent.find(".box-of-questions").find(">:first-child");
 
@@ -237,7 +273,7 @@ function addQuestion(){
     var removeQuestionElement = boxQuestions.find(".removeQuestion");
     removeQuestionElement.unbind("click", removeQuestion());
     removeQuestionElement.bind("click", removeQuestion());
-
+    
   });
 }
 
@@ -354,7 +390,8 @@ function autoAddCategory(){
       var boxGroup = $('#boxOfGoodies');
 
       categoryName = capitalizeFirstLetter(category['category']);
-      boxGroup.append('<div class="box"><div class="row"><div class="col-xs-4 table-col-border-first table-col-size table-contain-h3"><h3>'+categoryName+'</h3></div><div class="col-xs-3 table-col-border-first table-col-size table-contain-button"><button type="button" class="btn btn-block table-button addQuestion">Adicionar Pergunta</button></div><div class="col-xs-4 table-col-border-first table-col-size table-contain-button"><button type="button" class="btn btn-block table-button expandCategoria">Lista de Perguntas/Repostas <span class=" glyphicon glyphicon-menu-down"></span></button></div><div class="col-xs-1 table-col-border-end-first table-col-size table-contain-button"><button type="button" class="btn btn-block table-button removeCategory"><span class="glyphicon glyphicon-remove"></span></button></div></div><div class="box-of-questions"><div class="container-fluid"></div></div></div>');
+       boxGroup.append('<div class="box"><div class="row"><div class="col-xs-4 table-col-border-first table-col-size table-contain-h3"><h3>'+categoryName+'</h3></div><div class="col-xs-3 table-col-border-first table-col-size table-contain-button"><button type="button" href="#" class="btn btn-block table-button toggle-login inputQuestion">Adicionar Pergunta</button><div style="display:none" class="login"><div id="triangle"></div><h1>Nova Pergunta</h1><input type="text" class="value" placeholder=">" required/><input class="addQuestion" type="submit" value="Adicionar" /></div></div><div class="col-xs-4 table-col-border-first table-col-size table-contain-button"><button type="button" class="btn btn-block table-button expandCategoria">Lista de Perguntas/Repostas <span class=" glyphicon glyphicon-menu-down"></span></button></div><div class="col-xs-1 table-col-border-end-first table-col-size table-contain-button"><button type="button" class="btn btn-block table-button removeCategory"><span class="glyphicon glyphicon-remove"></span></button></div></div><div class="box-of-questions"><div class="container-fluid"></div></div></div>');
+      
       catItems.push(categoryName);
       catItems.sort();
 
@@ -368,6 +405,9 @@ function autoAddCategory(){
       var removeCategoryElement = boxGroup.find(".removeCategory");
       removeCategoryElement.unbind("click", removeCategory());
       removeCategoryElement.bind("click", removeCategory());
+      $(document).unbind("ready");
+      $(document).bind("ready", function () { $('.toggle-login').click(function(){ $(this).next(".login").toggle(); }); $('.addQuestion').click(function(){ $('.login').hide();});});
+      
 
       var lastChild = boxGroup.find(">:last-child");
 
@@ -398,6 +438,7 @@ function autoAddQuestions(categoryName,lastChild){
         var removeQuestionElement = boxQuestions.find(".removeQuestion");
         removeQuestionElement.unbind("click", removeQuestion());
         removeQuestionElement.bind("click", removeQuestion());
+       
 
         var newLastChild = boxQuestions.find(":last-child");
         autoAddAnswers(quest['answers'],newLastChild);
@@ -548,6 +589,88 @@ function removeCharacteristic() {
     $(this).parent().parent().parent().remove();
   });
 }
+
+function AddModal() {
+  // Get the modal
+  var modal = document.getElementById('myModal');
+
+  // Get the button that opens the modal
+  var btn = document.getElementById("myBtn");
+
+  // Get the <span> element that closes the modal
+  var span = document.getElementsByClassName("close")[0];
+
+  // When the user clicks the button, open the modal 
+  btn.onclick = function() {
+      modal.style.display = "block";
+  }
+
+  // When the user clicks on <span> (x), close the modal
+  span.onclick = function() {
+       if($('.inputCatName').hasClass('border')){
+         $('.inputCatName').removeClass('border');
+       }
+       //edit placeholder
+      $('.inputCatName').val('');
+      $('.inputCatName').attr("placeholder", ">");
+      //disable button submit add category
+      $('#InputButtonCatName').attr("disabled", true);
+      modal.style.display = "none";
+  }
+
+  // When the user clicks anywhere outside of the modal, close it
+  window.onclick = function(event) {
+      if (event.target == modal) {
+           if($('.inputCatName').hasClass('border')){
+               $('.inputCatName').removeClass('border');
+          }
+          //edit placeholder
+          $('.inputCatName').val('');
+          $('.inputCatName').attr("placeholder", ">");
+          //disable button submit add category
+          $('#InputButtonCatName').attr("disabled", true);
+          modal.style.display = "none";
+      }
+  }
+
+  $('.AddCategory').click(function(){
+      modal.style.display = "none";
+  });
+}
+
+//check input is empty and disable button submit
+$(document).ready(function() {
+    $('.modal-body input').keyup(function() {
+
+        var empty = false;
+        $('.modal-body input').each(function() {
+            if ($(this).val().length == 0) {
+                empty = true;
+            }
+        });
+
+        if (empty) {
+            $('#InputButtonCatName').attr('disabled', 'disabled');
+        } else {
+            $('#InputButtonCatName').attr('disabled', false);
+        }
+    });
+});
+
+//
+$(document).ready(function() {
+  $('.toggle-login').click(function(){
+    $(this).next(".login").toggle();
+  });
+  $('.addQuestion').click(function(){
+    //edit value placeholder
+    $('.login').val('');
+    $('.login').attr("placeholder", ">");
+
+    $('.login').hide();
+  });
+});
+
 
 //UTILS
 

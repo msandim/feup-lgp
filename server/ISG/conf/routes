@@ -5,20 +5,18 @@
 # An example controller showing a sample home page
 GET     /                                       controllers.HomeController.index
 
-GET     /api/allQuestions                       controllers.QuestionController.retrieveAllQuestions
 POST    /api/addQuestions                       controllers.QuestionController.createOrUpdateQuestion
-GET     /api/question                           controllers.QuestionController.retrieveQuestion(id: Long)
-GET     /api/deleteQuestion                     controllers.QuestionController.deleteQuestion(id: Long)
-
-# Get the next question
 POST    /api/getNextQuestion                    controllers.QuestionController.getNextQuestion
-
-GET     /api/questionsByCategory                controllers.QuestionController.getQuestionByCategory(code: String)
+POST    /api/sendFeedback                       controllers.QuestionController.sendFeedback
+GET     /api/questionsByCategory                controllers.QuestionController.getQuestionsByCategory(code: String)
 
 GET     /api/allCategories                      controllers.CategoryController.retrieveAllCategories
+POST    /api/addCategory                        controllers.CategoryController.createCategory
+GET     /api/productsByCategory                 controllers.ProductController.getProductsByCategory(code: String)
 GET     /api/category                           controllers.CategoryController.retrieveCategory(id: Long)
-POST    /api/addCategory                        controllers.CategoryController.createOrUpdateCategory
+#POST    /api/addCategory                        controllers.CategoryController.createOrUpdateCategory
 GET     /api/deleteCategory/                    controllers.CategoryController.deleteCategory(id: Long)
+
 
 
 POST    /api/addProducts                        controllers.ProductController.importFromCsv()

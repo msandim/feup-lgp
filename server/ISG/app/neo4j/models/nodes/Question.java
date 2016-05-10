@@ -4,67 +4,98 @@ package neo4j.models.nodes;
  * Created by Lycantropus on 14-04-2016.
  */
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import neo4j.models.Entity;
 import neo4j.models.edges.QuestionEdge;
 import org.neo4j.ogm.annotation.*;
+import utils.IdGenerator;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @NodeEntity
-public class Question extends Entity {
+public class Question extends Entity
+{
+    private String code;
     private String text;
 
+    @JsonIgnore
+    private Long numberOfTimesChosen = (long) 0;
+
     @Relationship(type = "HAS")
-    private Set<Answer> answers;
+    private List<Answer> answers = new ArrayList<>();
 
     @Relationship(type = "CONNECTS", direction = Relationship.OUTGOING)
-    private Set<QuestionEdge> nextQuestions;
-
-    @Relationship(type = "CONNECTS", direction = Relationship.INCOMING)
-    private Set<QuestionEdge> previousQuestions;
+    @JsonIgnore
+    private List<QuestionEdge> nextQuestions = new ArrayList<>();
 
     @Relationship(type = "HAS_QUESTIONS", direction = Relationship.INCOMING)
+    @JsonIgnore
     private Category category;
 
+    //@Relationship(type = "CONNECTS", direction = Relationship.INCOMING)
+    //private Set<QuestionEdge> previousQuestions;
+
     public Question() {
+        this.code = IdGenerator.generate();
     }
 
-    public Question(String text, Category category) {
+    public Question(String text) {
         this.text = text;
-        this.category = category;
+        this.code = IdGenerator.generate();
     }
 
     @Override
     public String toString() {
-        return "Question{" + "id=" + getId() + ", text=" + text +
-                ", category=" + category +
-                //", nextQuestionsSize=" + nextQuestions.size() +
-                '}' + '\n';
+        return code;
     }
 
-    public Set<Answer> getAnswers() {
+    public List<Answer> getAnswers() {
         return answers;
     }
 
-    public void setAnswers(Set<Answer> answers) {
+    public void setAnswers(List<Answer> answers) {
         this.answers = answers;
     }
 
-    public Set<QuestionEdge> getNextQuestions() {
+    public List<QuestionEdge> getNextQuestions() {
         return nextQuestions;
     }
 
-    public void setNextQuestions(Set<QuestionEdge> nextQuestions) {
+    public void setNextQuestions(List<QuestionEdge> nextQuestions) {
         this.nextQuestions = nextQuestions;
     }
 
-    public Set<QuestionEdge> getPreviousQuestions() {
-        return previousQuestions;
+    public String getText() {
+        return text;
     }
 
-    public void setPreviousQuestions(Set<QuestionEdge> previousQuestions) {
-        this.previousQuestions = previousQuestions;
+    public void setText(String text) {
+        this.text = text;
     }
+
+    public String getCode()
+    {
+        return code;
+    }
+
+    public void setCode(String code)
+    {
+        this.code = code;
+    }
+
+    public void incNumberOfTimesChosen()
+    {
+        numberOfTimesChosen++;
+    }
+
+    public Long getNumberOfTimesChosen()
+    {
+        return numberOfTimesChosen;
+    }
+
 
     public Category getCategory() {
         return category;
@@ -74,11 +105,24 @@ public class Question extends Entity {
         this.category = category;
     }
 
-    public String getText() {
-        return text;
+    // Hashcode of each Question is the code's hashcode:
+    @Override
+    public int hashCode()
+    {
+        return this.code.hashCode();
     }
 
-    public void setText(String text) {
-        this.text = text;
+    // Two Questions are the same if they have the same code:
+    @Override
+    public boolean equals(Object obj)
+    {
+        if (obj instanceof Question)
+        {
+            Question q = (Question) obj;
+            return (q.code.equals(this.code));
+        } else
+        {
+            return false;
+        }
     }
 }

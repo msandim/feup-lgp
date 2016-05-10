@@ -8,15 +8,23 @@ import neo4j.models.edges.ProductAttribute;
 import neo4j.models.nodes.Attribute;
 import neo4j.models.nodes.Category;
 import neo4j.models.nodes.Product;
+
+import neo4j.services.CategoryService;
+import neo4j.services.ProductService;
+import neo4j.services.QuestionService;
+import play.libs.Json;
+
 import neo4j.services.AttributeService;
 import neo4j.services.CategoryService;
 import neo4j.services.ProductService;
 import play.Logger;
 import play.libs.Json;
 import play.mvc.BodyParser;
+
 import play.mvc.Controller;
 import play.mvc.Http;
 import play.mvc.Result;
+import utils.ControllerUtils;
 
 import java.io.*;
 import java.util.*;
@@ -34,8 +42,22 @@ public class ProductController extends Controller {
         return ok(res.toString());
     }
 
+
+    public Result getProductsByCategory(String code)
+    {
+        ProductService productService = new ProductService();
+        CategoryService categoryService = new CategoryService();
+
+        if (categoryService.findByCode(code) == null)
+            return badRequest(ControllerUtils.generalError("INVALID_CATEGORY", "Category not found!"));
+
+        return ok(Json.toJson(productService.findByCategoryCode(code)));
+    }
+
+
     public Result retrieveProduct(Long id) {
         ProductService service = new ProductService();
+
 
         Product res = service.find(id);
 
