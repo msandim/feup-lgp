@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import neo4j.models.Entity;
 import neo4j.models.edges.ProductAttribute;
 import org.neo4j.ogm.annotation.*;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -21,9 +20,14 @@ public class Product extends Entity
     private String EAN;
     private Float price;
 
+
     @Relationship(type = "VALUES")
     @JsonIgnore
     private List<ProductAttribute> attributes = new ArrayList<>();
+
+    @Relationship(type = "HAS_PRODUCTS", direction = Relationship.INCOMING)
+    private Category category;
+
 
 
     //@Transient
@@ -36,6 +40,16 @@ public class Product extends Entity
         this.name = name;
         this.EAN = EAN;
         this.price = price;
+    }
+
+    public Product(String name, String EAN, Float price, Category category)
+    {
+        this.name = name;
+        this.EAN = EAN;
+        this.price = price;
+        this.category = category;
+
+
     }
 
     public String getName() {
@@ -54,13 +68,7 @@ public class Product extends Entity
         this.price = price;
     }
 
-    public List<ProductAttribute> getAttributes() {
-        return attributes;
-    }
 
-    public void setAttributes(List<ProductAttribute> attributes) {
-        this.attributes = attributes;
-    }
 
     public String getEAN()
     {
@@ -89,8 +97,18 @@ public class Product extends Entity
     }
 
     @Override
-    public String toString()
-    {
+    public String toString() {
         return this.EAN;
     }
+
+    public List<ProductAttribute> getAttributes() {
+        return attributes;
+    }
+
+    public void setAttributes(List<ProductAttribute> attributes) {
+        this.attributes = attributes;
+
+    }
+
+
 }

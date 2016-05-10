@@ -2,6 +2,7 @@ package controllers;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
+
 import neo4j.models.nodes.Category;
 import neo4j.services.CategoryService;
 //import org.neo4j.ogm.json.JSONObject;
@@ -9,7 +10,11 @@ import play.libs.Json;
 import play.mvc.BodyParser;
 import play.mvc.Controller;
 import play.mvc.Result;
+
 import utils.ControllerUtils;
+
+
+import play.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -53,8 +58,7 @@ public class CategoryController extends Controller {
     }*/
 
     @BodyParser.Of(BodyParser.Json.class)
-    public Result createCategory()
-    {
+    public Result createCategory() {
         JsonNode jsonRequest = request().body().asJson();
 
         String name = jsonRequest.get("name").asText();
@@ -70,6 +74,47 @@ public class CategoryController extends Controller {
         categoryService.createOrUpdate(temp);
 
         return ok(Json.newObject());
+    }
+
+    public Result createOrUpdateCategory()
+    {
+        /*CategoryService service = new CategoryService();
+        Category temp = new Category(name, code);
+        service.createOrUpdate(temp);
+        //return ok("Ok");*/
+
+        // TODO Falta se already exists
+
+
+        JsonNode json = request().body().asJson();
+
+
+
+        if(json == null) {
+            JsonNode obj =  Json.parse("{\"error\":\"INVALID NAME\", \"msg\":\"This category name already exists!\"}");
+            return badRequest(obj);
+        } else {
+            String categoryName = json.findPath("name").asText();
+            String categoryCode = json.findPath("code").asText();
+            Logger.info(categoryName);
+            if(categoryName == null) {
+                return badRequest("Missing parameter [name]");
+
+            }
+            else if(categoryCode == null){
+                return badRequest("Missing parameter [code]");
+            }
+            else{
+
+                CategoryService service = new CategoryService();
+                Category temp = new Category(categoryName, categoryCode);
+                service.createOrUpdate(temp);
+                return ok();
+
+            }
+        }
+
+
     }
 
 
