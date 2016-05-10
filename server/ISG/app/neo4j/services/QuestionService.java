@@ -25,7 +25,7 @@ public class QuestionService extends GenericService<Question>
 
     public List<Question> findByCategoryCode(String code, boolean includeProducts)
     {
-        String query = null;
+        String query;
 
         if (includeProducts)
         {

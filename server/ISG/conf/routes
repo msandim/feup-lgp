@@ -11,7 +11,7 @@ POST    /api/sendFeedback                       controllers.QuestionController.s
 GET     /api/questionsByCategory                controllers.QuestionController.getQuestionsByCategory(code: String)
 
 GET     /api/allCategories                      controllers.CategoryController.retrieveAllCategories
-POST    /api/addCategory                        controllers.CategoryController.createCategory(name: String, code: String)
+POST    /api/addCategory                        controllers.CategoryController.createCategory
 
 GET     /api/productsByCategory                 controllers.ProductController.getProductsByCategory(code: String)
 
