@@ -352,19 +352,19 @@ body{
 input[class="value"]{
   width:92%;
   background:#fff;
-  margin-bottom:4%;
-  margin-left:3%;
   border:1px solid #ccc;
   padding:4%;
   font-family:'Open Sans',sans-serif;
   font-size:95%;
   color:#555;
-
+  display: block;
+  margin : 0 auto;
 }
 
-input[class="addQuestion"], input[class="addAnswer"] {
+input[class="addQuestion"], input[class="addAnswer"], input[class="addCharacteristic"] { 
   width:100%;
   background:#ff3333;
+  margin-top: 2.5%;
   border:0;
   padding:4%;
   font-family:'Open Sans',sans-serif;
@@ -375,6 +375,6 @@ input[class="addQuestion"], input[class="addAnswer"] {
   -webkit-transition:background .3s;
 }
 
-input[class="addQuestion"]:hover, input[class="addAnswer"]:hover {
+input[class="addQuestion"]:hover, input[class="addAnswer"]:hover, input[class="addCharacteristic"]:hover{
   background:#FF0000;
 }
