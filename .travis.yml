@@ -9,3 +9,6 @@ jdk:
     # - neo4j-community-2.3.2/bin/neo4j start
 
 script: (cd server/ISG; sbt test)
+
+notifications:
+  email: false
