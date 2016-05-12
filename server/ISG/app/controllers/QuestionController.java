@@ -1,13 +1,12 @@
 package controllers;
 
 import algorithm.AlgorithmLogic;
+import algorithm.SequenceBuilder;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import neo4j.models.edges.QuestionEdge;
-import neo4j.models.nodes.Answer;
-import neo4j.models.nodes.Product;
-import neo4j.models.nodes.Question;
+import neo4j.models.nodes.*;
 import neo4j.services.*;
 import play.libs.Json;
 import play.mvc.BodyParser;
@@ -242,6 +241,9 @@ public class QuestionController extends Controller {
 
             // COMMIT
         }
+
+        // Build Sequence:
+        SequenceBuilder.build(sequence);
 
         return ok(Json.newObject());
     }
