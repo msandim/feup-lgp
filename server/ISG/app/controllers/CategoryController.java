@@ -57,13 +57,8 @@ public class CategoryController extends Controller {
         return ok(res.toString());
     }*/
 
-    @BodyParser.Of(BodyParser.Json.class)
-    public Result createCategory() {
-        JsonNode jsonRequest = request().body().asJson();
-
-        String name = jsonRequest.get("name").asText();
-        String code = jsonRequest.get("code").asText();
-
+    public Result createCategory(String name, String code)
+    {
         CategoryService categoryService = new CategoryService();
 
         if (categoryService.findByCode(code) != null)
@@ -108,6 +103,10 @@ public class CategoryController extends Controller {
 
                 CategoryService service = new CategoryService();
                 Category temp = new Category(categoryName, categoryCode);
+
+                if (service.findByCode(temp.getCode()) != null)
+                    return badRequest(ControllerUtils.generalError("INVALID_CODE", "This category code already exists!"));
+
                 service.createOrUpdate(temp);
                 return ok();
 

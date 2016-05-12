@@ -1,4 +1,5 @@
 import com.fasterxml.jackson.databind.JsonNode;
+import neo4j.Neo4jSessionFactory;
 import org.junit.*;
 
 import play.libs.Json;
@@ -7,6 +8,7 @@ import play.mvc.Http;
 import play.mvc.Result;
 
 import java.io.File;
+import java.util.Collections;
 import java.util.Iterator;
 
 import static play.test.Helpers.*;
@@ -94,9 +96,15 @@ public class BackOfficeAPITest extends APITest {
                 .put("code", "tvs")
         );
 
+        Neo4jSessionFactory.getInstance().getNeo4jSession().query("CREATE (at1: Attribute {name: 'width (cm)', type: 'numeric'});", Collections.EMPTY_MAP);
+        Neo4jSessionFactory.getInstance().getNeo4jSession().query("CREATE (at2: Attribute {name: 'resolution', type: 'categorical'});", Collections.EMPTY_MAP);
+
         //Adding a question. Should return empty JSON object
         response = request("api/addQuestions", "POST", readJsonFromFile("addQuestions/body.json"), null);
 
+        System.out.println(response.getBody());
+
+        //TODO Add attributes to the DB manually
         assert response != null;
         assertEquals(OK, response.getStatus());
         assertEquals(readJsonFromFile("addQuestions/response.json"), response.asJson());

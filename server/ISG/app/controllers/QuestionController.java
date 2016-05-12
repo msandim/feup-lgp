@@ -314,10 +314,10 @@ public class QuestionController extends Controller {
                 //create answer object
                 Answer answer = new Answer(answerText);
 
-                JsonNode characteristicsNode = answerNode.findPath("characteristics");
+                JsonNode characteristicsNode = answerNode.findPath("attributes");
 
                 if(characteristicsNode == null)
-                    return badRequest(ControllerUtils.missingField("characteristics"));
+                    return badRequest(ControllerUtils.missingField("attributes"));
 
                 List<AnswerAttribute> answerAttrs = new ArrayList<>();
                 Iterator<JsonNode> itCharacteristics = characteristicsNode.elements();
