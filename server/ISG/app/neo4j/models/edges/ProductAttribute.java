@@ -18,6 +18,7 @@ public class ProductAttribute extends Entity
 
     private String value;
 
+
     public Attribute getAttribute()
     {
         return this.attribute;
@@ -28,8 +29,14 @@ public class ProductAttribute extends Entity
         return this.product;
     }
 
-    public String getValue()
-    {
+    public String getValue() {
         return this.value;
+    }
+
+    public ProductAttribute(Product product, Attribute attribute,String value){
+        this.product=product;
+        this.attribute=attribute;
+        this.value=value;
+
     }
 }

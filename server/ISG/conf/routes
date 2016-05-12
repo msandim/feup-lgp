@@ -11,10 +11,15 @@ POST    /api/sendFeedback                       controllers.QuestionController.s
 GET     /api/questionsByCategory                controllers.QuestionController.getQuestionsByCategory(code: String)
 
 GET     /api/allCategories                      controllers.CategoryController.retrieveAllCategories
-POST    /api/addCategory                        controllers.CategoryController.createCategory(name: String, code: String)
-
+POST    /api/addCategory                        controllers.CategoryController.createCategory
 GET     /api/productsByCategory                 controllers.ProductController.getProductsByCategory(code: String)
+GET     /api/category                           controllers.CategoryController.retrieveCategory(id: Long)
+#POST    /api/addCategory                        controllers.CategoryController.createOrUpdateCategory
+GET     /api/deleteCategory/                    controllers.CategoryController.deleteCategory(id: Long)
 
+
+
+POST    /api/addProducts                        controllers.ProductController.importFromCsv()
 #GET     /allProducts                controllers.CategoryController.retrieveAllProducts
 #GET     /product/:id                controllers.CategoryController.retrieveProduct(id: Long)
 #GET     /addProduct/:name&:price    controllers.CategoryController.createOrUpdateProduct(name: String, price :Float)

@@ -318,7 +318,6 @@ body{
 }
 
 
-
 .login{
   z-index: 1;
   position: absolute;
@@ -328,6 +327,7 @@ body{
   margin-bottom:2%;
   transition:opacity 1s;
   -webkit-transition:opacity 1s;
+
 }
 
 #triangle{
@@ -353,11 +353,13 @@ input[class="value"]{
   width:92%;
   background:#fff;
   margin-bottom:4%;
+  margin-left:3%;
   border:1px solid #ccc;
   padding:4%;
   font-family:'Open Sans',sans-serif;
   font-size:95%;
   color:#555;
+
 }
 
 input[class="addQuestion"]{
