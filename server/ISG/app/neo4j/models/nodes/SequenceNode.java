@@ -1,5 +1,6 @@
 package neo4j.models.nodes;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import neo4j.models.Entity;
 import org.neo4j.ogm.annotation.Relationship;
 
@@ -9,9 +10,11 @@ import org.neo4j.ogm.annotation.Relationship;
 public class SequenceNode extends Entity
 {
     @Relationship(type="NEXT_NODE", direction = Relationship.OUTGOING)
+    @JsonIgnore
     private SequenceNode nextNode;
 
     @Relationship(type="NEXT_NODE", direction = Relationship.INCOMING)
+    @JsonIgnore
     private SequenceNode previousNode;
 
     private Question question;

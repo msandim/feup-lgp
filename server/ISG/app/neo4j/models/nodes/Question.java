@@ -5,9 +5,11 @@ package neo4j.models.nodes;
  */
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import neo4j.models.Entity;
 import neo4j.models.edges.QuestionEdge;
 import org.neo4j.ogm.annotation.*;
+import play.libs.Json;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -87,6 +89,19 @@ public class Question extends Entity
     public Long getNumberOfTimesChosen()
     {
         return numberOfTimesChosen;
+    }
+
+    public ObjectNode toJson()
+    {
+        ObjectNode node = Json.newObject();
+        node.put("code", code);
+        node.put("text", text);
+
+        List<ObjectNode> answerNodes = new ArrayList<>();
+        answers.forEach(x -> answerNodes.add(x.toJson()));
+        node.set("answers", Json.toJson(answerNodes));
+
+        return node;
     }
 
     // Hashcode of each Question is the code's hashcode:
