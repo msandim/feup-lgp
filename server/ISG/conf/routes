@@ -21,6 +21,11 @@ GET     /api/sequencesByCategory                controllers.SequenceController.g
 
 POST    /api/addProducts                        controllers.ProductController.importFromCsv()
 
+# Backoffice:
+GET     /backoffice/                            controllers.HomeController.index()
+GET     /backoffice/configurar_categorias       controllers.HomeController.configurarCategorias()
+GET     /backoffice/produtos                    controllers.HomeController.produtos()
+
 
 GET     /message                               controllers.AsyncController.message
 
