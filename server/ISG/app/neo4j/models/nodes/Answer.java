@@ -27,7 +27,9 @@ public class Answer extends Entity
     @Relationship(type = "INFLUENCES")
     private List<AnswerAttribute> attributes = new ArrayList<>();
 
-    public Answer() {this.code = IdGenerator.generate();}
+    //public Answer() {this.code = IdGenerator.generate();}
+    public Answer()
+    { }
 
     public Answer(String name) {
         this.text = name;
