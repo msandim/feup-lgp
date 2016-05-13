@@ -98,8 +98,7 @@ public class Question extends Entity
         return numberOfTimesChosen;
     }
 
-    public ObjectNode toJson()
-    {
+    public ObjectNode toJson() {
         ObjectNode node = Json.newObject();
         node.put("code", code);
         node.put("text", text);
@@ -109,6 +108,7 @@ public class Question extends Entity
         node.set("answers", Json.toJson(answerNodes));
 
         return node;
+    }
 
     public Category getCategory() {
         return category;
