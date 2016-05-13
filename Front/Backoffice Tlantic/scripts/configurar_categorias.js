@@ -661,8 +661,20 @@ $(document).ready(function() {
             $('#InputButtonCatName').attr('disabled', false);
         }
     });
-});
 
+    //check empty fields
+    /*$(document).on('click','.addQuestion',function(){
+      var parent = $( this ).parent();
+      var question = parent.children("input[type='text']").val();
+      if(question == ""){
+        //edit value placeholder
+        parent.children("input[type='text']").val('');
+        parent.children("input[type='text']").attr("placeholder", "> Insira algo"); 
+        }
+      });*/
+        
+});
+  
 //
 $(document).ready(function() {
 

@@ -89,21 +89,6 @@ function expandProducts() {
   });
 }
 
-function addProduct(){
-  var self = this;
-  $('.addProduct').click(function(){
-
-    var boxParent = $( this ).parent().parent();
-    var boxInputFile = boxParent.next();
-    if(boxInputFile.is(":visible")){
-      $(boxInputFile).hide('fast');
-    }else{
-      $(boxInputFile).show('medium');
-    }
-
-    var DefaultName = boxParent.parent().find('h4').text("Escolher ficheiro");
-  });
-}
 
 function addFile() {
    //add produtos a uma categoria
@@ -113,8 +98,8 @@ function addFile() {
   var fatherInputFile = $(this).parent().parent().parent();
   var nameCategory = fatherInputFile.find(">:first-child").find('h3').text();
 
-  var filename = $('#my-file-selector').val().split('\\').pop();
-  var myFile = $('#my-file-selector').prop('files');
+  var filename = $('.my-file-selector').val().split('\\').pop();
+  var myFile = $('.my-file-selector').prop('files');
 
   //console.log("OLA " + fatherInputFile.attr('class') + " " + filename +"  " + nameCategory);
 
@@ -170,7 +155,7 @@ function addCategory() {
 
     categoryName = capitalizeFirstLetter(categoryName);
     //boxGroup.append('<div class="box"><div class="box-header"><div class="col-sm-5 product-padding table-col-border table-col-border-left table-col-border-top color-backgorund-category col-size"><h3>'+categoryName+'</h3></div><div class="col-sm-3 text-center table-col-border table-col-border-top contain-button col-size"><button type="button"class="btn btn-block product-button addProduct">Adicionar Produtos</button> </div><div class="col-sm-3 text-center table-col-border table-col-border-top contain-button col-size"><button type="button" class="btn btn-block product-button expandProducts">Lista de Produtos <span class="glyphicon glyphicon-menu-down"></span></button></div> <div class="col-sm-1 table-col-border table-col-border-top contain-button col-size"><button type="button" class="btn btn-block product-button removeCategory"><span class="glyphicon glyphicon-remove"></span></button></div></div><div class="inputFile" style="display:none"> <div ><label class="btn btn-primary col-sm-11 product-padding table-col-border table-col-border-left table-col-border-top color-backgorund-category col-size" for="my-file-selector"><input id="my-file-selector" name="file" type="file" style="display:none;"> <!--accept=".csv"--><h4>Escolher ficheiro</h4></label><button type="submit" form="form1" value="Submit" class="col-sm-1 table-col-border table-col-border-top contain-button col-size btn btn-danger addFile">Submeter</button></div></div><div class="box-body box-body-scroll"></div></div>');
-    boxGroup.append('<div class="box"><div class="row"><div class="col-sm-5 table-col-border-first table-col-size table-contain-h3"><h3>'+categoryName+'</h3></div><div class="col-sm-3 text-center table-col-border-first table-col-size table-contain-button"><button type="button"class="btn btn-block table-button addProduct">Adicionar Produtos</button> </div><div class="col-sm-3 text-center table-col-border-first table-col-size table-contain-button"><button type="button" class="btn btn-block table-button expandProducts">Lista de Produtos <span class="glyphicon glyphicon-menu-down"></span></button></div><div class="col-sm-1 table-col-border-first table-col-size table-contain-button"><button type="button" class="btn btn-block table-button"><span class="glyphicon glyphicon-remove"></span></button></div><div class="box-of-products"><div class="container-fluid"></div></div></div><div>');
+    boxGroup.append('<div class="box"><div class="row"><div class="col-sm-5 table-col-border-first table-col-size table-contain-h3"><h3>'+categoryName+'</h3></div><div class="col-sm-3 text-center table-col-border-first table-col-size table-contain-button"><button type="button"class="btn btn-block table-button addProduct">Adicionar Produtos</button> </div><div class="col-sm-3 text-center table-col-border-first table-col-size table-contain-button"><button type="button" class="btn btn-block table-button expandProducts">Lista de Produtos <span class="glyphicon glyphicon-menu-down"></span></button></div><div class="col-sm-1 table-col-border-first table-col-size table-contain-button"><button type="button" class="btn btn-block table-button"><span class="glyphicon glyphicon-remove"></span></button></div> <div class="inputFile" style="display:none"> <div ><label class="btn btn-primary col-sm-12 product-padding table-col-border table-col-border-left table-col-border-top color-backgorund-category col-size" ><input class="my-file-selector" name="file" type="file" style="display:none;"> <!--accept=".csv"--><h4>Escolher ficheiro</h4></label></div></div><div class="box-of-products"><div class="container-fluid"></div></div></div><div>');
 
     //Add new category to arrays
     Products.push(categoryName);
@@ -183,17 +168,15 @@ function addCategory() {
     ProductsArray.push(toInsert);
 
     //Unbind all elements with the class and then rebbind to include the new element
-      $(".expandProducts").unbind("click", expand());
-      $(".expandProducts").bind("click", expand());
-      $(".addProduct").unbind("click", addProduct());
-      $(".addProduct").bind("click", addProduct());
+      $(".expandProducts").unbind("click", expandProducts());
+      $(".expandProducts").bind("click", expandProducts());
       $(".btn-danger").unbind("click", addFile());
       $(".btn-danger").bind("click", addFile());
       $(".removeCategory").unbind("click", removeCategory());
       $(".removeCategory").bind("click", removeCategory());
       $(document).unbind("ready");
-      $(document).bind("ready", function () { $("#my-file-selector").change(function(){var FileName = $(this).val().split('\\').pop(); $(this).parent().find('h4').text(FileName);}); });
-
+     $(document).bind("ready", function () { $(".my-file-selector").change(function(){var FileName = $(this).val().split('\\').pop(); $(this).parent().find('h4').text(FileName);});  $(document).on('click','.addProduct',function(){var boxParent = $( this ).parent().parent();var boxInputFile = boxParent.next(); if(boxInputFile.is(":visible")){$(boxInputFile).hide('fast'); }else{$(boxInputFile).show('medium');}var DefaultName = boxParent.parent().find('h4').text("Escolher ficheiro"); }); $(document).on('change', '.my-file-selector', function() {var FileName = $(this).val().split('\\').pop(); $(this).parent().find('h4').text(FileName); }); });
+      
       //clear placeholder
       $('.inputCatName').val('');
       $('.inputCatName').attr("placeholder", ">");
@@ -212,7 +195,7 @@ function autoAddCategory(){
 
       categoryName = capitalizeFirstLetter(category['category']);
       //boxGroup.append('<div class="box"><div class="box-header"><div class="col-sm-5 product-padding table-col-border table-col-border-left table-col-border-top color-backgorund-category col-size"><h3>'+categoryName+'</h3></div><div class="col-sm-3 text-center table-col-border table-col-border-top contain-button col-size"><button type="button"class="btn btn-block product-button addProduct">Adicionar Produtos</button> </div><div class="col-sm-3 text-center table-col-border table-col-border-top contain-button col-size"><button type="button" class="btn btn-block product-button expandProducts">Lista de Produtos <span class="glyphicon glyphicon-menu-down"></span></button></div> <div class="col-sm-1 table-col-border table-col-border-top contain-button col-size"><button type="button" class="btn btn-block product-button removeCategory"><span class="glyphicon glyphicon-remove"></span></button></div></div><div class="inputFile" style="display:none"> <div ><label class="btn btn-primary col-sm-11 product-padding table-col-border table-col-border-left table-col-border-top color-backgorund-category col-size" for="my-file-selector"><input id="my-file-selector" name="file" type="file" style="display:none;"> <!--accept=".csv"--><h4>Escolher ficheiro</h4></label><button type="submit" form="form1" value="Submit" class="col-sm-1 table-col-border table-col-border-top contain-button col-size btn btn-danger addFile">Submeter</button></div></div><div class="box-body box-body-scroll"></div></div>');
-      boxGroup.append('<div class="box"><div class="row"><div class="col-sm-5 table-col-border-first table-col-size table-contain-h3"><h3>'+categoryName+'</h3></div><div class="col-sm-3 text-center table-col-border-first table-col-size table-contain-button"><button type="button"class="btn btn-block table-button addProduct">Adicionar Produtos</button> </div><div class="col-sm-3 text-center table-col-border-first table-col-size table-contain-button"><button type="button" class="btn btn-block table-button expandProducts">Lista de Produtos <span class="glyphicon glyphicon-menu-down"></span></button></div><div class="col-sm-1 table-col-border-first table-col-size table-contain-button"><button type="button" class="btn btn-block table-button removeCategory"><span class="glyphicon glyphicon-remove"></span></button></div><div class="box-of-products"><div class="container-fluid"></div></div></div><div>');
+     boxGroup.append('<div class="box"><div class="row"><div class="col-sm-5 table-col-border-first table-col-size table-contain-h3"><h3>'+categoryName+'</h3></div><div class="col-sm-3 text-center table-col-border-first table-col-size table-contain-button"><button type="button"class="btn btn-block table-button addProduct">Adicionar Produtos</button> </div><div class="col-sm-3 text-center table-col-border-first table-col-size table-contain-button"><button type="button" class="btn btn-block table-button expandProducts">Lista de Produtos <span class="glyphicon glyphicon-menu-down"></span></button></div><div class="col-sm-1 table-col-border-first table-col-size table-contain-button"><button type="button" class="btn btn-block table-button"><span class="glyphicon glyphicon-remove"></span></button></div> <div class="inputFile" style="display:none"> <div ><label class="btn btn-primary col-sm-12 product-padding table-col-border table-col-border-left table-col-border-top color-backgorund-category col-size" ><input class="my-file-selector" name="file" type="file" style="display:none;"> <!--accept=".csv"--><h4>Escolher ficheiro</h4></label></div></div><div class="box-of-products"><div class="container-fluid"></div></div></div><div>');
 
       Products.push(categoryName);
       Products.sort();
@@ -220,15 +203,13 @@ function autoAddCategory(){
       //Unbind all elements with the class and then rebbind to include the new element
       $(".expandProducts").unbind("click", expandProducts());
       $(".expandProducts").bind("click", expandProducts());
-      $(".addProduct").unbind("click", addProduct());
-      $(".addProduct").bind("click", addProduct());
       $(".btn-danger").unbind("click", addFile());
       $(".btn-danger").bind("click", addFile());
       $(".removeCategory").unbind("click", removeCategory());
       $(".removeCategory").bind("click", removeCategory());
       $(document).unbind("ready");
-      $(document).bind("ready", function () { $("#my-file-selector").change(function(){var FileName = $(this).val().split('\\').pop(); $(this).parent().find('h4').text(FileName);}); });
-
+      $(document).bind("ready", function () { $(".my-file-selector").change(function(){var FileName = $(this).val().split('\\').pop(); $(this).parent().find('h4').text(FileName);});  $(document).on('click','.addProduct',function(){var boxParent = $( this ).parent().parent();var boxInputFile = boxParent.next(); if(boxInputFile.is(":visible")){$(boxInputFile).hide('fast'); }else{$(boxInputFile).show('medium');}var DefaultName = boxParent.parent().find('h4').text("Escolher ficheiro"); }); $(document).on('change', '.my-file-selector', function() {var FileName = $(this).val().split('\\').pop(); $(this).parent().find('h4').text(FileName); }); });
+        
        var lastChild = boxGroup.find(">:last-child");
       //console.log("OLA " + lastChild.attr('class') );
       autoAddProducts(categoryName, lastChild);
@@ -254,13 +235,6 @@ function autoAddProducts(categoryName,lastChild) {
   }
 }
 
-//display name file
-$(document).ready(function(){
-   $("#my-file-selector").change(function(){
-      var FileName = $(this).val().split('\\').pop();
-      $(this).parent().find('h4').text(FileName);
-   });
-});
 
 //check input is empty and disable button submit
 $(document).ready(function() {
@@ -279,6 +253,25 @@ $(document).ready(function() {
             $('#InputButtonCatName').attr('disabled', false);
         }
     });
+
+     $(document).on('click','.addProduct',function(){
+       var boxParent = $( this ).parent().parent();
+       var boxInputFile = boxParent.find(".inputFile");
+
+       if(boxInputFile.is(":visible")){
+        $(boxInputFile).hide('fast');
+       }else{
+        $(boxInputFile).show('medium');
+        }
+
+      var DefaultName = boxParent.parent().find('h4').text("Escolher ficheiro");
+    });
+
+     $(document).on('change', '.my-file-selector', function() {
+      var FileName = $(this).val().split('\\').pop();
+      $(this).parent().find('h4').text(FileName);
+    });
+
 });
 
 
