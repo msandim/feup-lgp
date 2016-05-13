@@ -3,6 +3,7 @@ package algorithm;
 import neo4j.models.edges.QuestionEdge;
 import neo4j.models.nodes.AlgorithmParameters;
 import neo4j.models.nodes.Answer;
+import neo4j.models.nodes.Product;
 import neo4j.models.nodes.Question;
 import neo4j.services.AlgorithmParametersService;
 import neo4j.services.ProductService;
@@ -10,9 +11,12 @@ import neo4j.services.QuestionEdgeService;
 import neo4j.services.QuestionService;
 import scala.Console;
 import utils.RandomCollection;
+import utils.Statistics;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Miguel on 06-05-2016.
@@ -136,5 +140,10 @@ public class AlgorithmLogic
             return (float) 0;
         else
             return ((float) questionEdge.getNumberOfTimesGoodFeedback()) / questionEdge.getNumberOfTimesChosen();
+    }
+
+    public static Float calculateScoreVariance(Map<Product, Float> scores)
+    {
+        return Statistics.getVariance(new ArrayList<>(scores.values()));
     }
 }
