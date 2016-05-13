@@ -1,21 +1,19 @@
 package neo4j.models.nodes;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import neo4j.models.Entity;
 import neo4j.models.edges.AnswerAttribute;
 import neo4j.models.edges.ProductAttribute;
 import org.neo4j.ogm.annotation.Relationship;
 
+
 import java.util.ArrayList;
 import java.util.List;
-
 /**
  * Created by Miguel on 27-04-2016.
  */
 public class Attribute extends Entity
 {
     private String name;
-
     @Relationship(type = "VALUES", direction = Relationship.INCOMING)
     @JsonIgnore
     private List<ProductAttribute> products = new ArrayList<>();
@@ -24,12 +22,15 @@ public class Attribute extends Entity
     @JsonIgnore
     private List<AnswerAttribute> answers = new ArrayList<>();
 
+
     @JsonIgnore
     private String type;
 
-    public interface Type {
+
+    public interface Type{
         String NUMERIC = "numeric";
-        String CATEGORICAL = "categorical";
+        String CATEGORICAL="categorical";
+
 
         static boolean isValid(String t)
         {
@@ -43,39 +44,35 @@ public class Attribute extends Entity
     {
         this.name=name;
     }
-
     public void setName(String name) {
         this.name = name;
     }
-
     public String getName()
     {
         return name;
     }
 
-    public List<ProductAttribute> getProducts()
-    {
+    public List<ProductAttribute> getProducts() {
         return products;
     }
 
     public void setProducts(List<ProductAttribute> products) {
         this.products = products;
     }
-
-    @JsonIgnore
     public List<AnswerAttribute> getAnswerAttributes()
     {
         return this.answers;
     }
 
+    public void setType(String type) {
+        if (Type.isValid(type)) {
+            this.type = type;
+        }
+    }
+
     public String getType()
     {
         return this.type;
-    }
-
-    public void setType(String type)
-    {
-        this.type = type;
     }
 
     @Override

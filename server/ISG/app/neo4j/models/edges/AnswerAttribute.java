@@ -36,6 +36,12 @@ public class AnswerAttribute extends Entity {
                 return true;
             else return false;
         }
+
+        static boolean isValidForCategorical(String op) {
+            if(op.equals(EQUAL) || op.equals(NOT_EQUAL))
+                return true;
+            else return false;
+        }
     }
 
     public AnswerAttribute() { }

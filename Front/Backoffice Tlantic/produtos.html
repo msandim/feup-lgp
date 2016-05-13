@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <link rel="stylesheet" type="text/css" href="bootstrap/css/bootstrap.min.css" />
-  <link rel="stylesheet" type="text/css" href="css/index.css" />
+  <link rel="stylesheet" type="text/css" href="css/produtos.css" />
 
   <!-- search dependencies-->
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
@@ -14,92 +14,73 @@
   <title>Produtos</title>
 </head>
 <body>
-  <!--tabs -->                                            
-  <div>
-    <ul class="nav nav-tabs">
-      <li><a href="configurar_categorias.html">Configurar Categorias</a></li>
-      <li class="active"><a href="produtos.html">Adicionar/Remover Produtos</a></li>
-    </ul>
-  </div>
-  <!--tabelas-->
-  <div class ="row">
-    <h1 class="col-sm-10">Categorias</h1>
-    <h1 class="col-sm-1" style="padding-left: 10px;">Pesquisa</h1>
-  </div>
+  <div class="container-fluid">
+    <!--tabs -->
+    <div>
+      <ul class="nav nav-tabs">
+        <li><a href="configurar_categorias.html">Configurar Categorias</a></li>
+        <li class="active"><a href="produtos.html">Adicionar/Remover Produtos</a></li>
+      </ul>
+    </div>
+    <!--tabelas-->
+    <div class ="row">
+      <h1 class="col-xs-10 slight-nodge-to-the-right">Categorias</h1>
+      <h1 class="col-xs-1">Pesquisa</h1>
+    </div>
 
-  <div class="row">
-    <div class="col-sm-9 pull-left">
-      <div class="box" style="height:770px;">
-        <div class="box-body" style=" height:770px; overflow-y:auto; overflow-x:hidden;">
-          <div class="row" style=" height:770px">
-            <!-- div que contem todas as categorias -->
-            <div class="box-group" style=" height:770px">
-              <!-- div que contem tudo sobre a categoria -->
-              <div class="box-group" id="boxOfGoodies" style=" height:770px;"></div>
+    <div class="row">
+      <!--col-xs-9-->
+      <div class="col-xs-9 pull-left interface-size interface-overflow slight-nodge-to-the-right">
+        <!--grupo de cat-->
+        <div class="container-fluid" id="boxOfGoodies">
+
+        </div>
+        <!--end grupo de cat-->
+      </div>
+      <!--end of col-xs-9-->
+      <!--col-xs-2-->
+      <div class="col-xs-2 pull-right">
+        <div class="box">
+          <div class="box-header">
+            <table class="table table-bordered right-table-margin">
+              <tbody>
+                <tr>
+                  <td>
+                    <div id="custom-search-input col-size">
+                      <div class="input-group col-sm-12">
+                        <input type="text" data-bind="textInput: filter" class="  search-query form-control" placeholder="Search"/>
+                        <span class="input-group-btn">
+                          <button class="btn btn-block" type="button">
+                            <span class=" glyphicon glyphicon-search"></span>
+                          </button>
+                        </span>
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+            <div class="box-body interface-right-size interface-overflow">
+
+              <div >
+                <table class="table table-bordered">
+                  <tbody data-bind="foreach: filteredItems">
+                    <tr><td class="text-center no-padding"><button type="button" data-bind="text: $data" class="btn btn-block product-button"></button></td></tr>
+                  </tbody>
+                </table>
+              </div>
             </div>
           </div>
         </div>
       </div>
-      <div class="box col-sm-2 pull-right" style="margin-top: 25px;">
-        <button type="button" class="btn btn-block pull-right down-button">Gravar alterações</button>
-      </div>
-    </div>
-    <div class="col-sm-2 pull-right" style="height:820px">
-      <div class="box">
-       <div class="box-header">
-          <table class="table table-bordered" style="margin-top:0px; margin-bottom:0px;">
-            <tbody>
-              <tr>
-                <td>
-                <div id="custom-search-input col-size">
-                  <div class="input-group col-sm-12">
-                    <input type="text" data-bind="textInput: filter" class="  search-query form-control" placeholder="Search"/>
-                    <span class="input-group-btn">
-                      <button class="btn btn-block" type="button">
-                        <span class=" glyphicon glyphicon-search"></span>
-                      </button>
-                    </span>
-                  </div>
-                </div>
-              </td>
-              </tr>
-            </tbody>
-          </table>
-        <div class="box-body" style="height:720px; overflow:auto;">
-
-          <div >
-            <table class="table table-bordered">
-              <!--<tbody>
-                <tr><th class="text-center"><button type="button" class="btn btn-block product-button">Televisão</button></th></tr>
-                <tr><th class="text-center"><button type="button" class="btn btn-block product-button">Computador</button></th></tr>
-                <tr><th class="text-center"><button type="button" class="btn btn-block product-button">Micro-ondas</button></th></tr>
-                <tr><th class="text-center"><button type="button" class="btn btn-block product-button">Frigorífico</button></th></tr>
-                <tr><th class="text-center"><button type="button" class="btn btn-block product-button">Telemóvel</button></th></tr>
-                <tr><th class="text-center"><button type="button" class="btn btn-block product-button">Colunas</button></th></tr>
-                <tr><th class="text-center"><button type="button" class="btn btn-block product-button">Rádio</button></th></tr>
-                <tr><th class="text-center"><button type="button" class="btn btn-block product-button">Televisão</button></th></tr>
-                <tr><th class="text-center"><button type="button" class="btn btn-block product-button">Computador</button></th></tr>
-                <tr><th class="text-center"><button type="button" class="btn btn-block product-button">Micro-ondas</button></th></tr>
-                <tr><th class="text-center"><button type="button" class="btn btn-block product-button">Frigorífico</button></th></tr>
-                <tr><th class="text-center"><button type="button" class="btn btn-block product-button">Telemóvel</button></th></tr>
-                <tr><th class="text-center"><button type="button" class="btn btn-block product-button">Colunas</button></th></tr>
-                <tr><th class="text-center"><button type="button" class="btn btn-block product-button">Rádio</button></th></tr>
-                <tr><th class="text-center"><button type="button" class="btn btn-block product-button">Televisão</button></th></tr>
-                <tr><th class="text-center"><button type="button" class="btn btn-block product-button">Computador</button></th></tr>
-              </tbody>-->
-              <tbody data-bind="foreach: filteredItems">
-                <tr><td class="text-center"><button type="button" data-bind="text: $data" class="btn btn-block product-button"></button></td></tr>
-              </tbody>
-            </table>
-          </div>
-        <!-- </div>
-      </div> -->
-    </div>
-    </div>
-
-      <div class="box col-sm-12" style="margin-top: 25px;">
-        <button id="myBtn" type="button" class="btn btn-block pull-right down-button AddModal">Adicionar Categoria</button>
-          <!-- The Modal -->
+      <!--end col-xs-2-->
+      <div class="row">
+        <div class="col-xs-9 pull-left nodge-to-the-right">
+          <button type="button" class="btn btn-block down-button" id="saveChanges">Gravar Alterações</button>
+        </div>
+        <div class="col-xs-2 pull-right nodge-to-the-left">
+          <button id="myBtn" type="button" class="btn btn-block down-button AddModal">Adicionar Categoria</button>
+           <!-- The Modal -->
           <div id="myModal" class="modal">
 
             <!-- Modal content -->
@@ -107,33 +88,30 @@
               <div class="modal-header">
                 <span class="close">×</span>
                 <h2>Adicione o Nome da Categoria: </h2>
-              </div>             
+              </div>
                 <div class="modal-body">
-                  <input class="inputCatName" id="ValidateCat" type="text"  placeholder=">" required>
+                  <input class="inputCatName" id="ValidateCat" type="text" placeholder=">" required>
                 </div>
                 <div class="modal-footer">
                   <button class="btn btn-default addCategory" id="InputButtonCatName" disabled="disabled">Adicionar</button>
                 </div>
             </div>
           </div>
+
+        </div>
       </div>
-      </div>
+    </div>
   </div>
 
 
-<!--Scripts -->
+  <!-- Scripts-->
   <script type="text/javascript">
    filter();
-   expand();
-   addProduct();
-   addFile();
    AddModal();
    addCategory();
    autoAddCategory();
+
   </script>
 
 </body>
 </html>
-
-     
-

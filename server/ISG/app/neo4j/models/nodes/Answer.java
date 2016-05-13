@@ -2,11 +2,11 @@ package neo4j.models.nodes;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import play.libs.Json;
 import neo4j.models.Entity;
 import neo4j.models.edges.AnswerAttribute;
-import org.neo4j.ogm.annotation.NodeEntity;
-import org.neo4j.ogm.annotation.Relationship;
-import play.libs.Json;
+import org.neo4j.ogm.annotation.*;
+import utils.IdGenerator;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,10 +27,11 @@ public class Answer extends Entity
     @Relationship(type = "INFLUENCES")
     private List<AnswerAttribute> attributes = new ArrayList<>();
 
-    public Answer() { }
+    public Answer() {this.code = IdGenerator.generate();}
 
     public Answer(String name) {
         this.text = name;
+        this.code = IdGenerator.generate();
     }
 
     public List<AnswerAttribute> getAttributes() {
@@ -49,6 +50,25 @@ public class Answer extends Entity
     public void setCode(String code)
     {
         this.code = code;
+    }
+
+    @Override
+    public int hashCode()
+    {
+        return this.code.hashCode();
+    }
+
+    @Override
+    public boolean equals(Object obj)
+    {
+        if (obj instanceof Answer)
+        {
+            Answer a = (Answer) obj;
+            return (a.code.equals(this.code));
+        } else
+        {
+            return false;
+        }
     }
 
     public String getText() {

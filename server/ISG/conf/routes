@@ -12,10 +12,14 @@ GET     /api/questionsByCategory                controllers.QuestionController.g
 
 GET     /api/allCategories                      controllers.CategoryController.retrieveAllCategories
 POST    /api/addCategory                        controllers.CategoryController.createCategory(name: String, code: String)
-
 GET     /api/productsByCategory                 controllers.ProductController.getProductsByCategory(code: String)
+GET     /api/category                           controllers.CategoryController.retrieveCategory(id: Long)
+#POST    /api/addCategory                        controllers.CategoryController.createOrUpdateCategory
+GET     /api/deleteCategory/                    controllers.CategoryController.deleteCategory(id: Long)
 
 GET     /api/sequencesByCategory                controllers.SequenceController.getSequencesByCategory(code: String)
+
+POST    /api/addProducts                        controllers.ProductController.importFromCsv()
 
 
 GET     /message                               controllers.AsyncController.message

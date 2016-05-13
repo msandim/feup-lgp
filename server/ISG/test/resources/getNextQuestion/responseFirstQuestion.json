@@ -1,0 +1,21 @@
+{
+  "question":{
+    "code":"1",
+    "text":"Qual o tamanho da sua sala?"
+  },
+  "answers":[
+    {
+      "code":"1",
+      "text":"Pequena"
+    },
+    {
+      "code":"2",
+      "text":"Média"
+    },
+    {
+      "code":"3",
+      "text":"Grande"
+    }
+  ],
+  "products":[ ]
+}

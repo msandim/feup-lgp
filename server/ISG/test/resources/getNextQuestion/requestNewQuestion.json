@@ -1,0 +1,21 @@
+{
+  "category":"tvs",
+  "answers":[
+    {
+      "question":"1",
+      "answer":"2"
+    },
+    {
+      "question":"4",
+      "answer":"1"
+    },
+    {
+      "question":"5",
+      "answer":"3"
+    }
+  ],
+  "blacklist_questions":[
+    "2",
+    "6"
+  ]
+}

@@ -10,6 +10,7 @@ import neo4j.models.Entity;
 import neo4j.models.edges.QuestionEdge;
 import org.neo4j.ogm.annotation.*;
 import play.libs.Json;
+import utils.IdGenerator;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -32,14 +33,20 @@ public class Question extends Entity
     @JsonIgnore
     private List<QuestionEdge> nextQuestions = new ArrayList<>();
 
+    @Relationship(type = "HAS_QUESTIONS", direction = Relationship.INCOMING)
+    @JsonIgnore
+    private Category category;
+
     //@Relationship(type = "CONNECTS", direction = Relationship.INCOMING)
     //private Set<QuestionEdge> previousQuestions;
 
     public Question() {
+        this.code = IdGenerator.generate();
     }
 
     public Question(String text) {
         this.text = text;
+        this.code = IdGenerator.generate();
     }
 
     @Override
@@ -102,6 +109,13 @@ public class Question extends Entity
         node.set("answers", Json.toJson(answerNodes));
 
         return node;
+
+    public Category getCategory() {
+        return category;
+    }
+
+    public void setCategory(Category category) {
+        this.category = category;
     }
 
     // Hashcode of each Question is the code's hashcode:

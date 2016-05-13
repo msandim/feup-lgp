@@ -23,12 +23,34 @@ public class QuestionEdge extends Entity
     private Long numberOfTimesChosen = (long) 0;
     private Long numberOfTimesGoodFeedback = (long) 0;
 
+    public QuestionEdge() {
+
+    }
+
+    public QuestionEdge(Question in, Question out) {
+        this.previousQuestion = in;
+        this.nextQuestion = out;
+    }
+
     public Question getNextQuestion()
     {
         return nextQuestion;
     }
 
+    public void setNextQuestion(Question nextQuestion) {
+        this.nextQuestion = nextQuestion;
+    }
+
+    public Question getPreviousQuestion() {
+        return previousQuestion;
+    }
+
+    public void setPreviousQuestion(Question previousQuestion) {
+        this.previousQuestion = previousQuestion;
+    }
+
     public Float getVarianceGainMean()
+
     {
         return varianceGainMean;
     }

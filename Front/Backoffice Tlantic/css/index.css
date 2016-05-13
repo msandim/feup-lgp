@@ -318,16 +318,16 @@ body{
 }
 
 
-
 .login{
   z-index: 1;
-  position: absolute;
+  position: fixed;
   width:350px;
   margin:0 auto;
   margin-top:8px;
   margin-bottom:2%;
   transition:opacity 1s;
   -webkit-transition:opacity 1s;
+
 }
 
 #triangle{
@@ -352,17 +352,19 @@ body{
 input[class="value"]{
   width:92%;
   background:#fff;
-  margin-bottom:4%;
   border:1px solid #ccc;
   padding:4%;
   font-family:'Open Sans',sans-serif;
   font-size:95%;
   color:#555;
+  display: block;
+  margin : 0 auto;
 }
 
-input[class="addQuestion"]{
+input[class="addQuestion"], input[class="addAnswer"], input[class="addCharacteristic"] { 
   width:100%;
   background:#ff3333;
+  margin-top: 2.5%;
   border:0;
   padding:4%;
   font-family:'Open Sans',sans-serif;
@@ -373,6 +375,6 @@ input[class="addQuestion"]{
   -webkit-transition:background .3s;
 }
 
-input[class="addQuestion"]:hover{
+input[class="addQuestion"]:hover, input[class="addAnswer"]:hover, input[class="addCharacteristic"]:hover{
   background:#FF0000;
 }
