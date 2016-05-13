@@ -8,4 +8,7 @@ jdk:
     # - tar -xzf neo4j-community-2.3.2-unix.tar.gz
     # - neo4j-community-2.3.2/bin/neo4j start
 
-script: cd server/ISG && sbt compile && sbt test 
+script:
+      - cd server/ISG;
+      - sbt compile;
+      - sbt test;
