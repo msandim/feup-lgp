@@ -1,6 +1,7 @@
 package controllers;
 
 import algorithm.AlgorithmLogic;
+import algorithm.SequenceBuilder;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -14,6 +15,7 @@ import play.mvc.Controller;
 import play.mvc.Result;
 import utils.ControllerUtils;
 import utils.MapUtils;
+import utils.Statistics;
 
 import javax.inject.Singleton;
 import java.util.*;
@@ -195,10 +197,14 @@ public class QuestionController extends Controller {
             if (answerCode == null)
                 return badRequest(ControllerUtils.missingField("answer"));
 
+            Float varianceBeforeUpdate = AlgorithmLogic.calculateScoreVariance(productScores);
+
             // Update the scores:
             if (!productService.updateScores(questionCode, answerCode, productScores))
                 return badRequest(ControllerUtils.generalError("INVALID_QUESTION_ANSWER",
                         "One of the question ID or answer ID you supplied is not valid!"));
+
+            Float varianceAfterUpdate = AlgorithmLogic.calculateScoreVariance(productScores);
 
             // BEGIN TRANSACTION
 
@@ -228,7 +234,7 @@ public class QuestionController extends Controller {
                             "The sequence you supplied is not valid!"));
 
                 questionEdge.incNumberOfTimesChosen();
-                //questionEdge. // TODO the variance this is missing!
+                questionEdge.incMeanVariance(varianceAfterUpdate / varianceBeforeUpdate);
 
                 if (feedback == 1)
                     questionEdge.incNumberOfTimesGoodFeedback();
@@ -242,6 +248,9 @@ public class QuestionController extends Controller {
 
             // COMMIT
         }
+
+        // Build Sequence:
+        SequenceBuilder.build(sequence);
 
         return ok(Json.newObject());
     }

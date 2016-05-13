@@ -1,6 +1,8 @@
 package neo4j.models.nodes;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import play.libs.Json;
 import neo4j.models.Entity;
 import neo4j.models.edges.AnswerAttribute;
 import org.neo4j.ogm.annotation.*;
@@ -85,5 +87,10 @@ public class Answer extends Entity
     public Long getNumberOfTimesChosen()
     {
         return numberOfTimesChosen;
+    }
+
+    public ObjectNode toJson()
+    {
+        return Json.newObject().put("code", code).put("text", text);
     }
 }

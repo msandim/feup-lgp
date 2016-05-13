@@ -17,13 +17,9 @@ GET     /api/category                           controllers.CategoryController.r
 #POST    /api/addCategory                        controllers.CategoryController.createOrUpdateCategory
 GET     /api/deleteCategory/                    controllers.CategoryController.deleteCategory(id: Long)
 
-
+GET     /api/sequencesByCategory                controllers.SequenceController.getSequencesByCategory(code: String)
 
 POST    /api/addProducts                        controllers.ProductController.importFromCsv()
-#GET     /allProducts                controllers.CategoryController.retrieveAllProducts
-#GET     /product/:id                controllers.CategoryController.retrieveProduct(id: Long)
-#GET     /addProduct/:name&:price    controllers.CategoryController.createOrUpdateProduct(name: String, price :Float)
-#GET     /deleteProduct/:id          controllers.CategoryController.deleteProduct(id: Long)
 
 
 GET     /message                               controllers.AsyncController.message

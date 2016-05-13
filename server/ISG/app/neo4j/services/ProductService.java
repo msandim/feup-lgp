@@ -28,6 +28,11 @@ public class ProductService extends GenericService<Product>
                 .append("\' RETURN count(n)")
                 .toString();
         Iterable<Long> valor = Neo4jSessionFactory.getInstance().getNeo4jSession().query(Long.class, query, Collections.EMPTY_MAP);
+
+        // If the category doesn't have products, the result is 0:
+        if (!valor.iterator().hasNext())
+            return (long) 0;
+
         return valor.iterator().next();
     }
 
@@ -64,7 +69,7 @@ public class ProductService extends GenericService<Product>
     public boolean updateScores(String questionCode, String answerCode, Map<Product, Float> productScores)
     {
         // MATCH (q:Question)-[:HAS]->(an:Answer)-[i:INFLUENCES]->(at:Attribute)<-[v:VALUES]-(p:Product) WHERE q.code = 'q1' AND an.code = '1' RETURN at,v,p
-        // Para esta resposta, ver quais os produtos que sao afetados
+        // For this answer, see the affected products:
         String query = new StringBuilder("MATCH (q:Question)-[:HAS]->(an:Answer)-[i:INFLUENCES]->(at:Attribute)<-[v:VALUES]-(p:Product) WHERE q.code = \'")
                 .append(questionCode)
                 .append("\' AND an.code = \'")

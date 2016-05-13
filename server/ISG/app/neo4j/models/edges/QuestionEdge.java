@@ -3,6 +3,9 @@ package neo4j.models.edges;
 import neo4j.models.Entity;
 import neo4j.models.nodes.Question;
 import org.neo4j.ogm.annotation.*;
+import utils.Statistics;
+
+import java.util.ArrayList;
 
 /**
  * Created by Miguel on 27-04-2016.
@@ -50,6 +53,12 @@ public class QuestionEdge extends Entity
 
     {
         return varianceGainMean;
+    }
+
+    // Source by: http://math.stackexchange.com/questions/106700/incremental-averageing
+    public void incMeanVariance(Float newVarianceValue)
+    {
+        varianceGainMean = varianceGainMean + ((newVarianceValue - varianceGainMean) / numberOfTimesChosen);
     }
 
     public void incNumberOfTimesChosen()
