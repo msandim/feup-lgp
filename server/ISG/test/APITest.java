@@ -2,10 +2,14 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectReader;
 import neo4j.Neo4jSessionFactory;
+import org.apache.http.entity.mime.MultipartEntityBuilder;
+import org.apache.http.entity.mime.content.ContentBody;
+import org.asynchttpclient.request.body.multipart.MultipartBody;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.neo4j.ogm.model.Result;
 import org.neo4j.ogm.service.Components;
+import play.api.mvc.MultipartFormData;
 import play.libs.ws.WS;
 import play.libs.ws.WSClient;
 import play.libs.ws.WSRequest;
@@ -18,6 +22,7 @@ import java.util.Collections;
 import java.util.Map;
 import java.util.concurrent.CompletionStage;
 
+@SuppressWarnings("Duplicates")
 public class APITest extends WithServer {
 
     /** TODO
@@ -46,8 +51,9 @@ public class APITest extends WithServer {
     }
 
     protected WSResponse request(String route, String type, JsonNode body /*TODO maybe change to File*/, JsonNode parameters) throws Exception {
-        String url = "http://localhost:" + testServer.port() + "/" + route;
-        try (WSClient ws = WS.newClient(testServer.port())) {
+        try {
+            String url = "http://localhost:" + testServer.port() + "/" + route;
+            WSClient ws = WS.newClient(testServer.port());
             WSRequest request = ws.url(url);
 
             if (parameters != null) {
@@ -63,6 +69,49 @@ public class APITest extends WithServer {
             }
 
             CompletionStage<WSResponse> stage;
+            switch (type) {
+                case "GET":
+                    stage = request.get();
+                    break;
+                case "POST":
+                    stage = request.post(body);
+                    break;
+                case "PUT":
+                    stage = request.put(body);
+                    break;
+                case "DELETE":
+                    stage = request.delete();
+                    break;
+                default:
+                    return null;
+            }
+            return stage.toCompletableFuture().get();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    protected WSResponse requestFile(String route, String type, File body, JsonNode parameters) throws Exception {
+        try {
+            String url = "http://localhost:" + testServer.port() + "/" + route;
+            WSClient ws = WS.newClient(testServer.port());
+            WSRequest request = ws.url(url);
+
+            if (parameters != null) {
+                ObjectMapper mapper = new ObjectMapper();
+                Map result = mapper.convertValue(parameters, Map.class);
+
+                for (Object o : result.entrySet()) {
+                    Map.Entry thisEntry = (Map.Entry) o;
+                    Object key = thisEntry.getKey();
+                    Object value = thisEntry.getValue();
+                    request.setQueryParameter((String) key, (String) value);
+                }
+            }
+
+            CompletionStage<WSResponse> stage;
+            request.setHeader( "Content-Type", "multipart/form-data" );
             switch (type) {
                 case "GET":
                     stage = request.get();

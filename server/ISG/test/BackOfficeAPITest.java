@@ -17,6 +17,7 @@ import static org.junit.Assert.assertEquals;
 
 public class BackOfficeAPITest extends APITest {
 
+    //TODO add tests for missing arguments, wrong argument names, wrong number of parameters, etc
     //TODO maybe change to not use other APIs and insert directly to the database
 
     @Test
@@ -57,12 +58,12 @@ public class BackOfficeAPITest extends APITest {
         assertEquals(readJsonFromFile("addCategory/responseBadName.json"), response.asJson());
     }
 
-    @Test @Ignore //FIXME: 10/05/2016 add file
+    @Test
     public void testAddProducts() throws Exception {
         request("api/addCategory", "POST", null, readJsonFromFile("addCategory/parameters.json"));
 
         //Adding products. Should return empty JSON object
-        response = request("api/addProducts", "POST", null /* TODO use file */, readJsonFromFile("addProducts/parameters.json"));
+        response = requestFile("api/addProducts", "POST", new File("addProducts/tv.csv"), readJsonFromFile("addProducts/parameters.json"));
 
         assert response != null;
         assertEquals(OK, response.getStatus());
@@ -104,7 +105,6 @@ public class BackOfficeAPITest extends APITest {
 
         System.out.println(response.getBody());
 
-        //TODO Add attributes to the DB manually
         assert response != null;
         assertEquals(OK, response.getStatus());
         assertEquals(readJsonFromFile("addQuestions/response.json"), response.asJson());
