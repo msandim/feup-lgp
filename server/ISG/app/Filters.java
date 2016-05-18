@@ -2,9 +2,8 @@ import javax.inject.*;
 import play.*;
 import play.mvc.EssentialFilter;
 import play.http.HttpFilters;
-import play.mvc.*;
 
-import filters.ExampleFilter;
+import filters.AccessControlFilter;
 
 /**
  * This class configures filters that run on every request. This
@@ -26,7 +25,7 @@ public class Filters implements HttpFilters {
      * @param exampleFilter A demonstration filter that adds a header to
      */
     @Inject
-    public Filters(Environment env, ExampleFilter exampleFilter) {
+    public Filters(Environment env, AccessControlFilter exampleFilter) {
         this.env = env;
         this.exampleFilter = exampleFilter;
     }

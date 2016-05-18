@@ -107,7 +107,7 @@ public class CategoryController extends Controller {
                     return badRequest(ControllerUtils.generalError("INVALID_CODE", "This category code already exists!"));
 
                 service.createOrUpdate(temp);
-                return ok();
+                return ok(Json.newObject());
 
             }
         }
@@ -126,26 +126,26 @@ public class CategoryController extends Controller {
         return ok(Long.toString(id));
     }
 
-    public Result removeCategory(String name){
+    public Result removeCategory(String code){
         CategoryService service = new CategoryService();
 
-        Category tmp = service.findByName(name);
+        Category tmp = service.findByCode(code);
 
 
 
         if(tmp==null){
-            Logger.info("ta null");
+            //Logger.info("ta null");
             Map<String, String> errorMsg = new HashMap<>();
             errorMsg.put("error", "INVALID_NAME");
             errorMsg.put("msg", "there is no category with this name!");
             return badRequest(errorMsg.toString());
         }
-        Logger.info(tmp.getName());
+        //Logger.info(tmp.getName());
 
-        String query = new StringBuilder("MATCH (c:Category{name:\'" + tmp.getName() + "\'}) OPTIONAL MATCH (c)-[]->(q:Question)-[]->(a:Answer) detach delete c, q, a").toString();
+        String query = new StringBuilder("MATCH (c:Category{name:\'" + tmp.getName() + "\'}) OPTIONAL MATCH (c)-[]->(q:Question)-[]->(a:Answer) OPTIONAL MATCH (c)-[]->(p:Product)-[]->(at:Attribute) detach delete c, q, a, p").toString();
         //Logger.debug("query:" + query);
         Neo4jSessionFactory.getInstance().getNeo4jSession().query(query, Collections.EMPTY_MAP);
 
-        return ok();
+        return ok(Json.newObject());
     }
 }

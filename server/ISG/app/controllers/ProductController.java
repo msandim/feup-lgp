@@ -72,7 +72,7 @@ public class ProductController extends Controller {
         //Product temp = new Product (name, EAN, price, categoryCode);
 
         //return ok(service.createOrUpdate(temp).getName());
-        return ok();
+        return ok(Json.newObject());
     }
 
     public Result deleteProduct(Long id) {
@@ -99,14 +99,14 @@ public class ProductController extends Controller {
 
         if (result.get("code") == null) {
             errorMsg.put("error", "missing attribute keyword");
-            errorMsg.put("Message", "There is no code: ");
-            return ok(errorMsg.toString());
+            errorMsg.put("msg", "There is no code: ");
+            return badRequest(errorMsg.toString());
         }
 
         if (result.get("code")[0] == null) {
             errorMsg.put("error", "NO_CODE");
-            errorMsg.put("Message", "There is no code in the request");
-            return ok(errorMsg.toString());
+            errorMsg.put("msg", "There is no code in the request");
+            return badRequest(errorMsg.toString());
         }
         String categoryCode = result.get("code")[0];
         //Logger.debug("primeiro: " + result.get("code")[0]);
@@ -117,8 +117,9 @@ public class ProductController extends Controller {
         //Category targetCategory =
         if (categoryService.findByCode(categoryCode) == null) {
             errorMsg.put("error", "INVALID_CODE");
-            errorMsg.put("Message", "There is no category with this code: ");
-            return ok(errorMsg.toString());
+            errorMsg.put("msg", "There is no category with this code: ");
+            JsonNode node = ControllerUtils.missingField("code");
+            return badRequest(node);
         }
 
         Category targetCategory = categoryService.findByCode(categoryCode);
@@ -220,10 +221,12 @@ public class ProductController extends Controller {
             }
             //Logger.debug("Done");
         } else {
-            return ok("Missing file");
+            errorMsg.put("error", "FILE_NOT_FOUND");
+            errorMsg.put("msg", "No file was found in your request!");
+            return badRequest(errorMsg.toString());
         }
         //Logger.debug("antes");
         //Logger.debug("segundo: " + targetCategory.getName());
-        return ok();
+        return ok(Json.newObject());
     }
 }

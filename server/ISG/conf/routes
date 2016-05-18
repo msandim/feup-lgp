@@ -16,7 +16,7 @@ GET     /api/productsByCategory                 controllers.ProductController.ge
 GET     /api/category                           controllers.CategoryController.retrieveCategory(id: Long)
 #POST    /api/addCategory                        controllers.CategoryController.createOrUpdateCategory
 GET     /api/deleteCategory/:id                 controllers.CategoryController.deleteCategory(id: Long)
-POST    /api/removeCategory/                    controllers.CategoryController.removeCategory(name: String)
+POST    /api/removeCategory/                    controllers.CategoryController.removeCategory(code: String)
 
 GET     /api/sequencesByCategory                controllers.SequenceController.getSequencesByCategory(code: String)
 
