@@ -15,7 +15,8 @@ POST    /api/addCategory                        controllers.CategoryController.c
 GET     /api/productsByCategory                 controllers.ProductController.getProductsByCategory(code: String)
 GET     /api/category                           controllers.CategoryController.retrieveCategory(id: Long)
 #POST    /api/addCategory                        controllers.CategoryController.createOrUpdateCategory
-GET     /api/deleteCategory/                    controllers.CategoryController.deleteCategory(id: Long)
+GET     /api/deleteCategory/:id                 controllers.CategoryController.deleteCategory(id: Long)
+POST    /api/removeCategory/                    controllers.CategoryController.removeCategory(name: String)
 
 GET     /api/sequencesByCategory                controllers.SequenceController.getSequencesByCategory(code: String)
 
