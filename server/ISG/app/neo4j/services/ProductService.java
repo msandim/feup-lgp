@@ -193,4 +193,17 @@ public class ProductService extends GenericService<Product>
             }
         }
     }
+
+    public Product findByEAN(String ean)
+    {
+        String query = new StringBuilder("MATCH (p: Product) where p.EAN = \'").append(ean).append("\' return p").toString();
+
+        Iterator<Product> iterator =
+                Neo4jSessionFactory.getInstance().getNeo4jSession().query(getEntityType(), query, Collections.EMPTY_MAP).iterator();
+
+        if (iterator.hasNext())
+            return iterator.next();
+        else
+            return null;
+    }
 }

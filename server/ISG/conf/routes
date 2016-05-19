@@ -21,6 +21,7 @@ POST    /api/removeCategory/                    controllers.CategoryController.r
 GET     /api/sequencesByCategory                controllers.SequenceController.getSequencesByCategory(code: String)
 
 POST    /api/addProducts                        controllers.ProductController.importFromCsv()
+DELETE  /api/removeProducts                     controllers.ProductController.removeProducts
 
 # Backoffice:
 GET     /backoffice/                            controllers.HomeController.index()

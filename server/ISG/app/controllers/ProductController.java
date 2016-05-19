@@ -9,12 +9,9 @@ import neo4j.models.nodes.Attribute;
 import neo4j.models.nodes.Category;
 import neo4j.models.nodes.Product;
 
-import neo4j.services.CategoryService;
-import neo4j.services.ProductService;
-import neo4j.services.QuestionService;
+import neo4j.services.*;
 import play.libs.Json;
 
-import neo4j.services.AttributeService;
 import neo4j.services.CategoryService;
 import neo4j.services.ProductService;
 import play.Logger;
@@ -227,6 +224,73 @@ public class ProductController extends Controller {
         }
         //Logger.debug("antes");
         //Logger.debug("segundo: " + targetCategory.getName());
+        return ok(Json.newObject());
+    }
+
+    @BodyParser.Of(BodyParser.Json.class)
+    public Result removeProducts(){
+
+
+        JsonNode jsonRequest = request().body().asJson();
+
+        //detect missing or null values
+        if(jsonRequest.get("category") == null)
+            return badRequest(ControllerUtils.missingField("category"));
+        if(jsonRequest.get("products") == null)
+            return badRequest(ControllerUtils.missingField("products"));
+
+        // Service initialization
+        CategoryService categoryService = new CategoryService();
+        ProductService productService= new ProductService();
+        AttributeService attrService = new AttributeService();
+
+        // Get the category and verify if it exists
+        String categoryCode = jsonRequest.findPath("category").asText();
+        Category category = categoryService.findByCode(categoryCode);
+
+        if (category == null){
+            return badRequest(ControllerUtils.generalError("INVALID_CATEGORY","Category not found!"));
+        }
+
+
+        //parse questions
+        JsonNode productsNode = jsonRequest.findPath("products");
+        Iterator<JsonNode> itProducts = productsNode.elements();
+
+        //if field is present but has no content
+        if(!itProducts.hasNext()) {
+            return badRequest(ControllerUtils.generalError("NO_PRODUCTS", "Products not found in the request!"));
+        }
+
+        //check for product that doesnt exist in the DB
+        while (itProducts.hasNext()) {
+            JsonNode node = itProducts.next();
+            String productEAN = node.asText();
+            Logger.info(productEAN);
+            Product product = productService.findByEAN(productEAN);
+
+            if (product == null) {
+                return badRequest(ControllerUtils.generalError("INVALID_PRODUCTS", "One or more products specified for elimination do not exist!"));
+            }
+
+            Logger.info(product.getName());
+        }
+
+
+        //remove products
+        itProducts=productsNode.elements();
+
+        while (itProducts.hasNext()) {
+            JsonNode node = itProducts.next();
+            String productEAN = node.asText();
+            Logger.info("to delete: " + productEAN);
+            Product product = productService.findByEAN(productEAN);
+            productService.delete(product.getId());
+            Logger.info("deleted " + productEAN);
+        }
+
+        //TODO como é? é para apagar os attributos que ficam ligados a respostas? ou checko so se ficam tristes sos e abandonados?
+
         return ok(Json.newObject());
     }
 }

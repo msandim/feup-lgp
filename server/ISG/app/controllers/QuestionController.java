@@ -259,37 +259,37 @@ public class QuestionController extends Controller {
     @BodyParser.Of(BodyParser.Json.class)
     public Result createOrUpdateQuestion() {
 
-        JsonNode jsonRequest = request().body().asJson();
+            JsonNode jsonRequest = request().body().asJson();
 
-        //detect missing or null values
-        if(jsonRequest.get("category") == null)
-            return badRequest(ControllerUtils.missingField("category"));
-        if(jsonRequest.get("questions") == null)
-            return badRequest(ControllerUtils.missingField("questions"));
+            //detect missing or null values
+            if(jsonRequest.get("category") == null)
+                return badRequest(ControllerUtils.missingField("category"));
+            if(jsonRequest.get("questions") == null)
+                return badRequest(ControllerUtils.missingField("questions"));
 
-        // Service initialization
-        CategoryService categoryService = new CategoryService();
-        QuestionService questionService = new QuestionService();
-        QuestionEdgeService questionEdgeService = new QuestionEdgeService();
-        AttributeService attrService = new AttributeService();
+            // Service initialization
+            CategoryService categoryService = new CategoryService();
+            QuestionService questionService = new QuestionService();
+            QuestionEdgeService questionEdgeService = new QuestionEdgeService();
+            AttributeService attrService = new AttributeService();
 
-        // Get the category and verify if it exists
-        String categoryCode = jsonRequest.findPath("category").asText();
-        Category category = categoryService.findByCode(categoryCode);
+            // Get the category and verify if it exists
+            String categoryCode = jsonRequest.findPath("category").asText();
+            Category category = categoryService.findByCode(categoryCode);
 
-        if (category == null)
-            return badRequest(ControllerUtils.generalError("INVALID_CATEGORY","Category not found!"));
+            if (category == null)
+                return badRequest(ControllerUtils.generalError("INVALID_CATEGORY","Category not found!"));
 
-        //parse questions
-        JsonNode questionsNode = jsonRequest.findPath("questions");
-        Iterator<JsonNode> itQuestion = questionsNode.elements();
+            //parse questions
+            JsonNode questionsNode = jsonRequest.findPath("questions");
+            Iterator<JsonNode> itQuestion = questionsNode.elements();
 
-        //if field is present but has no content
-        if(!itQuestion.hasNext())
-            return badRequest(ControllerUtils.generalError("NO_QUESTIONS","Questions not found!"));
+            //if field is present but has no content
+            if(!itQuestion.hasNext())
+                return badRequest(ControllerUtils.generalError("NO_QUESTIONS","Questions not found!"));
 
-        //iterate through questions
-        while (itQuestion.hasNext()) {
+            //iterate through questions
+            while (itQuestion.hasNext()) {
 
             JsonNode questionNode = itQuestion.next();
 
