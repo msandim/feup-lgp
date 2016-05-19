@@ -10,6 +10,7 @@ libraryDependencies ++= Seq(
   javaJdbc,
   cache,
   javaWs,
+  filters,
   "org.neo4j" % "neo4j-ogm-core" % "2.0.1",
   "org.neo4j" % "neo4j-ogm-http-driver" % "2.0.1",
   "org.neo4j" % "neo4j-ogm-embedded-driver" % "2.0.1",
