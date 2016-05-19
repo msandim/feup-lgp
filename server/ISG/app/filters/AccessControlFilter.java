@@ -37,7 +37,7 @@ public class AccessControlFilter extends Filter {
         RequestHeader requestHeader) {
 
         return next.apply(requestHeader).thenApplyAsync(
-            result -> result.withHeader("Access-Control-Allow-Origin", "*"),
+            result -> result.withHeaders("Access-Control-Allow-Origin", "*", "Access-Control-Allow-Credentials", "true"),
             exec
         );
     }
