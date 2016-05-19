@@ -286,7 +286,7 @@ public class QuestionController extends Controller {
 
         //if field is present but has no content
         if(!itQuestion.hasNext())
-            return badRequest(ControllerUtils.generalError("NO_QUESTIONS","Questions not found!"));
+            return badRequest(ControllerUtils.generalError("NO_QUESTIONS","Questions empty!"));
 
         //iterate through questions
         while (itQuestion.hasNext()) {
@@ -323,68 +323,68 @@ public class QuestionController extends Controller {
                 //create answer object
                 Answer answer = new Answer(answerText);
 
-                JsonNode characteristicsNode = answerNode.findPath("attributes");
+                JsonNode attributesNode = answerNode.findPath("attributes");
 
-                if(characteristicsNode == null)
+                if(attributesNode == null)
                     return badRequest(ControllerUtils.missingField("attributes"));
 
                 List<AnswerAttribute> answerAttrs = new ArrayList<>();
-                Iterator<JsonNode> itCharacteristics = characteristicsNode.elements();
+                Iterator<JsonNode> itAttributes = attributesNode.elements();
 
-                if(!itCharacteristics.hasNext())
-                    return badRequest(ControllerUtils.generalError("NO_CHARACTERISTICS","Characteristics for the answer not found!"));
+                if(!itAttributes.hasNext())
+                    return badRequest(ControllerUtils.generalError("NO_ATTRIBUTES","Attributes for the answer not found!"));
 
-                //iterate through characteristics
-                while (itCharacteristics.hasNext()) {
+                //iterate through attributes
+                while (itAttributes.hasNext()) {
 
-                    JsonNode characteristicNode = itCharacteristics.next();
+                    JsonNode attributeNode = itAttributes.next();
 
                     //detecting missing fields
-                    if(characteristicNode.findValue("name") == null)
-                        return badRequest(ControllerUtils.missingField("characteristic name"));
-                    if(characteristicNode.findValue("operator") == null)
-                        return badRequest(ControllerUtils.missingField("characteristic operator"));
-                    if(characteristicNode.findValue("value") == null)
-                        return badRequest(ControllerUtils.missingField("characteristic value"));
-                    if(characteristicNode.findValue("score") == null)
-                        return badRequest(ControllerUtils.missingField("characteristic score"));
+                    if(attributeNode.findValue("name") == null)
+                        return badRequest(ControllerUtils.missingField("attribute name"));
+                    if(attributeNode.findValue("operator") == null)
+                        return badRequest(ControllerUtils.missingField("attribute operator"));
+                    if(attributeNode.findValue("value") == null)
+                        return badRequest(ControllerUtils.missingField("attribute value"));
+                    if(attributeNode.findValue("score") == null)
+                        return badRequest(ControllerUtils.missingField("attribute score"));
 
                     //verify if the attribute exists in the database
-                    String characteristicName = characteristicNode.findValue("name").asText();
-                    Attribute attr = attrService.findByName(characteristicName);
+                    String attributeName = attributeNode.findValue("name").asText();
+                    Attribute attr = attrService.findByName(attributeName);
 
                     if (attr == null)
-                        return badRequest(ControllerUtils.generalError("INVALID_ATTRIBUTE", "There is no attribute with this name: " + characteristicName));
+                        return badRequest(ControllerUtils.generalError("INVALID_ATTRIBUTE", "There is no attribute with this name: " + attributeName));
 
                     //validate operator
-                    String characteristicsOperator = characteristicNode.findValue("operator").asText();
+                    String attributeOperator = attributeNode.findValue("operator").asText();
 
-                    if (!AnswerAttribute.Operators.isValid(characteristicsOperator))
+                    if (!AnswerAttribute.Operators.isValid(attributeOperator))
                         return badRequest(ControllerUtils.generalError("INVALID_OPERATOR", "Operators must be equal to one of these: < <= > >= = !="));
 
                     //validate value
-                    String characteristicsValue = characteristicNode.findValue("value").asText();
+                    String attributeValue = attributeNode.findValue("value").asText();
 
                     //validate attribute operator relation
-                    if(attr.getType().equals(Attribute.Type.CATEGORICAL) && !AnswerAttribute.Operators.isValidForCategorical(characteristicsOperator))
-                        return badRequest(ControllerUtils.generalError("INVALID_ATTRIBUTE_OPERATOR_RELATION", "The operator(" + characteristicsOperator + ") is not valid with the attribute " + characteristicName));
+                    if(attr.getType().equals(Attribute.Type.CATEGORICAL) && !AnswerAttribute.Operators.isValidForCategorical(attributeOperator))
+                        return badRequest(ControllerUtils.generalError("INVALID_ATTRIBUTE_OPERATOR_RELATION", "The operator(" + attributeOperator + ") is not valid with the attribute " + attributeName));
 
                     //validate attribute
                     if(attr.getType().equals(Attribute.Type.NUMERIC)) {
                         try {
-                            float f = Float.parseFloat(characteristicsValue);
+                            float f = Float.parseFloat(attributeValue);
 
                         } catch (NumberFormatException nfe) {
                             return badRequest(ControllerUtils.generalError("INVALID_VALUE", "Value must be parsable to float"));
                         }
                     }
 
-                    String chScore = characteristicNode.findValue("score").asText();
+                    String chScore = attributeNode.findValue("score").asText();
 
                     //verify if the score is a valid number
                     try {
                         float f = Float.parseFloat(chScore);
-                        AnswerAttribute answerAttr = new AnswerAttribute(answer, attr, characteristicsOperator, characteristicsValue, f);
+                        AnswerAttribute answerAttr = new AnswerAttribute(answer, attr, attributeOperator, attributeValue, f);
                         answerAttrs.add(answerAttr);
 
                     } catch (NumberFormatException nfe) {
