@@ -242,7 +242,7 @@ public class ProductController extends Controller {
         // Service initialization
         CategoryService categoryService = new CategoryService();
         ProductService productService= new ProductService();
-        AttributeService attrService = new AttributeService();
+        //AttributeService attrService = new AttributeService();
 
         // Get the category and verify if it exists
         String categoryCode = jsonRequest.findPath("category").asText();
@@ -266,14 +266,14 @@ public class ProductController extends Controller {
         while (itProducts.hasNext()) {
             JsonNode node = itProducts.next();
             String productEAN = node.asText();
-            Logger.info(productEAN);
+            //Logger.info(productEAN);
             Product product = productService.findByEAN(productEAN);
 
             if (product == null) {
                 return badRequest(ControllerUtils.generalError("INVALID_PRODUCTS", "One or more products specified for elimination do not exist!"));
             }
 
-            Logger.info(product.getName());
+            //Logger.info(product.getName());
         }
 
 
@@ -283,13 +283,13 @@ public class ProductController extends Controller {
         while (itProducts.hasNext()) {
             JsonNode node = itProducts.next();
             String productEAN = node.asText();
-            Logger.info("to delete: " + productEAN);
+            //Logger.info("to delete: " + productEAN);
             Product product = productService.findByEAN(productEAN);
             productService.delete(product.getId());
-            Logger.info("deleted " + productEAN);
+            //Logger.info("deleted " + productEAN);
         }
 
-        //TODO como é? é para apagar os attributos que ficam ligados a respostas? ou checko so se ficam tristes sos e abandonados?
+
 
         return ok(Json.newObject());
     }

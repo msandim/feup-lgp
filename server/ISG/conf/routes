@@ -9,6 +9,7 @@ POST    /api/addQuestions                       controllers.QuestionController.c
 POST    /api/getNextQuestion                    controllers.QuestionController.getNextQuestion
 POST    /api/sendFeedback                       controllers.QuestionController.sendFeedback
 GET     /api/questionsByCategory                controllers.QuestionController.getQuestionsByCategory(code: String)
+DELETE  /api/removeQuestions                    controllers.QuestionController.removeQuestions
 
 GET     /api/allCategories                      controllers.CategoryController.retrieveAllCategories
 POST    /api/addCategory                        controllers.CategoryController.createCategory(name: String, code: String)
