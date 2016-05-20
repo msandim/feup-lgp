@@ -59,6 +59,8 @@ public class Attribute extends Entity
     public void setProducts(List<ProductAttribute> products) {
         this.products = products;
     }
+
+    @JsonIgnore
     public List<AnswerAttribute> getAnswerAttributes()
     {
         return this.answers;

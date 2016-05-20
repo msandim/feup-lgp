@@ -70,12 +70,15 @@ public class ProductService extends GenericService<Product>
     {
         // MATCH (q:Question)-[:HAS]->(an:Answer)-[i:INFLUENCES]->(at:Attribute)<-[v:VALUES]-(p:Product) WHERE q.code = 'q1' AND an.code = '1' RETURN at,v,p
         // For this answer, see the affected products:
-        String query = new StringBuilder("MATCH (q:Question)-[:HAS]->(an:Answer)-[i:INFLUENCES]->(at:Attribute)<-[v:VALUES]-(p:Product) WHERE q.code = \'")
+        String query = new StringBuilder("MATCH (q:Question)-[:HAS]->(an:Answer) WHERE q.code = '")
                 .append(questionCode)
-                .append("\' AND an.code = \'")
+                .append("' AND an.code = '")
                 .append(answerCode)
-                .append("\' RETURN an,i,at,v,p")
+                .append("' OPTIONAL MATCH (an)-[i:INFLUENCES]->(at:Attribute)")
+                .append(" OPTIONAL MATCH (at)<-[v:VALUES]-(p:Product)")
+                .append(" RETURN an,i,at,v,p")
                 .toString();
+
         Iterator<Answer> answerIterator = Neo4jSessionFactory.getInstance().getNeo4jSession().query(Answer.class, query, Collections.EMPTY_MAP).iterator();
 
         // If no answer was found, then the questionCode and/or answerCode are invalid:

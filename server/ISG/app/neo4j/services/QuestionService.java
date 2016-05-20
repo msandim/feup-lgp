@@ -30,19 +30,19 @@ public class QuestionService extends GenericService<Question>
         if (includeProducts)
         {
             query = new StringBuilder(
-                    "MATCH (c:Category)-[:HAS_QUESTIONS]->(q:Question)-[h:HAS]->(a:Answer)-[i:INFLUENCES]->(at:Attribute)")
-                    .append("<-[v:VALUES]-(p:Product) WHERE c.code = '")
+                    "MATCH (c:Category)-[:HAS_QUESTIONS]->(q:Question)-[h:HAS]->(a:Answer) WHERE c.code = '")
                     .append(code)
-                    .append("' RETURN q,h,a,i,at,v,p")
+                    .append("' OPTIONAL MATCH (a)-[i:INFLUENCES*0..]->(at:Attribute)")
+                    .append(" OPTIONAL MATCH (at)<-[v:VALUES]-(p:Product) RETURN q,h,a,i,at,v,p")
                     .toString();
         }
         else
         {
             query = new StringBuilder(
-                    "MATCH (c:Category)-[:HAS_QUESTIONS]->(q:Question)-[h:HAS]->(a:Answer)-[i:INFLUENCES]->(at:Attribute)")
-                    .append("WHERE c.code = '")
+                    "MATCH (c:Category)-[:HAS_QUESTIONS]->(q:Question)-[h:HAS]->(a:Answer) WHERE c.code = '")
                     .append(code)
-                    .append("' RETURN q,h,a,i,at")
+                    .append("' OPTIONAL MATCH (a)-[i:INFLUENCES*0..]->(at:Attribute)")
+                    .append(" RETURN q,h,a,i,at")
                     .toString();
         }
 
