@@ -1,0 +1,281 @@
+.interface-size{
+  height:500px;
+}
+
+.interface-overflow{
+  overflow-y:auto;
+}
+
+.interface-right-size{
+  height:445px;
+}
+
+.table-col-border{
+  border: 2px solid red;
+  margin: -1px -1px -1px -1px;
+}
+
+.table-col-border-end{
+  border: 2px solid red;
+  margin: -1px -1px -1px -1px;
+}
+
+.table-col-border-first{
+  border: 2px solid red;
+  margin: 0px -1px -1px -1px;
+}
+
+.table-col-border-end-first{
+  border: 2px solid red;
+  margin: 0px -1px -1px -1px;
+}
+
+.table-col-size{
+  height:60px;
+}
+
+.table-contain-button{
+  padding:0;
+}
+
+.table-button{
+  height:56px;
+  background-color: white;
+  font-size: 125%;
+  border-radius: 0;
+}
+
+.table-contain-h3{
+  background-color: #FF6666;
+}
+
+.box-of-questions{
+  max-height:200px;
+  overflow:auto;
+}
+
+.input-padding{
+  padding-top: 12px;
+}
+
+#custom-search-input {
+  margin:0;
+  margin-top: 0px;
+  padding: 0;
+}
+
+#custom-search-input .search-query {
+  padding-right: 3px;
+  padding-right: 4px \9;
+  padding-left: 3px;
+  padding-left: 4px \9;
+  /* IE7-8 doesn't have border-radius, so don't indent the padding */
+
+  margin-bottom: 0;
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  border-radius: 3px;
+}
+
+#custom-search-input button {
+  border: 0;
+  background: none;
+  /** belows styles are working good */
+  padding: 2px 15px;
+  margin-top: 2px;
+  position: relative;
+  /* IE7-8 doesn't have border-radius, so don't indent the padding */
+  margin-bottom: 0;
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  border-radius: 3px;
+  color:#D9230F;
+}
+
+.search-query:focus + button {
+  z-index: 3;
+}
+
+.right-table-margin{
+  margin-top:0px;
+  margin-bottom:0px;
+}
+
+.product-button{
+  background-color: white;
+  border: 0px;
+  border-radius: 0px;
+  padding:0;
+  margin: 0px;
+  font-size: 20px;
+  height:45px;
+}
+
+.down-button{
+  height:30px;
+  font-size: 125%;
+  margin-top: 25px;
+  background-color: white;
+  border: 2px solid red;
+  padding:0;
+}
+
+.no-padding{
+  padding:0;
+}
+
+.box-of-questions{
+  display:none;
+}
+
+.box-of-answers{
+  display:none;
+}
+
+.box-of-characteristics{
+  display:none;
+}
+
+.container {
+  width: 100%;
+   overflow:hidden;
+}
+
+.container div {
+   min-width: 250px;
+}
+
+.nodge-to-the-right{
+  margin-left:25px;
+  width: (100/3)%;
+  float:left;
+}
+
+.slight-nodge-to-the-right{
+  margin-left:10px;
+}
+
+.nodge-to-the-left{
+  width: (100/9)%;
+  overflow:hidden;
+  min-height:20px;
+}
+
+
+/* Modal Content */
+.modal-content {
+    position: relative;
+    background-color: #fefefe;
+    margin-top: 15%;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 0;
+    border: 1px solid #888;
+    width: 80%;
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19);
+    -webkit-animation-name: animatetop;
+    -webkit-animation-duration: 0.4s;
+    animation-name: animatetop;
+    animation-duration: 0.4s
+}
+
+/* Add Animation */
+@-webkit-keyframes animatetop {
+    from {top:-300px; opacity:0} 
+    to {top:0; opacity:1}
+}
+
+@keyframes animatetop {
+    from {top:-300px; opacity:0}
+    to {top:0; opacity:1}
+}
+
+/* The Close Button */
+.close {
+    color: white;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+    color: #000;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.modal-header {
+    padding: 2px 16px;
+    background-color: #ff3333;
+    color: black;
+}
+
+.modal-body {padding: 2px 16px;}
+
+.modal-footer {
+    padding: 2px 16px;
+    background-color: #ff3333;
+    color: black;
+}
+
+.inputCatName, .inputCatName:focus {
+  width: 100%;
+  margin: 0;
+  border: none;
+  padding: 0;
+  outline:none;
+  background: none;
+  font-size: 150%;
+}
+
+
+.border {
+  -webkit-animation: color_change 1s infinite alternate;
+  -moz-animation: color_change 1s infinite alternate;
+  -ms-animation: color_change 1s infinite alternate;
+  -o-animation: color_change 1s infinite alternate;
+  animation: color_change 1s infinite alternate;
+  animation-name: color_change;
+  animation-duration: 1s;
+  animation-iteration-count: infinite;
+  animation-direction: alternate;
+  border:2px solid red;
+  animation-iteration-count: 4;
+}
+
+@-webkit-keyframes color_change {
+  from { background-color: white; }
+  to { background-color: red; }
+}
+@-moz-keyframes color_change {
+  from { background-color: white; }
+  to { background-color: red; }
+}
+@-ms-keyframes color_change {
+  from { background-color: white; }
+  to { background-color: red; }
+}
+@-o-keyframes color_change {
+  from { background-color: white; }
+  to { background-color: red; }
+}
+@keyframes color_change {
+  from { background-color: white; }
+  to { background-color: red; }
+}
+
+#InputButtonCatName {
+    -webkit-transition-duration: 0.4s; /* Safari */
+    transition-duration: 0.4s;
+    float: left;
+    background-color: white;
+    color: black;
+    border: 2px solid #555555;
+}
+
+#InputButtonCatName:hover {
+    background-color: #555555;
+    color: white;
+}
+

@@ -33,6 +33,8 @@ public class ProductAttribute extends Entity
         return this.value;
     }
 
+    public ProductAttribute() { }
+
     public ProductAttribute(Product product, Attribute attribute,String value){
         this.product=product;
         this.attribute=attribute;

@@ -3,6 +3,7 @@ package controllers;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 
+import neo4j.Neo4jSessionFactory;
 import neo4j.models.nodes.Category;
 import neo4j.services.CategoryService;
 //import org.neo4j.ogm.json.JSONObject;
@@ -16,8 +17,7 @@ import utils.ControllerUtils;
 
 import play.Logger;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by Lycantropus on 16-04-2016.
@@ -78,8 +78,6 @@ public class CategoryController extends Controller {
         service.createOrUpdate(temp);
         //return ok("Ok");*/
 
-        // TODO Falta se already exists
-
 
         JsonNode json = request().body().asJson();
 
@@ -90,6 +88,7 @@ public class CategoryController extends Controller {
             return badRequest(obj);
         } else {
             String categoryName = json.findPath("name").asText();
+            Logger.info("e null?" + categoryName);
             String categoryCode = json.findPath("code").asText();
             Logger.info(categoryName);
             if(categoryName == null) {
@@ -108,7 +107,7 @@ public class CategoryController extends Controller {
                     return badRequest(ControllerUtils.generalError("INVALID_CODE", "This category code already exists!"));
 
                 service.createOrUpdate(temp);
-                return ok();
+                return ok(Json.newObject());
 
             }
         }
@@ -125,5 +124,30 @@ public class CategoryController extends Controller {
 
 
         return ok(Long.toString(id));
+    }
+
+    public Result removeCategory(String code){
+        CategoryService service = new CategoryService();
+
+        Category tmp = service.findByCode(code);
+
+
+
+        if(tmp==null){
+            //Logger.info("ta null");
+            Map<String, String> errorMsg = new HashMap<>();
+            errorMsg.put("error", "INVALID_NAME");
+            errorMsg.put("msg", "there is no category with this name!");
+            return badRequest(errorMsg.toString());
+        }
+        //Logger.info(tmp.getName());
+
+        String query = new StringBuilder("MATCH (c:Category{name:\'" + tmp.getName() + "\'}) OPTIONAL MATCH (c)-[]->(q:Question)-[]->(a:Answer) OPTIONAL MATCH (c)-[]->(p:Product)-[]->(at:Attribute) detach delete c, q, a, p").toString();
+        //Logger.debug("query:" + query);
+        Neo4jSessionFactory.getInstance().getNeo4jSession().query(query, Collections.EMPTY_MAP);
+
+        String purgeAttributesQuery= new StringBuilder("MATCH (at:Attribute) OPTIONAL MATCH (at)--(p:Product) WHERE p IS NULL delete at").toString();
+        Neo4jSessionFactory.getInstance().getNeo4jSession().query(purgeAttributesQuery, Collections.EMPTY_MAP);
+        return ok(Json.newObject());
     }
 }

@@ -16,16 +16,6 @@ public abstract class Entity {
         return id;
     }
 
-    public String getNodeId() {
-        return nodeId;
-    }
-
-    public void setNodeId(String nodeId) {
-        this.nodeId = nodeId;
-    }
-
-    public String nodeId;
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

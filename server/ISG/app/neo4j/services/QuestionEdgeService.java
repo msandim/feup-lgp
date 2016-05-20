@@ -23,10 +23,11 @@ public class QuestionEdgeService extends GenericService<QuestionEdge>
     public List<QuestionEdge> getNextQuestions(String questionCode)
     {
         String query = new StringBuilder(
-                "MATCH (q1:Question)-[c:CONNECTS]->(q2:Question)-[h:HAS]->(a:Answer)-[i:INFLUENCES]->(at:Attribute)")
-                .append("<-[v:VALUES]-(p:Product) WHERE q1.code = '")
+                "MATCH (q1:Question)-[c:CONNECTS]->(q2:Question)-[h:HAS]->(a:Answer) WHERE q1.code = '")
                 .append(questionCode)
-                .append("' RETURN q1,c,q2,h,a,i,at,v,p")
+                .append("' OPTIONAL MATCH (a)-[i:INFLUENCES]->(at:Attribute)")
+                .append(" OPTIONAL MATCH (at)<-[v:VALUES]-(p:Product)")
+                .append(" RETURN q1,c,q2,h,a,i,at,v,p")
                 .toString();
 
         List<QuestionEdge> questionEdgeList = new ArrayList<>();

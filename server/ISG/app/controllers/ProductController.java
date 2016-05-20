@@ -9,12 +9,9 @@ import neo4j.models.nodes.Attribute;
 import neo4j.models.nodes.Category;
 import neo4j.models.nodes.Product;
 
-import neo4j.services.CategoryService;
-import neo4j.services.ProductService;
-import neo4j.services.QuestionService;
+import neo4j.services.*;
 import play.libs.Json;
 
-import neo4j.services.AttributeService;
 import neo4j.services.CategoryService;
 import neo4j.services.ProductService;
 import play.Logger;
@@ -72,7 +69,7 @@ public class ProductController extends Controller {
         //Product temp = new Product (name, EAN, price, categoryCode);
 
         //return ok(service.createOrUpdate(temp).getName());
-        return ok();
+        return ok(Json.newObject());
     }
 
     public Result deleteProduct(Long id) {
@@ -99,14 +96,14 @@ public class ProductController extends Controller {
 
         if (result.get("code") == null) {
             errorMsg.put("error", "missing attribute keyword");
-            errorMsg.put("Message", "There is no code: ");
-            return ok(errorMsg.toString());
+            errorMsg.put("msg", "There is no code: ");
+            return badRequest(errorMsg.toString());
         }
 
         if (result.get("code")[0] == null) {
             errorMsg.put("error", "NO_CODE");
-            errorMsg.put("Message", "There is no code in the request");
-            return ok(errorMsg.toString());
+            errorMsg.put("msg", "There is no code in the request");
+            return badRequest(errorMsg.toString());
         }
         String categoryCode = result.get("code")[0];
         //Logger.debug("primeiro: " + result.get("code")[0]);
@@ -117,8 +114,9 @@ public class ProductController extends Controller {
         //Category targetCategory =
         if (categoryService.findByCode(categoryCode) == null) {
             errorMsg.put("error", "INVALID_CODE");
-            errorMsg.put("Message", "There is no category with this code: ");
-            return ok(errorMsg.toString());
+            errorMsg.put("msg", "There is no category with this code: ");
+            JsonNode node = ControllerUtils.missingField("code");
+            return badRequest(node);
         }
 
         Category targetCategory = categoryService.findByCode(categoryCode);
@@ -220,10 +218,79 @@ public class ProductController extends Controller {
             }
             //Logger.debug("Done");
         } else {
-            return ok("Missing file");
+            errorMsg.put("error", "FILE_NOT_FOUND");
+            errorMsg.put("msg", "No file was found in your request!");
+            return badRequest(errorMsg.toString());
         }
         //Logger.debug("antes");
         //Logger.debug("segundo: " + targetCategory.getName());
-        return ok();
+        return ok(Json.newObject());
+    }
+
+    @BodyParser.Of(BodyParser.Json.class)
+    public Result removeProducts(){
+
+
+        JsonNode jsonRequest = request().body().asJson();
+
+        //detect missing or null values
+        if(jsonRequest.get("category") == null)
+            return badRequest(ControllerUtils.missingField("category"));
+        if(jsonRequest.get("products") == null)
+            return badRequest(ControllerUtils.missingField("products"));
+
+        // Service initialization
+        CategoryService categoryService = new CategoryService();
+        ProductService productService= new ProductService();
+        //AttributeService attrService = new AttributeService();
+
+        // Get the category and verify if it exists
+        String categoryCode = jsonRequest.findPath("category").asText();
+        Category category = categoryService.findByCode(categoryCode);
+
+        if (category == null){
+            return badRequest(ControllerUtils.generalError("INVALID_CATEGORY","Category not found!"));
+        }
+
+
+        //parse questions
+        JsonNode productsNode = jsonRequest.findPath("products");
+        Iterator<JsonNode> itProducts = productsNode.elements();
+
+        //if field is present but has no content
+        if(!itProducts.hasNext()) {
+            return badRequest(ControllerUtils.generalError("NO_PRODUCTS", "Products not found in the request!"));
+        }
+
+        //check for product that doesnt exist in the DB
+        while (itProducts.hasNext()) {
+            JsonNode node = itProducts.next();
+            String productEAN = node.asText();
+            //Logger.info(productEAN);
+            Product product = productService.findByEAN(productEAN);
+
+            if (product == null) {
+                return badRequest(ControllerUtils.generalError("INVALID_PRODUCTS", "One or more products specified for elimination do not exist!"));
+            }
+
+            //Logger.info(product.getName());
+        }
+
+
+        //remove products
+        itProducts=productsNode.elements();
+
+        while (itProducts.hasNext()) {
+            JsonNode node = itProducts.next();
+            String productEAN = node.asText();
+            //Logger.info("to delete: " + productEAN);
+            Product product = productService.findByEAN(productEAN);
+            productService.delete(product.getId());
+            //Logger.info("deleted " + productEAN);
+        }
+
+
+
+        return ok(Json.newObject());
     }
 }
