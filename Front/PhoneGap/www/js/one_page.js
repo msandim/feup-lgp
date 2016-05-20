@@ -49,8 +49,7 @@ function autoFillIndexPage(){
 
 	$('.main').empty();
 	$('.main').append('<h1 class="h1-title">Escolha uma categoria</h1><div class="interface-square interface-size"></div>');
-
-	//get categoryArray
+	loadService("A carregar categorias...");
   $.ajax({
         url: configs.server+configs.getAllCategoriesService,
         contentType: "application/json; charset=utf-8",
@@ -58,6 +57,7 @@ function autoFillIndexPage(){
         type: "GET",
         crossDomain: true,
 			}).done(function(response){
+				loadFinished();
 				categoryArray= response;
 				categoryArray.forEach(function(category){
 					var interfaceSquare = $('.interface-square');
@@ -75,6 +75,7 @@ function autoFillIndexPage(){
 												 };
 					//pedir nova pergunta
 					stringified = JSON.stringify(serviceCall);
+					loadService("A obter pergunta...");
 					$.ajax({
 								url: configs.server+configs.getNextQuestionService,
 								contentType: "application/json; charset=utf-8",
@@ -83,14 +84,17 @@ function autoFillIndexPage(){
 								type: "POST",
 								crossDomain: true,
 					}).done(function(response){
+						loadFinished();
 								service = response;
 								autoFillFirstQuestionPage();
 					}).fail(function(err){
-								alert(err);
+						loadFinished();
+						processError(err);
 					});
 				});
 			}).fail(function(err){
-				alert(err);
+				loadFinished();
+				processError(err);
 			});
 };
 
@@ -153,6 +157,7 @@ function autoFillFirstQuestionPage(){
 		});
 		console.log(serviceCall);
 		stringified = JSON.stringify(serviceCall);
+		loadService("A obter produtos/preparar próxima pergunta...");
 		$.ajax({
 					url: configs.server+configs.getNextQuestionService,
 					contentType: "application/json; charset=utf-8",
@@ -161,10 +166,12 @@ function autoFillFirstQuestionPage(){
 					type: "POST",
 					crossDomain: true,
 		}).done(function(response){
+					loadFinished();
 					service = response;
 					autoFillHubPage();
 		}).fail(function(err){
-					alert(err);
+			loadFinished();
+			processError(err);
 		});
   });
 
@@ -202,6 +209,7 @@ function autoFillFirstQuestionPage(){
 		});
 		console.log(serviceCall);
 		stringified = JSON.stringify(serviceCall);
+		loadService("A obter produtos/preparar próxima pergunta...");
 		$.ajax({
 					url: configs.server+configs.getNextQuestionService,
 					contentType: "application/json; charset=utf-8",
@@ -210,11 +218,13 @@ function autoFillFirstQuestionPage(){
 					type: "POST",
 					crossDomain: true,
 		}).done(function(response){
+			loadFinished();
 					service = response;
 					console.log(service);
 					autoFillHubPage();
 		}).fail(function(err){
-					alert(err);
+			loadFinished();
+			processError(err);
 		});
   });
 };
@@ -306,6 +316,7 @@ function autoFillQuestionPage(){
 		});
 		console.log(serviceCall);
 		stringified = JSON.stringify(serviceCall);
+		loadService("A obter produtos/preparar próxima pergunta...");
 		$.ajax({
 					url: configs.server+configs.getNextQuestionService,
 					contentType: "application/json; charset=utf-8",
@@ -314,10 +325,12 @@ function autoFillQuestionPage(){
 					type: "POST",
 					crossDomain: true,
 		}).done(function(response){
+			loadFinished();
 					service = response;
 					autoFillHubPage();
 		}).fail(function(err){
-					alert(err);
+			loadFinished();
+			processError(err);
 		});
     //autoFillHubPage();
   });
@@ -356,6 +369,7 @@ function autoFillQuestionPage(){
 		});
 		console.log(serviceCall);
 		stringified = JSON.stringify(serviceCall);
+		loadService("A obter produtos/preparar próxima pergunta...");
 		$.ajax({
 					url: configs.server+configs.getNextQuestionService,
 					contentType: "application/json; charset=utf-8",
@@ -364,10 +378,12 @@ function autoFillQuestionPage(){
 					type: "POST",
 					crossDomain: true,
 		}).done(function(response){
+			loadFinished();
 					service = response;
 					autoFillHubPage();
 		}).fail(function(err){
-					alert(err);
+			loadFinished();
+			processError(err);
 		});
   });
 
@@ -391,11 +407,10 @@ function autoFillFeedbackPage(){
     $('.interface-square').append('<div class="row"> <div class="col-sm-2"><div class="thumbnail"><img src="img/tv1.jpg" height ="50"></div></div><div class="col-sm-6"><p class="center-div">'+product['name']+'</p></div><div class="col-sm-2"><p class="center-div">1399,00<span class="glyphicon glyphicon-eur"></span></p></div><div class="col-sm-2 text-right"><p class="center-div">Score:'+product['score']+'</p></div></div>');
   });
 
-7
-
   $('.yes-button').click(function(){
     serviceCall['feedback']=1;
 		stringified = JSON.stringify(serviceCall);
+		loadService("A enviar feedback...");
 		$.ajax({
 					url: configs.server+configs.getNextQuestionService,
 					contentType: "application/json; charset=utf-8",
@@ -404,15 +419,18 @@ function autoFillFeedbackPage(){
 					type: "POST",
 					crossDomain: true,
 		}).done(function(response){
+			loadFinished();
 					finishAndRestart();
 		}).fail(function(err){
-					alert(err);
+			loadFinished();
+			processError(err);
 		});
   });
 
   $('.no-button').click(function(){
     serviceCall['feedback']=0;
 		stringified = JSON.stringify(serviceCall);
+		loadService("A enviar feedback...");
 		$.ajax({
 					url: configs.server+configs.getNextQuestionService,
 					contentType: "application/json; charset=utf-8",
@@ -421,9 +439,11 @@ function autoFillFeedbackPage(){
 					type: "POST",
 					crossDomain: true,
 		}).done(function(response){
+			loadFinished();
 					finishAndRestart();
 		}).fail(function(err){
-					alert(err);
+			loadFinished();
+			processError(err);
 		});
 
   });
@@ -461,4 +481,25 @@ function scoreSort(){
 	byScore.sort(function(a,b) {
 		return b.score - a.score;
 	});
+}
+
+function loadService(text){
+	//$('.interface-square').empty();
+	$('.interface-square').children().hide();
+	$('.interface-square').append('<div id="loady"><div class="loader" id="loader"></div><div id="loadyText">'+text+'</div></div>');
+	$("body").find("*").attr("disabled", "disabled");
+}
+
+function loadFinished(){
+	$('#loady').remove();
+	$("body").find("*").removeAttr("disabled");
+	$('.interface-square').children().show();
+}
+
+function processError(err){
+	var msg = err['responseText'];
+	msg = msg.split(',');
+	msg = msg[1].split(':');
+	msg = msg[1].split('}');
+	alert(msg[0]);
 }
