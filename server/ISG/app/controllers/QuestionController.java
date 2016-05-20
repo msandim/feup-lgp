@@ -9,6 +9,7 @@ import neo4j.models.edges.AnswerAttribute;
 import neo4j.models.edges.QuestionEdge;
 import neo4j.models.nodes.*;
 import neo4j.services.*;
+import play.Logger;
 import play.libs.Json;
 import play.mvc.BodyParser;
 import play.mvc.Controller;
@@ -259,37 +260,38 @@ public class QuestionController extends Controller {
     @BodyParser.Of(BodyParser.Json.class)
     public Result createOrUpdateQuestion() {
 
-        JsonNode jsonRequest = request().body().asJson();
+            JsonNode jsonRequest = request().body().asJson();
 
-        //detect missing or null values
-        if(jsonRequest.get("category") == null)
-            return badRequest(ControllerUtils.missingField("category"));
-        if(jsonRequest.get("questions") == null)
-            return badRequest(ControllerUtils.missingField("questions"));
+            //detect missing or null values
+            if(jsonRequest.get("category") == null)
+                return badRequest(ControllerUtils.missingField("category"));
+            if(jsonRequest.get("questions") == null)
+                return badRequest(ControllerUtils.missingField("questions"));
 
-        // Service initialization
-        CategoryService categoryService = new CategoryService();
-        QuestionService questionService = new QuestionService();
-        QuestionEdgeService questionEdgeService = new QuestionEdgeService();
-        AttributeService attrService = new AttributeService();
+            // Service initialization
+            CategoryService categoryService = new CategoryService();
+            QuestionService questionService = new QuestionService();
+            QuestionEdgeService questionEdgeService = new QuestionEdgeService();
+            AttributeService attrService = new AttributeService();
 
-        // Get the category and verify if it exists
-        String categoryCode = jsonRequest.findPath("category").asText();
-        Category category = categoryService.findByCode(categoryCode);
+            // Get the category and verify if it exists
+            String categoryCode = jsonRequest.findPath("category").asText();
+            Category category = categoryService.findByCode(categoryCode);
 
-        if (category == null)
-            return badRequest(ControllerUtils.generalError("INVALID_CATEGORY","Category not found!"));
+            if (category == null)
+                return badRequest(ControllerUtils.generalError("INVALID_CATEGORY","Category not found!"));
 
-        //parse questions
-        JsonNode questionsNode = jsonRequest.findPath("questions");
-        Iterator<JsonNode> itQuestion = questionsNode.elements();
+            //parse questions
+            JsonNode questionsNode = jsonRequest.findPath("questions");
+            Iterator<JsonNode> itQuestion = questionsNode.elements();
 
-        //if field is present but has no content
-        if(!itQuestion.hasNext())
-            return badRequest(ControllerUtils.generalError("NO_QUESTIONS","Questions empty!"));
 
-        //iterate through questions
-        while (itQuestion.hasNext()) {
+	        //if field is present but has no content
+	        if(!itQuestion.hasNext())
+	            return badRequest(ControllerUtils.generalError("NO_QUESTIONS","Questions empty!"));
+
+            //iterate through questions
+            while (itQuestion.hasNext()) {
 
             JsonNode questionNode = itQuestion.next();
 
@@ -461,6 +463,58 @@ public class QuestionController extends Controller {
         QuestionService service = new QuestionService();
         service.delete(id);
         return ok(Json.toJson(id));
+    }
+    @BodyParser.Of(BodyParser.Json.class)
+    public Result removeQuestions()
+    {
+        JsonNode jsonRequest = request().body().asJson();
+
+        //detect missing or null values
+        if(jsonRequest.get("questions") == null) {
+            return badRequest(ControllerUtils.missingField("questions"));
+        }
+
+        // Service initialization
+        QuestionService questionService = new QuestionService();
+        //ProductService productService= new ProductService();
+        //AttributeService attrService = new AttributeService();
+
+
+        JsonNode questionsNode = jsonRequest.findPath("questions");
+        Iterator<JsonNode> itQuestions = questionsNode.elements();
+
+
+        if(!itQuestions.hasNext()) {
+            return badRequest(ControllerUtils.generalError("NO_QUESTIONS_CODE", "questions not found in the request!"));
+        }
+
+
+        while (itQuestions.hasNext()) {
+            JsonNode node = itQuestions.next();
+            String questionCode = node.asText();
+            //Logger.info(questionCode);
+            Question question = questionService.findByCode(questionCode);
+
+            if (question == null) {
+                return badRequest(ControllerUtils.generalError("INVALID_QUESTION", "One or more questions specified for elimination do not exist!"));
+            }
+
+            //Logger.info(question.getText());
+        }
+
+        itQuestions=questionsNode.elements();
+
+        while (itQuestions.hasNext()){
+            JsonNode node = itQuestions.next();
+            Question question=questionService.findByCode(node.asText());
+
+            String query = new StringBuilder("MATCH (q:Question{code:\'" + question.getCode() + "\'}) OPTIONAL MATCH (q)-[]->(a:Answer) detach delete q,a").toString();
+
+            questionService.getSession().query(query, Collections.EMPTY_MAP);
+
+        }
+
+        return ok(Json.newObject());
     }
 
 }
