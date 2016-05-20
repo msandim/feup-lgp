@@ -136,8 +136,19 @@
   display:none;
 }
 
+.container {
+  width: 100%;
+   overflow:hidden;
+}
+
+.container div {
+   min-width: 250px;
+}
+
 .nodge-to-the-right{
   margin-left:25px;
+  width: (100/3)%;
+  float:left;
 }
 
 .slight-nodge-to-the-right{
@@ -145,7 +156,9 @@
 }
 
 .nodge-to-the-left{
-  margin-right: 20px;
+  width: (100/9)%;
+  overflow:hidden;
+  min-height:20px;
 }
 
 
@@ -265,3 +278,4 @@
     background-color: #555555;
     color: white;
 }
+

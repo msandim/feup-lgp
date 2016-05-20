@@ -1,5 +1,4 @@
 //GLOBALS
-
    //Trocar por serviço
    var categoryArray =
      [
@@ -225,8 +224,8 @@ function addCategory(){
     var removeCategoryElement = boxGroup.find(".removeCategory");
     removeCategoryElement.unbind("click", removeCategory());
     removeCategoryElement.bind("click", removeCategory());
-       $(document).unbind("ready");
-      $(document).bind("ready", function () { $(document).on('click','.addQuestion',function(){$('.login').val('');  $('.login').attr("placeholder", ">"); $('.login').hide();}); $("document ").on("click", ".toggle-login", function(){$(this).next(".login").toggle(); }); $(document).on('click','.addCharacteristic',function(){$('.login').val('');$('.login').attr("placeholder", ">"); $('.login').hide(); });}); 
+    $(document).unbind("ready");
+    $(document).bind("ready", function () {  $(document).on('click','.addQuestion',function(){ var parent = $( this ).parent(); var question = parent.children("input[type='text']").val(); if(question != "") {$('.login').val(''); $('.login').attr("placeholder", ">"); $(".login").click(); } }); $("document ").on("click", ".toggle-login", function(){$(this).next(".login").toggle(); });  $(document).on('click','.addCharacteristic',function(){ var parent = $( this ).parent(); var operator = parent.children("input[id='inputOperator']").val(); var value = parent.children("input[id='inputValue']").val();var score = parent.children("input[id='inputScore']").val(); var characteristic = parent.children("input[id='inputCharacteristic']").val(); if(operator != "" && value != "" && score != "" && characteristic != "") { $('.login').val(''); $('.login').attr("placeholder", ">"); $('.login').hide(); }});}); 
 
     //clear placeholder
     $('.inputCatName').val('');
@@ -243,7 +242,14 @@ function addQuestion(){
     
     var parent = $( this ).parent();
     var question = parent.children("input[type='text']").val();
-    
+
+     if(question == "") {
+      //edit placeholder
+      parent.children("input[type='text']").val('');
+      parent.children("input[type='text']").attr("placeholder", "> Insira algo.");
+      return;
+    }
+
     var boxParent = $( this ).closest('.box');
     var boxQuestions = boxParent.find(".box-of-questions").find(">:first-child");
 
@@ -276,6 +282,7 @@ function addQuestion(){
     removeQuestionElement.bind("click", removeQuestion());
     
     //clear placeholder
+    parent.hide();
     parent.children("input[type='text']").val('');
     parent.children("input[type='text']").attr("placeholder", ">");
   });
@@ -287,6 +294,13 @@ function addAnswer(){
    
     var parent = $( this ).parent();
     var answer = parent.children("input[type='text']").val();
+
+    if(answer == "") {
+      //edit placeholder
+      parent.children("input[type='text']").val('');
+      parent.children("input[type='text']").attr("placeholder", "> Insira algo.");
+      return;
+    }
 
     var boxParent = $( this ).closest('.box');
     var boxAnswers = boxParent.find('.box-of-answers').find('>:first-child');
@@ -326,6 +340,7 @@ function addAnswer(){
     removeAnswerElement.bind("click", removeAnswer());
 
     //clear placeholder
+    parent.hide();
     parent.children("input[type='text']").val('');
     parent.children("input[type='text']").attr("placeholder", ">");
   });
@@ -336,13 +351,37 @@ function addCharacteristic(){
   $('.addCharacteristic').click(function(){
 
     var parent = $( this ).parent();
-    var score = parent.children("input[id='inputScore']").val();;
-    var value = parent.children("input[id='inputValue']").val();;
-    var operator = parent.children("input[id='inputOperator']").val();;
-    var name = parent.children("input[id='inputCharacteristic']").val();;
+    var score = parent.children("input[id='inputScore']").val();
+    var value = parent.children("input[id='inputValue']").val();
+    var operator = parent.children("input[id='inputOperator']").val();
+    var name = parent.children("input[id='inputCharacteristic']").val();
+
+    if(score == "" || value == "" || operator == "" || name == "" ) {
+        if(score == "") {
+            //edit placeholder
+          parent.children("input[id='inputScore']").val('');
+          parent.children("input[id='inputScore']").attr("placeholder", "> Insira algo.");
+        }
+        if ( value == "") {
+           //edit placeholder
+          parent.children("input[id='inputValue']").val('');
+          parent.children("input[id='inputValue']").attr("placeholder", "> Insira algo.");
+        }
+        if ( operator == "") {
+           //edit placeholder
+          parent.children("input[id='inputOperator']").val('');
+          parent.children("input[id='inputOperator']").attr("placeholder", "> Insira algo.");
+        }
+        if ( name == "" ) {
+          //edit placeholder
+          parent.children("input[id='inputCharacteristic']").val('');
+          parent.children("input[id='inputCharacteristic']").attr("placeholder", "> Insira algo.");
+        }
+      return;
+    }
  
     var boxParent = $( this ).closest('.box');
-    console.log(boxParent.attr("class"));
+    //console.log(boxParent.attr("class"));
     var boxCharacteristic = boxParent.find('.box-of-characteristics').find('>:first-child');
     boxCharacteristic.append('<div class="box"><div class="row"><div class="col-xs-2 table-col-border table-col-size"><h4>Caraterística</h4></div><div class="col-xs-2 table-col-border table-col-size"><h4>Operador</h4></div><div class="col-xs-2 table-col-border table-col-size"><h4>Valor</h4></div><div class="col-xs-2 table-col-border table-col-size"><h4>Score</h4></div><div class="col-xs-1 table-col-border table-col-size table-contain-button"><button type="button" class="btn btn-block table-button removeCharacteristic"><span class="glyphicon glyphicon-remove"></span></button></div></div><div class="row"><div class="col-xs-2 table-col-border table-col-size input-padding"><input type="text" class="form-control" placeholder="'+name+'"></div><div class="col-xs-2 table-col-border table-col-size input-padding"><input type="text" class="form-control" placeholder="'+operator+'"></div><div class="col-sm-2 table-col-border table-col-size input-padding"><input type="text" class="form-control" placeholder="'+value+'"></div><div class="col-sm-2 table-col-border table-col-size input-padding"><input type="text" class="form-control" placeholder="'+score+'"></div></div></div>');
 
@@ -378,6 +417,7 @@ function addCharacteristic(){
     removeCharacteristicElement.unbind("click", removeCharacteristic());
     removeCharacteristicElement.bind("click", removeCharacteristic());
 
+     parent.hide();
      //clear placeholder
     parent.children("input[id='inputScore']").val('');
     parent.children("input[id='inputValue']").val('');
@@ -389,6 +429,7 @@ function addCharacteristic(){
     parent.children("input[id='inputCharacteristic']").attr("placeholder", "> Score");
   });
 }
+
 
 function autoAddCategory(){
   $(document).ready(function(){
@@ -413,7 +454,7 @@ function autoAddCategory(){
       removeCategoryElement.unbind("click", removeCategory());
       removeCategoryElement.bind("click", removeCategory());
       $(document).unbind("ready");
-       $(document).bind("ready", function () { $(document).on('click','.addQuestion',function(){$('.login').val('');  $('.login').attr("placeholder", ">"); $('.login').hide();}); $("document ").on("click", ".toggle-login", function(){$(this).next(".login").toggle(); }); $(document).on('click','.addCharacteristic',function(){$('.login').val('');$('.login').attr("placeholder", ">"); $('.login').hide(); });}); 
+       $(document).bind("ready", function () {  $(document).on('click','.addQuestion',function(){ var parent = $( this ).parent(); var question = parent.children("input[type='text']").val(); if(question != "") {$('.login').val(''); $('.login').attr("placeholder", ">"); $(".login").click(); } }); $("document ").on("click", ".toggle-login", function(){$(this).next(".login").toggle(); });  $(document).on('click','.addCharacteristic',function(){ var parent = $( this ).parent(); var operator = parent.children("input[id='inputOperator']").val(); var value = parent.children("input[id='inputValue']").val();var score = parent.children("input[id='inputScore']").val(); var characteristic = parent.children("input[id='inputCharacteristic']").val(); if(operator != "" && value != "" && score != "" && characteristic != "") { $('.login').val(''); $('.login').attr("placeholder", ">"); $('.login').hide(); }});}); 
 
       var lastChild = boxGroup.find(">:last-child");
 
@@ -678,28 +719,48 @@ $(document).ready(function() {
 //
 $(document).ready(function() {
 
-  $(document).on('click','.addQuestion',function(){
-      //edit value placeholder
-    $('.login').val('');
-    $('.login').attr("placeholder", ">");
+   $(document).on('click','.addQuestion',function(){
+      
+    var parent = $( this ).parent();
+    var question = parent.children("input[type='text']").val();
 
-    $('.login').hide();
+    if(question != "") {
+      //edit value placeholder
+      $('.login').val('');
+      $('.login').attr("placeholder", ">");
+      $(".login").click();
+    }
   });
 
   $(document).on('click','.addAnswer',function(){
-      //edit value placeholder
-    $('.login').val('');
-    $('.login').attr("placeholder", ">");
 
-    $('.login').hide();
+    var parent = $( this ).parent();
+    var answer = parent.children("input[type='text']").val();
+
+    if(answer != "") {
+      //edit value placeholder
+      $('.login').val('');
+      $('.login').attr("placeholder", ">");
+
+      $('.login').hide();
+    }
   });
 
-   $(document).on('click','.addCharacteristic',function(){
-      //edit value placeholder
-    $('.login').val('');
-    $('.login').attr("placeholder", ">");
+  $(document).on('click','.addCharacteristic',function(){
 
-    $('.login').hide();
+    var parent = $( this ).parent();
+    var operator = parent.children("input[id='inputOperator']").val();
+    var value = parent.children("input[id='inputValue']").val();
+    var score = parent.children("input[id='inputScore']").val();
+    var characteristic = parent.children("input[id='inputCharacteristic']").val();
+
+    if(operator != "" && value != "" && score != "" && characteristic != "") {
+        //edit value placeholder
+      $('.login').val('');
+      $('.login').attr("placeholder", ">");
+
+      $('.login').hide();
+    }
   });
 
   $(document).on('click','.toggle-login',function(){
