@@ -58,7 +58,7 @@ public class BackOfficeAPITest extends APITest {
         assertEquals(readJsonFromFile("addCategory/responseBadName.json"), response.asJson());
     }
 
-    @Test
+    @Test @Ignore
     public void testAddProducts() throws Exception {
         request("api/addCategory", "POST", null, readJsonFromFile("addCategory/parameters.json"));
 
