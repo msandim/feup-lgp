@@ -3,6 +3,9 @@ package neo4j.models.edges;
 import neo4j.models.Entity;
 import neo4j.models.nodes.Question;
 import org.neo4j.ogm.annotation.*;
+import utils.Statistics;
+
+import java.util.ArrayList;
 
 /**
  * Created by Miguel on 27-04-2016.
@@ -16,22 +19,66 @@ public class QuestionEdge extends Entity
     @EndNode
     private Question nextQuestion;
 
-    private Float varianceGain;
-    private Float goodSequenceRatio;
+    private Float varianceGainMean = (float) 0.0;
+    private Long numberOfTimesChosen = (long) 0;
+    private Long numberOfTimesGoodFeedback = (long) 0;
+
+    public QuestionEdge() {
+
+    }
+
+    public QuestionEdge(Question in, Question out) {
+        this.previousQuestion = in;
+        this.nextQuestion = out;
+    }
 
     public Question getNextQuestion()
     {
         return nextQuestion;
     }
 
-    public Float getVarianceGain()
-    {
-        return varianceGain;
+    public void setNextQuestion(Question nextQuestion) {
+        this.nextQuestion = nextQuestion;
     }
 
-    public Float goodSequenceGain()
+    public Question getPreviousQuestion() {
+        return previousQuestion;
+    }
+
+    public void setPreviousQuestion(Question previousQuestion) {
+        this.previousQuestion = previousQuestion;
+    }
+
+    public Float getVarianceGainMean()
+
     {
-        return goodSequenceRatio;
+        return varianceGainMean;
+    }
+
+    // Source by: http://math.stackexchange.com/questions/106700/incremental-averageing
+    public void incMeanVariance(Float newVarianceValue)
+    {
+        varianceGainMean = varianceGainMean + ((newVarianceValue - varianceGainMean) / numberOfTimesChosen);
+    }
+
+    public void incNumberOfTimesChosen()
+    {
+        numberOfTimesChosen++;
+    }
+
+    public Long getNumberOfTimesChosen()
+    {
+        return numberOfTimesChosen;
+    }
+
+    public void incNumberOfTimesGoodFeedback()
+    {
+        numberOfTimesGoodFeedback++;
+    }
+
+    public Long getNumberOfTimesGoodFeedback()
+    {
+        return numberOfTimesGoodFeedback;
     }
 
     private String getCode()

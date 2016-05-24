@@ -28,6 +28,11 @@ public class ProductService extends GenericService<Product>
                 .append("\' RETURN count(n)")
                 .toString();
         Iterable<Long> valor = Neo4jSessionFactory.getInstance().getNeo4jSession().query(Long.class, query, Collections.EMPTY_MAP);
+
+        // If the category doesn't have products, the result is 0:
+        if (!valor.iterator().hasNext())
+            return (long) 0;
+
         return valor.iterator().next();
     }
 
@@ -64,13 +69,16 @@ public class ProductService extends GenericService<Product>
     public boolean updateScores(String questionCode, String answerCode, Map<Product, Float> productScores)
     {
         // MATCH (q:Question)-[:HAS]->(an:Answer)-[i:INFLUENCES]->(at:Attribute)<-[v:VALUES]-(p:Product) WHERE q.code = 'q1' AND an.code = '1' RETURN at,v,p
-        // Para esta resposta, ver quais os produtos que sao afetados
-        String query = new StringBuilder("MATCH (q:Question)-[:HAS]->(an:Answer)-[i:INFLUENCES]->(at:Attribute)<-[v:VALUES]-(p:Product) WHERE q.code = \'")
+        // For this answer, see the affected products:
+        String query = new StringBuilder("MATCH (q:Question)-[:HAS]->(an:Answer) WHERE q.code = '")
                 .append(questionCode)
-                .append("\' AND an.code = \'")
+                .append("' AND an.code = '")
                 .append(answerCode)
-                .append("\' RETURN an,i,at,v,p")
+                .append("' OPTIONAL MATCH (an)-[i:INFLUENCES]->(at:Attribute)")
+                .append(" OPTIONAL MATCH (at)<-[v:VALUES]-(p:Product)")
+                .append(" RETURN an,i,at,v,p")
                 .toString();
+
         Iterator<Answer> answerIterator = Neo4jSessionFactory.getInstance().getNeo4jSession().query(Answer.class, query, Collections.EMPTY_MAP).iterator();
 
         // If no answer was found, then the questionCode and/or answerCode are invalid:
@@ -139,11 +147,13 @@ public class ProductService extends GenericService<Product>
 
     public Float getMediumScore(Answer answer)
     {
+        if (answer.getAttributes().isEmpty())
+            return (float) 0.0;
+
         Float mediumScore = (float) 0.0;
         for(AnswerAttribute answerAttribute: answer.getAttributes())
-        {
             mediumScore += answerAttribute.getScore();
-        }
+
         return mediumScore / answer.getAttributes().size();
     }
 
@@ -185,5 +195,18 @@ public class ProductService extends GenericService<Product>
                     return false;
             }
         }
+    }
+
+    public Product findByEAN(String ean)
+    {
+        String query = new StringBuilder("MATCH (p: Product) where p.EAN = \'").append(ean).append("\' return p").toString();
+
+        Iterator<Product> iterator =
+                Neo4jSessionFactory.getInstance().getNeo4jSession().query(getEntityType(), query, Collections.EMPTY_MAP).iterator();
+
+        if (iterator.hasNext())
+            return iterator.next();
+        else
+            return null;
     }
 }

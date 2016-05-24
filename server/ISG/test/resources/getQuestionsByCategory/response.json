@@ -1,0 +1,78 @@
+[
+  {
+    "code":"q2",
+    "text":"Numero de crianças?",
+    "answers":[
+      {
+        "code":"2",
+        "text":"1 ou Mais",
+        "attributes":[
+          {
+            "attribute":{
+              "name":"Height (cm)"
+            },
+            "operator":">",
+            "value":"160",
+            "score":0.20000000298023224
+          }
+        ]
+      },
+      {
+        "code":"1",
+        "text":"Nenhuma",
+        "attributes":[
+          {
+            "attribute":{
+              "name":"Width (cm)"
+            },
+            "operator":">=",
+            "value":"60",
+            "score":0.10000000149011612
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "code":"q1",
+    "text":"Tamanho da sala?",
+    "answers":[
+      {
+        "code":"2",
+        "text":"Grande",
+        "attributes":[
+          {
+            "attribute":{
+              "name":"Quality"
+            },
+            "operator":"!=",
+            "value":"1080p",
+            "score":0.30000001192092896
+          }
+        ]
+      },
+      {
+        "code":"1",
+        "text":"Pequena",
+        "attributes":[
+          {
+            "attribute":{
+              "name":"Quality"
+            },
+            "operator":"=",
+            "value":"720p",
+            "score":0.20000000298023224
+          },
+          {
+            "attribute":{
+              "name":"Width (cm)"
+            },
+            "operator":"<",
+            "value":"60",
+            "score":0.5
+          }
+        ]
+      }
+    ]
+  }
+]

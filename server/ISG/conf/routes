@@ -1,23 +1,32 @@
 # Routes
 # This file defines all application routes (Higher priority routes first)
 # ~~~~
-
 # An example controller showing a sample home page
 GET     /                                       controllers.HomeController.index
 
 POST    /api/addQuestions                       controllers.QuestionController.createOrUpdateQuestion
 POST    /api/getNextQuestion                    controllers.QuestionController.getNextQuestion
+POST    /api/sendFeedback                       controllers.QuestionController.sendFeedback
 GET     /api/questionsByCategory                controllers.QuestionController.getQuestionsByCategory(code: String)
+DELETE  /api/removeQuestions                    controllers.QuestionController.removeQuestions
 
 GET     /api/allCategories                      controllers.CategoryController.retrieveAllCategories
 POST    /api/addCategory                        controllers.CategoryController.createCategory(name: String, code: String)
-
 GET     /api/productsByCategory                 controllers.ProductController.getProductsByCategory(code: String)
+GET     /api/category                           controllers.CategoryController.retrieveCategory(id: Long)
+#POST    /api/addCategory                        controllers.CategoryController.createOrUpdateCategory
+GET     /api/deleteCategory/:id                 controllers.CategoryController.deleteCategory(id: Long)
+POST    /api/removeCategory/                    controllers.CategoryController.removeCategory(code: String)
 
-#GET     /allProducts                controllers.CategoryController.retrieveAllProducts
-#GET     /product/:id                controllers.CategoryController.retrieveProduct(id: Long)
-#GET     /addProduct/:name&:price    controllers.CategoryController.createOrUpdateProduct(name: String, price :Float)
-#GET     /deleteProduct/:id          controllers.CategoryController.deleteProduct(id: Long)
+GET     /api/sequencesByCategory                controllers.SequenceController.getSequencesByCategory(code: String)
+
+POST    /api/addProducts                        controllers.ProductController.importFromCsv()
+DELETE  /api/removeProducts                     controllers.ProductController.removeProducts
+
+# Backoffice:
+GET     /backoffice/                            controllers.HomeController.index()
+GET     /backoffice/configurar_categorias       controllers.HomeController.configurarCategorias()
+GET     /backoffice/produtos                    controllers.HomeController.produtos()
 
 
 GET     /message                               controllers.AsyncController.message

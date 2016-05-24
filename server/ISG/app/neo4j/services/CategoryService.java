@@ -19,8 +19,21 @@ public class CategoryService extends GenericService<Category>
     }
 
     public Category findByCode(String code)
+{
+    String query = new StringBuilder("MATCH (c: Category) where c.code = \'").append(code).append("\' return c").toString();
+
+    Iterator<Category> iterator =
+            Neo4jSessionFactory.getInstance().getNeo4jSession().query(getEntityType(), query, Collections.EMPTY_MAP).iterator();
+
+    if (iterator.hasNext())
+        return iterator.next();
+    else
+        return null;
+}
+
+    public Category findByName(String name)
     {
-        String query = new StringBuilder("MATCH (c: Category) where c.code = \'").append(code).append("\' return c").toString();
+        String query = new StringBuilder("MATCH (c: Category) where c.name = \'").append(name).append("\' return c").toString();
 
         Iterator<Category> iterator =
                 Neo4jSessionFactory.getInstance().getNeo4jSession().query(getEntityType(), query, Collections.EMPTY_MAP).iterator();
@@ -30,4 +43,6 @@ public class CategoryService extends GenericService<Category>
         else
             return null;
     }
+
+
 }
