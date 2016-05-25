@@ -90,7 +90,7 @@ public class ProductController extends Controller {
 
         // Get the category and verify if it exists
         CategoryService categoryService = new CategoryService();
-
+        ProductService productService = new ProductService();
 
         Map<String, String> errorMsg = new HashMap<>();
 
@@ -111,34 +111,29 @@ public class ProductController extends Controller {
         Http.MultipartFormData body = request().body().asMultipartFormData();
         Http.MultipartFormData.FilePart csv = body.getFile("csv");
 
-        //Category targetCategory =
-        if (categoryService.findByCode(categoryCode) == null) {
+        Category targetCategory = categoryService.findByCode(categoryCode);
+
+        if (targetCategory == null) {
             errorMsg.put("error", "INVALID_CODE");
             errorMsg.put("msg", "There is no category with this code: ");
             JsonNode node = ControllerUtils.missingField("code");
             return badRequest(node);
         }
 
-        Category targetCategory = categoryService.findByCode(categoryCode);
-
-
         if (csv != null) {
             String fileName = csv.getFilename();
             String contentType = csv.getContentType();
             File file = (File) csv.getFile();
 
-
             BufferedReader br = null;
-            String line = "";
+            String line;
             String cvsSplitBy = ";";
             String attributeTypeSplitChar = ":";
             AttributeService attributeService = new AttributeService();
-            ProductService productService = new ProductService();
             Vector<String> attributeNames = new Vector<>();
 
-            String query = new StringBuilder("MATCH (c:Category{name:\'" + targetCategory.getName() + "\'})-[]->(p:Product)-[]->(a:Attribute) detach delete p, a").toString();
-            //Logger.debug("query:" + query);
-            Neo4jSessionFactory.getInstance().getNeo4jSession().query(query, Collections.EMPTY_MAP);
+            // Delete all products from this category:
+            productService.deleteAllProductsByCategoryCode(categoryCode);
 
             try {
 
@@ -148,6 +143,7 @@ public class ProductController extends Controller {
                     linecounter++;
                     // use comma as separator
                     String[] product = line.split(cvsSplitBy);
+
                     int tokencounter = 0;
                     if (linecounter == 1) {
                         for (String header : product) {
@@ -192,8 +188,8 @@ public class ProductController extends Controller {
                         //Logger.debug("attribute values: " + attributeValues.size());
                         for (int i = 0; i < attributeNames.size(); i++) {
                             Attribute tempAttribute = attributeService.findByName(attributeNames.get(i));
-                            if (attributeValues.get(i) != "NA" &&
-                                    attributeValues.get(i) != " ") {
+                            if (!Objects.equals(attributeValues.get(i), "NA") &&
+                                    !Objects.equals(attributeValues.get(i), " ")) {
                                 tempList.add(new ProductAttribute(nodeProduct, tempAttribute, attributeValues.get(i)));
                             }
                         }
@@ -230,7 +226,6 @@ public class ProductController extends Controller {
     @BodyParser.Of(BodyParser.Json.class)
     public Result removeProducts(){
 
-
         JsonNode jsonRequest = request().body().asJson();
 
         //detect missing or null values
@@ -242,54 +237,29 @@ public class ProductController extends Controller {
         // Service initialization
         CategoryService categoryService = new CategoryService();
         ProductService productService= new ProductService();
-        //AttributeService attrService = new AttributeService();
 
         // Get the category and verify if it exists
         String categoryCode = jsonRequest.findPath("category").asText();
         Category category = categoryService.findByCode(categoryCode);
 
-        if (category == null){
+        if (category == null)
             return badRequest(ControllerUtils.generalError("INVALID_CATEGORY","Category not found!"));
-        }
-
 
         //parse questions
         JsonNode productsNode = jsonRequest.findPath("products");
         Iterator<JsonNode> itProducts = productsNode.elements();
 
-        //if field is present but has no content
-        if(!itProducts.hasNext()) {
-            return badRequest(ControllerUtils.generalError("NO_PRODUCTS", "Products not found in the request!"));
-        }
-
         //check for product that doesnt exist in the DB
         while (itProducts.hasNext()) {
             JsonNode node = itProducts.next();
             String productEAN = node.asText();
-            //Logger.info(productEAN);
             Product product = productService.findByEAN(productEAN);
 
-            if (product == null) {
+            if (product == null)
                 return badRequest(ControllerUtils.generalError("INVALID_PRODUCTS", "One or more products specified for elimination do not exist!"));
-            }
 
-            //Logger.info(product.getName());
-        }
-
-
-        //remove products
-        itProducts=productsNode.elements();
-
-        while (itProducts.hasNext()) {
-            JsonNode node = itProducts.next();
-            String productEAN = node.asText();
-            //Logger.info("to delete: " + productEAN);
-            Product product = productService.findByEAN(productEAN);
             productService.delete(product.getId());
-            //Logger.info("deleted " + productEAN);
         }
-
-
 
         return ok(Json.newObject());
     }

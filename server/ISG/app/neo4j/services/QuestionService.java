@@ -65,4 +65,10 @@ public class QuestionService extends GenericService<Question>
         else
             return null;
     }
+
+    public void deleteQuestion(String code)
+    {
+        String query = new StringBuilder("MATCH (q:Question{code:\'" + code + "\'}) OPTIONAL MATCH (q)-[]->(a:Answer) detach delete q,a").toString();
+        Neo4jSessionFactory.getInstance().getNeo4jSession().query(query, Collections.EMPTY_MAP);
+    }
 }
