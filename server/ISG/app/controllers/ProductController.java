@@ -226,7 +226,6 @@ public class ProductController extends Controller {
     @BodyParser.Of(BodyParser.Json.class)
     public Result removeProducts(){
 
-
         JsonNode jsonRequest = request().body().asJson();
 
         //detect missing or null values
@@ -238,54 +237,29 @@ public class ProductController extends Controller {
         // Service initialization
         CategoryService categoryService = new CategoryService();
         ProductService productService= new ProductService();
-        //AttributeService attrService = new AttributeService();
 
         // Get the category and verify if it exists
         String categoryCode = jsonRequest.findPath("category").asText();
         Category category = categoryService.findByCode(categoryCode);
 
-        if (category == null){
+        if (category == null)
             return badRequest(ControllerUtils.generalError("INVALID_CATEGORY","Category not found!"));
-        }
-
 
         //parse questions
         JsonNode productsNode = jsonRequest.findPath("products");
         Iterator<JsonNode> itProducts = productsNode.elements();
 
-        //if field is present but has no content
-        if(!itProducts.hasNext()) {
-            return badRequest(ControllerUtils.generalError("NO_PRODUCTS", "Products not found in the request!"));
-        }
-
         //check for product that doesnt exist in the DB
         while (itProducts.hasNext()) {
             JsonNode node = itProducts.next();
             String productEAN = node.asText();
-            //Logger.info(productEAN);
             Product product = productService.findByEAN(productEAN);
 
-            if (product == null) {
+            if (product == null)
                 return badRequest(ControllerUtils.generalError("INVALID_PRODUCTS", "One or more products specified for elimination do not exist!"));
-            }
 
-            //Logger.info(product.getName());
-        }
-
-
-        //remove products
-        itProducts=productsNode.elements();
-
-        while (itProducts.hasNext()) {
-            JsonNode node = itProducts.next();
-            String productEAN = node.asText();
-            //Logger.info("to delete: " + productEAN);
-            Product product = productService.findByEAN(productEAN);
             productService.delete(product.getId());
-            //Logger.info("deleted " + productEAN);
         }
-
-
 
         return ok(Json.newObject());
     }
