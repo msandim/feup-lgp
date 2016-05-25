@@ -13,7 +13,7 @@ DELETE  /api/removeQuestions                    controllers.QuestionController.r
 GET     /api/allCategories                      controllers.CategoryController.retrieveAllCategories
 POST    /api/addCategory                        controllers.CategoryController.createCategory(name: String, code: String)
 GET     /api/productsByCategory                 controllers.ProductController.getProductsByCategory(code: String)
-POST    /api/removeCategory/                    controllers.CategoryController.removeCategory(code: String)
+DELETE  /api/removeCategory                     controllers.CategoryController.removeCategory(code: String)
 
 GET     /api/sequencesByCategory                controllers.SequenceController.getSequencesByCategory(code: String)
 
