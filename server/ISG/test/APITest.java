@@ -48,6 +48,12 @@ public class APITest extends WithServer {
     @Before
     public void resetDatabase() {
         Neo4jSessionFactory.getInstance().getNeo4jSession().query("MATCH (n) DETACH DELETE n;", Collections.EMPTY_MAP);
+        //Neo4jSessionFactory.getInstance().getNeo4jSession().purgeDatabase();
+        try {
+            Thread.sleep(1000);
+        } catch(InterruptedException ex) {
+            Thread.currentThread().interrupt();
+        }
     }
 
     protected WSResponse request(String route, String type, JsonNode body /*TODO maybe change to File*/, JsonNode parameters) throws Exception {
@@ -55,6 +61,7 @@ public class APITest extends WithServer {
             String url = "http://localhost:" + testServer.port() + "/" + route;
             WSClient ws = WS.newClient(testServer.port());
             WSRequest request = ws.url(url);
+            request.setRequestTimeout(5000);
 
             if (parameters != null) {
                 ObjectMapper mapper = new ObjectMapper();

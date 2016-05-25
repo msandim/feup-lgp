@@ -172,7 +172,7 @@ public class BackOfficeAPITest extends APITest {
         );
 
         request("api/addCategory", "POST", null, Json.newObject()
-                .put("name", "Máquinas de Lavar")
+                .put("name", "Maquinas de Lavar")
                 .put("code", "maqla")
         );
 
