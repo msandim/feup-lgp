@@ -90,7 +90,7 @@ public class ProductController extends Controller {
 
         // Get the category and verify if it exists
         CategoryService categoryService = new CategoryService();
-
+        ProductService productService = new ProductService();
 
         Map<String, String> errorMsg = new HashMap<>();
 
@@ -111,34 +111,29 @@ public class ProductController extends Controller {
         Http.MultipartFormData body = request().body().asMultipartFormData();
         Http.MultipartFormData.FilePart csv = body.getFile("csv");
 
-        //Category targetCategory =
-        if (categoryService.findByCode(categoryCode) == null) {
+        Category targetCategory = categoryService.findByCode(categoryCode);
+
+        if (targetCategory == null) {
             errorMsg.put("error", "INVALID_CODE");
             errorMsg.put("msg", "There is no category with this code: ");
             JsonNode node = ControllerUtils.missingField("code");
             return badRequest(node);
         }
 
-        Category targetCategory = categoryService.findByCode(categoryCode);
-
-
         if (csv != null) {
             String fileName = csv.getFilename();
             String contentType = csv.getContentType();
             File file = (File) csv.getFile();
 
-
             BufferedReader br = null;
-            String line = "";
+            String line;
             String cvsSplitBy = ";";
             String attributeTypeSplitChar = ":";
             AttributeService attributeService = new AttributeService();
-            ProductService productService = new ProductService();
             Vector<String> attributeNames = new Vector<>();
 
-            String query = new StringBuilder("MATCH (c:Category{name:\'" + targetCategory.getName() + "\'})-[]->(p:Product)-[]->(a:Attribute) detach delete p, a").toString();
-            //Logger.debug("query:" + query);
-            Neo4jSessionFactory.getInstance().getNeo4jSession().query(query, Collections.EMPTY_MAP);
+            // Delete all products from this category:
+            productService.deleteAllProductsByCategoryCode(categoryCode);
 
             try {
 
@@ -148,6 +143,7 @@ public class ProductController extends Controller {
                     linecounter++;
                     // use comma as separator
                     String[] product = line.split(cvsSplitBy);
+
                     int tokencounter = 0;
                     if (linecounter == 1) {
                         for (String header : product) {
@@ -192,8 +188,8 @@ public class ProductController extends Controller {
                         //Logger.debug("attribute values: " + attributeValues.size());
                         for (int i = 0; i < attributeNames.size(); i++) {
                             Attribute tempAttribute = attributeService.findByName(attributeNames.get(i));
-                            if (attributeValues.get(i) != "NA" &&
-                                    attributeValues.get(i) != " ") {
+                            if (!Objects.equals(attributeValues.get(i), "NA") &&
+                                    !Objects.equals(attributeValues.get(i), " ")) {
                                 tempList.add(new ProductAttribute(nodeProduct, tempAttribute, attributeValues.get(i)));
                             }
                         }
