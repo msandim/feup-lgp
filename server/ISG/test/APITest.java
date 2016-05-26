@@ -18,13 +18,14 @@ import java.util.Map;
 import java.util.concurrent.CompletionStage;
 
 @SuppressWarnings("Duplicates")
-class APITest extends WithServer {
+public class APITest extends WithServer {
 
-    /** TODO
+    /**
+     * TODO
      * Test with:
-     *  Bad number of parameters;
-     *  Missing parameters;
-     *  Bad syntax;
+     * Bad number of parameters;
+     * Missing parameters;
+     * Bad syntax;
      */
 
     private final static ObjectMapper mapper = new ObjectMapper();
@@ -54,20 +55,20 @@ class APITest extends WithServer {
 
         try {
             Thread.sleep(1500);
-        } catch(InterruptedException ex) {
+        } catch (InterruptedException ex) {
             Thread.currentThread().interrupt();
         }
 
     }
 
-    WSResponse request(String route, String type, JsonNode body, JsonNode parameters) throws Exception {
+    protected WSResponse request(String route, String type, JsonNode body, JsonNode parameters) throws Exception {
         try {
             WSClient ws = WS.newClient(testServer.port());
-            WSRequest request = ws.url("http://localhost:" + testServer.port() + "/" + route).setRequestTimeout(5000);
-            //request.setRequestTimeout(5000);
+            WSRequest request = ws
+                    .url("http://localhost:" + testServer.port() + "/" + route)
+                    .setRequestTimeout(5000);
 
             if (parameters != null) {
-                ObjectMapper mapper = new ObjectMapper();
                 Map result = mapper.convertValue(parameters, Map.class);
 
                 for (Object o : result.entrySet()) {
@@ -123,7 +124,7 @@ class APITest extends WithServer {
             }
 
             CompletionStage<WSResponse> stage;
-            request.setHeader( "Content-Type", "multipart/form-data" );
+            request.setHeader("Content-Type", "multipart/form-data");
             switch (type) {
                 case "GET":
                     stage = request.get();
