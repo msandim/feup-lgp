@@ -1,4 +1,13 @@
 //GLOBALS
+
+//server:"http://intelligentsalesguide.me/",
+//  getAllCategories:"api/allCategories",
+// getQuestionsByCategory  -> CODE Código da categoria.  => GET
+// api/sequencesByCategory -> CODE Código da categoria. => GET
+// api/addQuestions/ “category”: categoria onde adicionar as perguntas./“questions”: Perguntas a serem adicionadas.  => POST
+// api/removeQuestions/  “questions”: Código das Perguntas a serem removidas.
+
+
    //Trocar por serviço
    var categoryArray =
      [
