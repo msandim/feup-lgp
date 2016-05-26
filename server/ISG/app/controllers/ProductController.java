@@ -185,6 +185,7 @@ public class ProductController extends Controller
         // Service initialization
         CategoryService categoryService = new CategoryService();
         ProductService productService = new ProductService();
+        AttributeService attributeService = new AttributeService();
 
         // Get the category and verify if it exists
         String categoryCode = jsonRequest.findPath("category").asText();
@@ -209,6 +210,9 @@ public class ProductController extends Controller
 
             productService.delete(product.getId());
         }
+
+        // Delete attributes alone:
+        attributeService.deleteNotConnectedAttributes();
 
         return ok(Json.newObject());
     }
