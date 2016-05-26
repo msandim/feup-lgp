@@ -17,7 +17,7 @@ public class Product extends Entity
 {
     private String name;
     private String ean;
-    private Float price;
+    private String price;
 
 
     @Relationship(type = "VALUES")
@@ -34,14 +34,14 @@ public class Product extends Entity
 
     public Product() {}
 
-    public Product(String name, String ean, Float price)
+    public Product(String name, String ean, String price)
     {
         this.name = name;
         this.ean = ean;
         this.price = price;
     }
 
-    public Product(String name, String ean, Float price, Category category)
+    public Product(String name, String ean, String price, Category category)
     {
         this.name = name;
         this.ean = ean;
@@ -59,11 +59,11 @@ public class Product extends Entity
         this.name = name;
     }
 
-    public Float getPrice() {
+    public String getPrice() {
         return price;
     }
 
-    public void setPrice(Float price) {
+    public void setPrice(String price) {
         this.price = price;
     }
 

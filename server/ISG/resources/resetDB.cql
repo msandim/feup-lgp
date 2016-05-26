@@ -11,12 +11,12 @@ CREATE (c1:Category {code: 'tvs', name: 'Televisions'})
 CREATE (c2:Category {code: 'dws', name: 'Dish Washers'})
 
 // ** Create products **
-CREATE (c1)-[:HAS_PRODUCTS]->(tv1:Product {name: 'TV1', ean: '001', price: 49.5})
-CREATE (c1)-[:HAS_PRODUCTS]->(tv2:Product {name: 'TV2', ean: '002', price: 120.5})
-CREATE (c1)-[:HAS_PRODUCTS]->(tv3:Product {name: 'TV3', ean: '003', price: 50.0})
-CREATE (c2)-[:HAS_PRODUCTS]->(dw1:Product {name: 'DW1', ean: '004', price: 99.5})
-CREATE (c2)-[:HAS_PRODUCTS]->(dw2:Product {name: 'DW2', ean: '005', price: 128.5})
-CREATE (c2)-[:HAS_PRODUCTS]->(dw3:Product {name: 'DW3', ean: '006', price: 10.0})
+CREATE (c1)-[:HAS_PRODUCTS]->(tv1:Product {name: 'TV1', ean: '001', price: "49.5"})
+CREATE (c1)-[:HAS_PRODUCTS]->(tv2:Product {name: 'TV2', ean: '002', price: "120.5"})
+CREATE (c1)-[:HAS_PRODUCTS]->(tv3:Product {name: 'TV3', ean: '003', price: "50.0"})
+CREATE (c2)-[:HAS_PRODUCTS]->(dw1:Product {name: 'DW1', ean: '004', price: "99.5"})
+CREATE (c2)-[:HAS_PRODUCTS]->(dw2:Product {name: 'DW2', ean: '005', price: "128.5"})
+CREATE (c2)-[:HAS_PRODUCTS]->(dw3:Product {name: 'DW3', ean: '006', price: "10.0"})
 
 // Create attributes: (TV)
 CREATE (at1: Attribute {name: 'Width (cm)', type: 'numeric'})

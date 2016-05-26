@@ -113,8 +113,6 @@ public class ProductController extends Controller
                             if (attInfo[1] == null)
                                 return badRequest(ControllerUtils.generalError("MISSING_ATTRIBUTE_TYPE", "Attribute '" + attName + "' lacks his type ('categorical' or 'numeric')!"));
 
-                            System.out.println("Atributo: " + attInfo[1]);
-
                             if (!attInfo[1].equals(Attribute.Type.CATEGORICAL) && !attInfo[1].equals(Attribute.Type.NUMERIC))
                                 return badRequest(ControllerUtils.generalError("INVALID_ATTRIBUTE_TYPE", "Attribute '" + attName + "' must have a valid type: ('categorical' or 'numeric')!"));
 
@@ -145,7 +143,7 @@ public class ProductController extends Controller
                     List<ProductAttribute> productAttributes = new ArrayList<>();
 
                     // Create new product:
-                    Product product = new Product(productFeatures.get(1), productFeatures.get(0), Float.parseFloat(productFeatures.get(2)), targetCategory);
+                    Product product = new Product(productFeatures.get(1), productFeatures.get(0), productFeatures.get(2), targetCategory);
 
                     // Link Attributes to Products:
                     for (int i = 0; i < attributes.size(); i++)
