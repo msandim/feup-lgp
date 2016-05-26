@@ -285,10 +285,12 @@ public class QuestionController extends Controller
         JsonNode questionsNode = jsonRequest.findPath("questions");
         Iterator<JsonNode> itQuestion = questionsNode.elements();
 
-
         //if field is present but has no content
         if (!itQuestion.hasNext())
             return badRequest(ControllerUtils.generalError("NO_QUESTIONS", "Questions empty!"));
+
+        List<Question> questionsAdded = new ArrayList<>();
+        List<Question> otherQuestions = questionService.findByCategoryCode(categoryCode, false); // Load all the questions
 
         //iterate through questions
         while (itQuestion.hasNext())
@@ -415,24 +417,33 @@ public class QuestionController extends Controller
             //connecting answers to question
             question.setAnswers(answers);
 
-            //connecting same category questions
-            List<Question> sameCategoryQuestions = questionService.findByCategoryCode(categoryCode, false);
-            if (sameCategoryQuestions != null)
+            //adding answer to DB
+            questionsAdded.add(questionService.createOrUpdate(question, 2));
+        }
+
+        for(Question question: questionsAdded)
+        {
+            // Connect to existing questions:
+            for (Question q : otherQuestions)
             {
-                for (Question q : sameCategoryQuestions)
+                if (!q.equals(question))
                 {
-                    if (!q.equals(question))
-                    {
-                        QuestionEdge questionEdge = new QuestionEdge(question, q);
-                        questionEdgeService.createOrUpdate(questionEdge, 0);
-                        questionEdge = new QuestionEdge(q, question);
-                        questionEdgeService.createOrUpdate(questionEdge, 0);
-                    }
+                    QuestionEdge questionEdge = new QuestionEdge(question, q);
+                    questionEdgeService.createOrUpdate(questionEdge, 0);
+                    questionEdge = new QuestionEdge(q, question);
+                    questionEdgeService.createOrUpdate(questionEdge, 0);
                 }
             }
 
-            //adding answer to DB
-            questionService.createOrUpdate(question, 2);
+            // Connect to other added questions:
+            for (Question q : questionsAdded)
+            {
+                if (!q.equals(question))
+                {
+                    QuestionEdge questionEdge = new QuestionEdge(question, q);
+                    questionEdgeService.createOrUpdate(questionEdge, 0);
+                }
+            }
         }
 
         return ok(Json.newObject());
