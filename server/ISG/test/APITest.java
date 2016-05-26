@@ -1,15 +1,11 @@
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.ObjectReader;
-import neo4j.Neo4jSessionFactory;
-import org.apache.http.entity.mime.MultipartEntityBuilder;
-import org.apache.http.entity.mime.content.ContentBody;
-import org.asynchttpclient.request.body.multipart.MultipartBody;
-import org.junit.Before;
+import org.junit.After;
 import org.junit.BeforeClass;
-import org.neo4j.ogm.model.Result;
+import org.neo4j.graphdb.GraphDatabaseService;
+import org.neo4j.graphdb.Transaction;
+import org.neo4j.ogm.drivers.embedded.driver.EmbeddedDriver;
 import org.neo4j.ogm.service.Components;
-import play.api.mvc.MultipartFormData;
 import play.libs.ws.WS;
 import play.libs.ws.WSClient;
 import play.libs.ws.WSRequest;
@@ -18,12 +14,11 @@ import play.test.WithServer;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Collections;
 import java.util.Map;
 import java.util.concurrent.CompletionStage;
 
 @SuppressWarnings("Duplicates")
-public class APITest extends WithServer {
+class APITest extends WithServer {
 
     /** TODO
      * Test with:
@@ -33,35 +28,43 @@ public class APITest extends WithServer {
      */
 
     private final static ObjectMapper mapper = new ObjectMapper();
-    protected WSResponse response;
+    //EmbeddedDriver driver = new EmbeddedDriver(Components.configuration().driverConfiguration().setDriverClassName("org.neo4j.ogm.drivers.embedded.driver.EmbeddedDriver"));
 
     @BeforeClass
     public static void databaseConfiguration() {
-        Components.configuration()
-                .driverConfiguration()
-                .setDriverClassName("org.neo4j.ogm.drivers.embedded.driver.EmbeddedDriver");
+        Components.setDriver(new EmbeddedDriver(Components.configuration().driverConfiguration().setDriverClassName("org.neo4j.ogm.drivers.embedded.driver.EmbeddedDriver")));
+        //Components.configuration().driverConfiguration().setDriverClassName("org.neo4j.ogm.drivers.embedded.driver.EmbeddedDriver");
         //.setDriverClassName("org.neo4j.ogm.drivers.http.driver.HttpDriver")
         //.setURI("http://neo4j:neo@104.167.113.111:7474");
         //.setURI("http://neo4j:neo@localhost:7474");
     }
 
-    @Before
+    @After
     public void resetDatabase() {
-        Neo4jSessionFactory.getInstance().getNeo4jSession().query("MATCH (n) DETACH DELETE n;", Collections.EMPTY_MAP);
-        //Neo4jSessionFactory.getInstance().getNeo4jSession().purgeDatabase();
+        EmbeddedDriver driver = (EmbeddedDriver) Components.driver();
+
+        GraphDatabaseService databaseService = driver.getGraphDatabaseService();
+
+        try (Transaction tx = databaseService.beginTx()) {
+            databaseService.execute("MATCH (n) DETACH DELETE n");
+            tx.success();
+            tx.close();
+        }
+        //Neo4jSessionFactory.getInstance().getNeo4jSession().query("MATCH (n) DETACH DELETE n;", Collections.EMPTY_MAP);
+
         try {
-            Thread.sleep(1000);
+            Thread.sleep(1500);
         } catch(InterruptedException ex) {
             Thread.currentThread().interrupt();
         }
+
     }
 
-    protected WSResponse request(String route, String type, JsonNode body /*TODO maybe change to File*/, JsonNode parameters) throws Exception {
+    WSResponse request(String route, String type, JsonNode body, JsonNode parameters) throws Exception {
         try {
-            String url = "http://localhost:" + testServer.port() + "/" + route;
             WSClient ws = WS.newClient(testServer.port());
-            WSRequest request = ws.url(url);
-            request.setRequestTimeout(5000);
+            WSRequest request = ws.url("http://localhost:" + testServer.port() + "/" + route).setRequestTimeout(5000);
+            //request.setRequestTimeout(5000);
 
             if (parameters != null) {
                 ObjectMapper mapper = new ObjectMapper();
@@ -92,14 +95,16 @@ public class APITest extends WithServer {
                 default:
                     return null;
             }
-            return stage.toCompletableFuture().get();
+            WSResponse result = stage.toCompletableFuture().get();
+            ws.close();
+            return result;
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
         return null;
     }
 
-    protected WSResponse requestFile(String route, String type, File body, JsonNode parameters) throws Exception {
+    WSResponse requestFile(String route, String type, File body, JsonNode parameters) throws Exception {
         try {
             String url = "http://localhost:" + testServer.port() + "/" + route;
             WSClient ws = WS.newClient(testServer.port());
@@ -142,7 +147,7 @@ public class APITest extends WithServer {
         return null;
     }
 
-    protected JsonNode readJsonFromFile(String fileLocation) throws IOException {
+    JsonNode readJsonFromFile(String fileLocation) throws IOException {
         return mapper.readValue(new File(fileLocation), JsonNode.class);
     }
 }

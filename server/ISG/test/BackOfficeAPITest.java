@@ -17,6 +17,8 @@ import static org.junit.Assert.assertEquals;
 
 public class BackOfficeAPITest extends APITest {
 
+    WSResponse response;
+
     //TODO add tests for missing arguments, wrong argument names, wrong number of parameters, etc
     //TODO maybe change to not use other APIs and insert directly to the database
 
@@ -44,7 +46,7 @@ public class BackOfficeAPITest extends APITest {
     @Test
     public void testAddCategoryBadName() throws Exception {
         //Adding a category. Should return empty JSON object
-        response = request("api/addCategory", "POST", null,readJsonFromFile("addCategory/parameters.json"));
+        response = request("api/addCategory", "POST", null, readJsonFromFile("addCategory/parameters.json"));
 
         assert response != null;
         assertEquals(OK, response.getStatus());
@@ -58,7 +60,8 @@ public class BackOfficeAPITest extends APITest {
         assertEquals(readJsonFromFile("addCategory/responseBadName.json"), response.asJson());
     }
 
-    @Test @Ignore
+    @Test
+    @Ignore
     public void testAddProducts() throws Exception {
         request("api/addCategory", "POST", null, readJsonFromFile("addCategory/parameters.json"));
 
@@ -70,7 +73,8 @@ public class BackOfficeAPITest extends APITest {
         assertEquals(readJsonFromFile("addQuestions/response.json"), response.asJson());
     }
 
-    @Test @Ignore
+    @Test
+    @Ignore
     public void testAddProductsBadCategory() throws Exception {
         response = request("api/addProducts", "POST", null /* TODO use file */, readJsonFromFile("addProducts/parameters.json"));
 
@@ -79,7 +83,8 @@ public class BackOfficeAPITest extends APITest {
         assertEquals(readJsonFromFile("addQuestions/responseBadCategory.json"), response.asJson());
     }
 
-    @Test @Ignore
+    @Test
+    @Ignore
     public void testAddProductsBadFile() throws Exception {
         request("api/addCategory", "POST", null, readJsonFromFile("addCategory/parameters.json"));
 
@@ -129,37 +134,44 @@ public class BackOfficeAPITest extends APITest {
         //TODO check if Questions were not added
     }
 
-    @Test @Ignore
+    @Test
+    @Ignore
     public void testAddQuestionsBadQuestions() throws Exception {
 
     }
 
-    @Test @Ignore
+    @Test
+    @Ignore
     public void testConfigAlgorithm() throws Exception {
 
     }
 
-    @Test @Ignore
+    @Test
+    @Ignore
     public void testConfigAlgorithmBadNumber() throws Exception {
 
     }
 
-    @Test @Ignore
+    @Test
+    @Ignore
     public void testRemoveCategory() throws Exception {
 
     }
 
-    @Test @Ignore
+    @Test
+    @Ignore
     public void testRemoveCategoryError() throws Exception {
 
     }
 
-    @Test @Ignore
+    @Test
+    @Ignore
     public void testRemoveProducts() throws Exception {
 
     }
 
-    @Test @Ignore
+    @Test
+    @Ignore
     public void testRemoveQuestions() throws Exception {
 
     }
@@ -183,22 +195,26 @@ public class BackOfficeAPITest extends APITest {
         assertEquals(readJsonFromFile("getAllCategories/response.json"), response.asJson());
     }
 
-    @Test @Ignore
+    @Test
+    @Ignore
     public void testGetProductsByCategory() throws Exception {
 
     }
 
-    @Test @Ignore
+    @Test
+    @Ignore
     public void testGetProductsByCategoryBadCategory() throws Exception {
 
     }
 
-    @Test @Ignore
+    @Test
+    @Ignore
     public void testGetQuestionsByCategory() throws Exception {
 
     }
 
-    @Test @Ignore
+    @Test
+    @Ignore
     public void testGetQuestionsByCategoryBadCategory() throws Exception {
 
     }
