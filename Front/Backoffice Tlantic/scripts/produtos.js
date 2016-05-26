@@ -1,9 +1,9 @@
 //GLOBALS
 
-/*$.getJSON("/some/url", function(data) {
+$.getJSON("/some/url", function(data) {
     // Now use this data to update your view models,
     // and Knockout will update your UI automatically
-})*/
+})
 
 //Trocar por serviço
   var ProductsArray =
@@ -195,7 +195,7 @@ function autoAddCategory(){
 
       categoryName = capitalizeFirstLetter(category['category']);
       //boxGroup.append('<div class="box"><div class="box-header"><div class="col-sm-5 product-padding table-col-border table-col-border-left table-col-border-top color-backgorund-category col-size"><h3>'+categoryName+'</h3></div><div class="col-sm-3 text-center table-col-border table-col-border-top contain-button col-size"><button type="button"class="btn btn-block product-button addProduct">Adicionar Produtos</button> </div><div class="col-sm-3 text-center table-col-border table-col-border-top contain-button col-size"><button type="button" class="btn btn-block product-button expandProducts">Lista de Produtos <span class="glyphicon glyphicon-menu-down"></span></button></div> <div class="col-sm-1 table-col-border table-col-border-top contain-button col-size"><button type="button" class="btn btn-block product-button removeCategory"><span class="glyphicon glyphicon-remove"></span></button></div></div><div class="inputFile" style="display:none"> <div ><label class="btn btn-primary col-sm-11 product-padding table-col-border table-col-border-left table-col-border-top color-backgorund-category col-size" for="my-file-selector"><input id="my-file-selector" name="file" type="file" style="display:none;"> <!--accept=".csv"--><h4>Escolher ficheiro</h4></label><button type="submit" form="form1" value="Submit" class="col-sm-1 table-col-border table-col-border-top contain-button col-size btn btn-danger addFile">Submeter</button></div></div><div class="box-body box-body-scroll"></div></div>');
-     boxGroup.append('<div class="box"><div class="row"><div class="col-sm-5 table-col-border-first table-col-size table-contain-h3"><h3>'+categoryName+'</h3></div><div class="col-sm-3 text-center table-col-border-first table-col-size table-contain-button"><button type="button"class="btn btn-block table-button addProduct">Adicionar Produtos</button> </div><div class="col-sm-3 text-center table-col-border-first table-col-size table-contain-button"><button type="button" class="btn btn-block table-button expandProducts">Lista de Produtos <span class="glyphicon glyphicon-menu-down"></span></button></div><div class="col-sm-1 table-col-border-first table-col-size table-contain-button"><button type="button" class="btn btn-block table-button"><span class="glyphicon glyphicon-remove"></span></button></div> <div class="inputFile" style="display:none"> <div ><label class="btn btn-primary col-sm-11 product-padding table-col-border table-col-border-left table-col-border-top color-backgorund-category col-size" ><input class="my-file-selector" name="file" type="file" style="display:none;"> <!--accept=".csv"--><h4>Escolher ficheiro</h4></label></div></div><div class="box-of-products"><div class="container-fluid"></div></div></div><div>');
+     boxGroup.append('<div class="box"><div class="row"><div class="col-sm-5 table-col-border-first table-col-size table-contain-h3"><h3>'+categoryName+'</h3></div><div class="col-sm-3 text-center table-col-border-first table-col-size table-contain-button"><button type="button"class="btn btn-block table-button addProduct">Adicionar Produtos</button> </div><div class="col-sm-3 text-center table-col-border-first table-col-size table-contain-button"><button type="button" class="btn btn-block table-button expandProducts">Lista de Produtos <span class="glyphicon glyphicon-menu-down"></span></button></div><div class="col-sm-1 table-col-border-first table-col-size table-contain-button"><button type="button" class="btn btn-block table-button"><span class="glyphicon glyphicon-remove"></span></button></div> <div class="inputFile" style="display:none"> <div ><label class="btn btn-primary col-xs-12  col-lg-11 col-md-11 product-padding table-col-border table-col-border-left table-col-border-top color-backgorund-category col-size" ><input class="my-file-selector" name="file" type="file" style="display:none;"> <!--accept=".csv"--><h4>Escolher ficheiro</h4></label></div></div><div class="box-of-products"><div class="container-fluid"></div></div></div><div>');
 
       Products.push(categoryName);
       Products.sort();
@@ -227,7 +227,7 @@ function autoAddProducts(categoryName,lastChild) {
       for(var j = 0; j < ProductsArray[i].products.length; j++) {
         //console.log("OLA3 " + ProductsArray[i].products[j].name );
         product=capitalizeFirstLetter(ProductsArray[i].products[j].name);
-        boxProducts.append('<div class="row"><div class="col-sm-10 table-col-border-first table-col-size"> <h3>'+product+'</h3></div> <div class="col-sm-1 table-col-border-first table-col-size table-contain-button"><button type="button" class="btn btn-block table-button removeProduct"><span class="glyphicon glyphicon-remove"></span></button></div></div>');
+        boxProducts.append('<div class="row"><div class="col-sm-10 table-col-border-first table-col-size nameProducts"> '+product+' </div> <div class="col-sm-1 table-col-border-first table-col-size table-contain-button"><button type="button" class="btn btn-block table-button removeProduct"><span class="glyphicon glyphicon-remove"></span></button></div></div>');
         $(".removeProduct").unbind("click", removeProduct());
         $(".removeProduct").bind("click", removeProduct());
       }

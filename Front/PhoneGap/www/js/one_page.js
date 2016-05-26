@@ -2,7 +2,7 @@
 
 //Servidor e serviços
 var configs={
-	server:"http://104.167.113.111:9000",
+	server:"http://intelligentsalesguide.me",
 	getNextQuestionService:"/api/getNextQuestion",
 	sendFeedbackService:"/api/sendFeedback",
   getAllCategoriesService:"/api/allCategories"
@@ -497,9 +497,7 @@ function loadFinished(){
 }
 
 function processError(err){
-	var msg = err['responseText'];
-	msg = msg.split(',');
-	msg = msg[1].split(':');
-	msg = msg[1].split('}');
-	alert(msg[0]);
+  var msg = err;
+  msg = JSON.parse(msg['responseText']);
+	alert(msg['msg']);
 }
