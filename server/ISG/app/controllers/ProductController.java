@@ -110,7 +110,7 @@ public class ProductController extends Controller
                             String[] attInfo = attributeName.split(attributeTypeSplitChar);
                             String attName = attInfo[0];
 
-                            if (attInfo[1] == null)
+                            if (attInfo.length == 1)
                                 return badRequest(ControllerUtils.generalError("MISSING_ATTRIBUTE_TYPE", "Attribute '" + attName + "' lacks his type ('categorical' or 'numeric')!"));
 
                             if (!attInfo[1].equals(Attribute.Type.CATEGORICAL) && !attInfo[1].equals(Attribute.Type.NUMERIC))
