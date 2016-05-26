@@ -131,6 +131,7 @@ public class QuestionController extends Controller
         orderedProductScores.forEach(x -> products.addObject()
                 .put("ean", x.getKey().getEan())
                 .put("name", x.getKey().getName())
+                .put("price", x.getKey().getPrice())
                 .put("score", x.getValue()));
 
         return ok(result);

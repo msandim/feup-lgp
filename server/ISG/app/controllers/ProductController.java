@@ -151,8 +151,7 @@ public class ProductController extends Controller
                         Attribute attribute = attributes.get(i);
 
                         // If attribute value is "NA" or empty space, then it has no value:
-                        if (!Objects.equals(attributeValues.get(i), "NA") &&
-                                !Objects.equals(attributeValues.get(i), " "))
+                        if (!attributeValues.get(i).equals("NA") && !attributeValues.get(i).equals(" "))
                         {
                             productAttributes.add(new ProductAttribute(product, attribute, attributeValues.get(i)));
                         }
@@ -167,16 +166,6 @@ public class ProductController extends Controller
             e.printStackTrace();
         } finally
         {
-            if (br != null)
-            {
-                try
-                {
-                    br.close();
-                } catch (IOException e)
-                {
-                    e.printStackTrace();
-                }
-            }
         }
 
         return ok(Json.newObject());
@@ -185,7 +174,6 @@ public class ProductController extends Controller
     @BodyParser.Of(BodyParser.Json.class)
     public Result removeProducts()
     {
-
         JsonNode jsonRequest = request().body().asJson();
 
         //detect missing or null values
