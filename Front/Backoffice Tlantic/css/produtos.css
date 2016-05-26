@@ -136,31 +136,11 @@
   display:none;
 }
 
-.container {
-  width: 100%;
-   overflow:hidden;
+.nameProducts {
+  font-size: 18px;
+  text-align: center;
+  padding-top: 15px;
 }
-
-.container div {
-   min-width: 250px;
-}
-
-.nodge-to-the-right{
-  margin-left:25px;
-  width: (100/3)%;
-  float:left;
-}
-
-.slight-nodge-to-the-right{
-  margin-left:10px;
-}
-
-.nodge-to-the-left{
-  width: (100/9)%;
-  overflow:hidden;
-  min-height:20px;
-}
-
 
 /* Modal Content */
 .modal-content {

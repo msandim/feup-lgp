@@ -197,9 +197,9 @@ public class ProductService extends GenericService<Product>
         }
     }
 
-    public Product findByEAN(String ean)
+    public Product findByEan(String ean)
     {
-        String query = new StringBuilder("MATCH (p: Product) where p.EAN = \'").append(ean).append("\' return p").toString();
+        String query = new StringBuilder("MATCH (p: Product) where p.ean = \'").append(ean).append("\' return p").toString();
 
         Iterator<Product> iterator =
                 Neo4jSessionFactory.getInstance().getNeo4jSession().query(getEntityType(), query, Collections.EMPTY_MAP).iterator();
@@ -208,5 +208,14 @@ public class ProductService extends GenericService<Product>
             return iterator.next();
         else
             return null;
+    }
+
+    public void deleteAllProductsByCategoryCode(String code)
+    {
+        String query = new StringBuilder("MATCH (c:Category{code: \'" + code + "\'})-[]->(p:Product)-[]->(a:Attribute) detach delete p, a").toString();
+        Neo4jSessionFactory.getInstance().getNeo4jSession().query(query, Collections.EMPTY_MAP);
+
+        // Delete leftover attributes:
+        new AttributeService().deleteNotConnectedAttributes();
     }
 }

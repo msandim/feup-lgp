@@ -73,6 +73,7 @@ public class AlgorithmLogic
                     + (parameters.getBeta() * getVarianceGain(questionEdge))
                     + (parameters.getGamma() * getGoodSequenceRatio(questionEdge));
 
+            Console.print("Question heuristic: " + getQuestionHeuristicValue(category, questionEdge.getNextQuestion()) + " ");
             Console.println("NextQuestion * Heuristic for: " + questionEdge.getNextQuestion() + " is " + heuristicValue);
             cumulativeRandom.add(heuristicValue, questionEdge.getNextQuestion());
         });

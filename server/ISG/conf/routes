@@ -4,7 +4,7 @@
 # An example controller showing a sample home page
 GET     /                                       controllers.HomeController.index
 
-POST    /api/addQuestions                       controllers.QuestionController.createOrUpdateQuestion
+POST    /api/addQuestions                       controllers.QuestionController.createQuestions
 POST    /api/getNextQuestion                    controllers.QuestionController.getNextQuestion
 POST    /api/sendFeedback                       controllers.QuestionController.sendFeedback
 GET     /api/questionsByCategory                controllers.QuestionController.getQuestionsByCategory(code: String)
@@ -13,10 +13,7 @@ DELETE  /api/removeQuestions                    controllers.QuestionController.r
 GET     /api/allCategories                      controllers.CategoryController.retrieveAllCategories
 POST    /api/addCategory                        controllers.CategoryController.createCategory(name: String, code: String)
 GET     /api/productsByCategory                 controllers.ProductController.getProductsByCategory(code: String)
-GET     /api/category                           controllers.CategoryController.retrieveCategory(id: Long)
-#POST    /api/addCategory                        controllers.CategoryController.createOrUpdateCategory
-GET     /api/deleteCategory/:id                 controllers.CategoryController.deleteCategory(id: Long)
-POST    /api/removeCategory/                    controllers.CategoryController.removeCategory(code: String)
+DELETE  /api/removeCategory                     controllers.CategoryController.removeCategory(code: String)
 
 GET     /api/sequencesByCategory                controllers.SequenceController.getSequencesByCategory(code: String)
 
