@@ -33,13 +33,12 @@ public class CategoryService extends GenericService<Category>
 
     public void deleteByCode(String code)
     {
-        // Delete products:
+        // Delete products and questions:
         String query = new StringBuilder("MATCH (c:Category{code:\'" + code + "\'}) OPTIONAL MATCH (c)-[]->(q:Question)-[]->(a:Answer) OPTIONAL MATCH (c)-[]->(p:Product)-[]->(at:Attribute) detach delete c, q, a, p, at").toString();
         Neo4jSessionFactory.getInstance().getNeo4jSession().query(query, Collections.EMPTY_MAP);
 
-        // Delete attributes that are not connected now:
-        String purgeAttributesQuery= new StringBuilder("MATCH (at:Attribute) OPTIONAL MATCH (at)--(p:Product) WHERE p IS NULL delete at").toString();
-        Neo4jSessionFactory.getInstance().getNeo4jSession().query(purgeAttributesQuery, Collections.EMPTY_MAP);
+        // Delete leftover attributes:
+        new AttributeService().deleteNotConnectedAttributes();
     }
 
 

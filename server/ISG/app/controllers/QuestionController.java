@@ -9,14 +9,12 @@ import neo4j.models.edges.AnswerAttribute;
 import neo4j.models.edges.QuestionEdge;
 import neo4j.models.nodes.*;
 import neo4j.services.*;
-import play.Logger;
 import play.libs.Json;
 import play.mvc.BodyParser;
 import play.mvc.Controller;
 import play.mvc.Result;
 import utils.ControllerUtils;
 import utils.MapUtils;
-import utils.Statistics;
 
 import javax.inject.Singleton;
 import java.util.*;
@@ -131,7 +129,7 @@ public class QuestionController extends Controller
 
         ArrayNode products = result.putArray("products");
         orderedProductScores.forEach(x -> products.addObject()
-                .put("EAN", x.getKey().getEAN())
+                .put("ean", x.getKey().getEan())
                 .put("name", x.getKey().getName())
                 .put("score", x.getValue()));
 
@@ -346,7 +344,6 @@ public class QuestionController extends Controller
                 //iterate through attributes
                 while (itAttributes.hasNext())
                 {
-
                     JsonNode attributeNode = itAttributes.next();
 
                     //detecting missing fields
@@ -440,18 +437,6 @@ public class QuestionController extends Controller
         return ok(Json.newObject());
     }
 
-    /*
-    public Result retrieveAllQuestions()
-    {
-        // Retrieve all the questions in the system:
-        QuestionService service = new QuestionService();
-        List<Question> questions = new ArrayList<>();
-        service.findAll().forEach(questions::add);
-
-        return ok(Json.toJson(questions));
-    }
-    */
-
     public Result getQuestionsByCategory(String code)
     {
         QuestionService questionService = new QuestionService();
@@ -461,24 +446,6 @@ public class QuestionController extends Controller
             return badRequest(ControllerUtils.generalError("INVALID_CATEGORY", "Category not found!"));
 
         return ok(Json.toJson(questionService.findByCategoryCode(code, false)));
-    }
-
-    // TODO ver o que retorna se n existir a questao com este ID
-    /*
-    public Result retrieveQuestion(Long id)
-    {
-        QuestionService service = new QuestionService();
-        Question question = service.find(id);
-
-        return ok(Json.toJson(question));
-    }
-    */
-
-    public Result deleteQuestion(Long id)
-    {
-        QuestionService service = new QuestionService();
-        service.delete(id);
-        return ok(Json.toJson(id));
     }
 
     @BodyParser.Of(BodyParser.Json.class)
