@@ -235,7 +235,7 @@ public class QuestionController extends Controller
                             "The sequence you supplied is not valid!"));
 
                 questionEdge.incNumberOfTimesChosen();
-                questionEdge.incMeanVariance(varianceAfterUpdate / varianceBeforeUpdate);
+                questionEdge.incMeanVariance(varianceAfterUpdate, varianceBeforeUpdate);
 
                 if (feedback == 1)
                     questionEdge.incNumberOfTimesGoodFeedback();
