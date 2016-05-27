@@ -1,21 +1,34 @@
+import akka.stream.Materializer;
+import akka.stream.javadsl.Sink;
+import akka.stream.javadsl.Source;
+import akka.util.ByteString;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import filters.AccessControlFilter;
+import neo4j.Neo4jSessionFactory;
 import org.junit.After;
+import org.junit.AfterClass;
+import org.junit.Before;
 import org.junit.BeforeClass;
-import org.neo4j.graphdb.GraphDatabaseService;
-import org.neo4j.graphdb.Transaction;
-import org.neo4j.ogm.drivers.embedded.driver.EmbeddedDriver;
+import org.neo4j.ogm.config.Configuration;
+import org.neo4j.ogm.config.DriverConfiguration;
 import org.neo4j.ogm.service.Components;
-import play.libs.ws.WS;
-import play.libs.ws.WSClient;
-import play.libs.ws.WSRequest;
-import play.libs.ws.WSResponse;
+import play.libs.ws.*;
+import play.libs.ws.ahc.AhcWSClient;
+import play.test.TestServer;
 import play.test.WithServer;
 
+import javax.inject.Inject;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.Collections;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
+import java.util.function.Function;
+
+import static play.test.Helpers.*;
 
 @SuppressWarnings("Duplicates")
 public class APITest extends WithServer {
@@ -28,50 +41,54 @@ public class APITest extends WithServer {
      * Bad syntax;
      */
 
+    private static Configuration configuration = new Configuration();
+    private static DriverConfiguration driverConfiguration = new DriverConfiguration(configuration);
+
     private final static ObjectMapper mapper = new ObjectMapper();
-    //EmbeddedDriver driver = new EmbeddedDriver(Components.configuration().driverConfiguration().setDriverClassName("org.neo4j.ogm.drivers.embedded.driver.EmbeddedDriver"));
+    @Inject
+    private WSClient ws;
+    @Inject
+    Materializer materializer;
+
+    int i = 0;
+
 
     @BeforeClass
-    public static void databaseConfiguration() {
-        Components.setDriver(new EmbeddedDriver(Components.configuration().driverConfiguration().setDriverClassName("org.neo4j.ogm.drivers.embedded.driver.EmbeddedDriver")));
-        //Components.configuration().driverConfiguration().setDriverClassName("org.neo4j.ogm.drivers.embedded.driver.EmbeddedDriver");
-        //.setDriverClassName("org.neo4j.ogm.drivers.http.driver.HttpDriver")
-        //.setURI("http://neo4j:neo@104.167.113.111:7474");
-        //.setURI("http://neo4j:neo@localhost:7474");
+    public static void setUp() {
+        driverConfiguration.setDriverClassName("org.neo4j.ogm.drivers.embedded.driver.EmbeddedDriver");
+        Components.configure(configuration);
+    }
+
+    @Before
+    public void resetDatabase() {
+        Neo4jSessionFactory.getInstance().getNeo4jSession().query("MATCH (n) DETACH DELETE n;", Collections.EMPTY_MAP);
+
+        /*try {
+            Thread.sleep(5000);
+        } catch (InterruptedException ex) {
+            Thread.currentThread().interrupt();
+        }*/
+        ws = WS.newClient(testServer.port());
     }
 
     @After
-    public void resetDatabase() {
-        EmbeddedDriver driver = (EmbeddedDriver) Components.driver();
-
-        GraphDatabaseService databaseService = driver.getGraphDatabaseService();
-
-        try (Transaction tx = databaseService.beginTx()) {
-            databaseService.execute("MATCH (n) DETACH DELETE n");
-            tx.success();
-            tx.close();
-        }
-        //Neo4jSessionFactory.getInstance().getNeo4jSession().query("MATCH (n) DETACH DELETE n;", Collections.EMPTY_MAP);
-
-        try {
-            Thread.sleep(1500);
-        } catch (InterruptedException ex) {
-            Thread.currentThread().interrupt();
-        }
-
+    public void tearDown() throws IOException {
+        ws.close();
     }
 
-    protected WSResponse request(String route, String type, JsonNode body, JsonNode parameters) throws Exception {
+    WSResponse request(String route, String type, JsonNode body, JsonNode parameters) throws Exception {
+
+        WSResponse response = null;
         try {
-            WSClient ws = WS.newClient(testServer.port());
+
             WSRequest request = ws
                     .url("http://localhost:" + testServer.port() + "/" + route)
-                    .setRequestTimeout(5000);
+                    .setRequestTimeout(2000);
 
             if (parameters != null) {
-                Map result = mapper.convertValue(parameters, Map.class);
+                Map parametersMap = mapper.convertValue(parameters, Map.class);
 
-                for (Object o : result.entrySet()) {
+                for (Object o : parametersMap.entrySet()) {
                     Map.Entry thisEntry = (Map.Entry) o;
                     Object key = thisEntry.getKey();
                     Object value = thisEntry.getValue();
@@ -80,72 +97,65 @@ public class APITest extends WithServer {
             }
 
             CompletionStage<WSResponse> stage;
+            CompletionStage<WSResponse> recoverPromise;
             switch (type) {
                 case "GET":
                     stage = request.get();
+                    recoverPromise = stage.toCompletableFuture().handle((result, error) -> {
+                        if (error != null) {
+                            return request.get().toCompletableFuture();
+                        } else {
+                            return CompletableFuture.completedFuture(result);
+                        }
+                    }).thenCompose(Function.identity());
                     break;
                 case "POST":
                     stage = request.post(body);
+                    recoverPromise = stage.toCompletableFuture().handle((result, error) -> {
+                        if (error != null) {
+                            return request.post(body).toCompletableFuture();
+                        } else {
+                            return CompletableFuture.completedFuture(result);
+                        }
+                    }).thenCompose(Function.identity());
                     break;
                 case "PUT":
                     stage = request.put(body);
+                    recoverPromise = stage.toCompletableFuture().handle((result, error) -> {
+                        if (error != null) {
+                            return request.put(body).toCompletableFuture();
+                        } else {
+                            return CompletableFuture.completedFuture(result);
+                        }
+                    }).thenCompose(Function.identity());
                     break;
                 case "DELETE":
                     stage = request.delete();
+                    recoverPromise = stage.toCompletableFuture().handle((result, error) -> {
+                        if (error != null) {
+                            return request.delete().toCompletableFuture();
+                        } else {
+                            return CompletableFuture.completedFuture(result);
+                        }
+                    }).thenCompose(Function.identity());
                     break;
                 default:
                     return null;
             }
-            WSResponse result = stage.toCompletableFuture().get();
-            ws.close();
-            return result;
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
 
-    WSResponse requestFile(String route, String type, File body, JsonNode parameters) throws Exception {
-        try {
-            String url = "http://localhost:" + testServer.port() + "/" + route;
-            WSClient ws = WS.newClient(testServer.port());
-            WSRequest request = ws.url(url);
-
-            if (parameters != null) {
-                ObjectMapper mapper = new ObjectMapper();
-                Map result = mapper.convertValue(parameters, Map.class);
-
-                for (Object o : result.entrySet()) {
-                    Map.Entry thisEntry = (Map.Entry) o;
-                    Object key = thisEntry.getKey();
-                    Object value = thisEntry.getValue();
-                    request.setQueryParameter((String) key, (String) value);
-                }
+            try {
+                Thread.sleep(250);
+            } catch (InterruptedException ex) {
+                Thread.currentThread().interrupt();
             }
 
-            CompletionStage<WSResponse> stage;
-            request.setHeader("Content-Type", "multipart/form-data");
-            switch (type) {
-                case "GET":
-                    stage = request.get();
-                    break;
-                case "POST":
-                    stage = request.post(body);
-                    break;
-                case "PUT":
-                    stage = request.put(body);
-                    break;
-                case "DELETE":
-                    stage = request.delete();
-                    break;
-                default:
-                    return null;
-            }
-            return stage.toCompletableFuture().get();
-        } catch (InterruptedException e) {
+            response = recoverPromise.toCompletableFuture().get();
+
+        } catch (Exception e) {
             e.printStackTrace();
         }
-        return null;
+
+        return response;
     }
 
     JsonNode readJsonFromFile(String fileLocation) throws IOException {

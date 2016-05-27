@@ -1,7 +1,7 @@
 import com.fasterxml.jackson.databind.JsonNode;
 import neo4j.Neo4jSessionFactory;
-import org.junit.*;
-
+import org.junit.Ignore;
+import org.junit.Test;
 import play.libs.Json;
 import play.libs.ws.WSResponse;
 import play.mvc.Http;
@@ -9,15 +9,13 @@ import play.mvc.Result;
 
 import java.io.File;
 import java.util.Collections;
-import java.util.Iterator;
-
-import static play.test.Helpers.*;
 
 import static org.junit.Assert.assertEquals;
+import static play.test.Helpers.*;
 
 public class BackOfficeAPITest extends APITest {
 
-    WSResponse response;
+    private WSResponse response;
 
     //TODO add tests for missing arguments, wrong argument names, wrong number of parameters, etc
     //TODO maybe change to not use other APIs and insert directly to the database
@@ -66,7 +64,7 @@ public class BackOfficeAPITest extends APITest {
         request("api/addCategory", "POST", null, readJsonFromFile("addCategory/parameters.json"));
 
         //Adding products. Should return empty JSON object
-        response = requestFile("api/addProducts", "POST", new File("addProducts/tv.csv"), readJsonFromFile("addProducts/parameters.json"));
+        //response = requestFile("api/addProducts", "POST", new File("addProducts/tv.csv"), readJsonFromFile("addProducts/parameters.json"));
 
         assert response != null;
         assertEquals(OK, response.getStatus());
@@ -97,18 +95,17 @@ public class BackOfficeAPITest extends APITest {
 
     @Test
     public void testAddQuestions() throws Exception {
-        request("api/addCategory", "POST", null, Json.newObject()
-                .put("name", "Televisoes")
-                .put("code", "tvs")
-        );
-
         Neo4jSessionFactory.getInstance().getNeo4jSession().query("CREATE (at1: Attribute {name: 'width (cm)', type: 'numeric'});", Collections.EMPTY_MAP);
         Neo4jSessionFactory.getInstance().getNeo4jSession().query("CREATE (at2: Attribute {name: 'resolution', type: 'categorical'});", Collections.EMPTY_MAP);
 
+        JsonNode node = Json.newObject()
+                .put("name", "Televisoes")
+                .put("code", "tvs");
+
+        request("api/addCategory", "POST", null, node);
+
         //Adding a question. Should return empty JSON object
         response = request("api/addQuestions", "POST", readJsonFromFile("addQuestions/body.json"), null);
-
-        System.out.println(response.getBody());
 
         assert response != null;
         assertEquals(OK, response.getStatus());
