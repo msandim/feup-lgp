@@ -2,9 +2,7 @@
 MATCH (n) DETACH
 DELETE n;
 
-// Restriction: every Attribute node is only connected to products of the same category:
-
-CREATE (x:AlgorithmParameters {alfa: 0.333, beta: 0.333, gamma: 0.333})
+CREATE (x:AlgorithmParameters {alfa: 0.333, beta: 0.333, gamma: 0.333, numberOfProducts: 10})
 
 // Create categories:
 CREATE (c1:Category {code: 'tvs', name: 'Televisions'})
