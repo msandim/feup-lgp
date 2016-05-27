@@ -40,10 +40,7 @@ public class Question extends Entity
     //@Relationship(type = "CONNECTS", direction = Relationship.INCOMING)
     //private Set<QuestionEdge> previousQuestions;
 
-    public Question() {
-
-        //this.code = IdGenerator.generate();
-    }
+    public Question() {}
 
     public Question(String text) {
         this.text = text;
