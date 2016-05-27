@@ -23,7 +23,7 @@ public class BackOfficeAPITest extends APITest {
     @Test
     public void testAddCategory() throws Exception {
         //Adding a category. Should return empty JSON object
-        response = request("api/addCategory", "POST", null, readJsonFromFile("addCategory/parameters.json"));
+        response = request("api/addCategory", "POST", readJsonFromFile("addCategory/parameters.json"), null);
 
         assert response != null;
         assertEquals(OK, response.getStatus());
@@ -44,14 +44,14 @@ public class BackOfficeAPITest extends APITest {
     @Test
     public void testAddCategoryBadName() throws Exception {
         //Adding a category. Should return empty JSON object
-        response = request("api/addCategory", "POST", null, readJsonFromFile("addCategory/parameters.json"));
+        response = request("api/addCategory", "POST", readJsonFromFile("addCategory/parameters.json"), null);
 
         assert response != null;
         assertEquals(OK, response.getStatus());
         assertEquals(readJsonFromFile("addCategory/response.json"), response.asJson());
 
         //Trying to add another category with the same name. It should return an error.
-        response = request("api/addCategory", "POST", null, readJsonFromFile("addCategory/parameters.json"));
+        response = request("api/addCategory", "POST", readJsonFromFile("addCategory/parameters.json"), null);
 
         assert response != null;
         assertEquals(BAD_REQUEST, response.getStatus());
@@ -98,14 +98,14 @@ public class BackOfficeAPITest extends APITest {
         Neo4jSessionFactory.getInstance().getNeo4jSession().query("CREATE (at1: Attribute {name: 'width (cm)', type: 'numeric'});", Collections.EMPTY_MAP);
         Neo4jSessionFactory.getInstance().getNeo4jSession().query("CREATE (at2: Attribute {name: 'resolution', type: 'categorical'});", Collections.EMPTY_MAP);
 
-        JsonNode parameters = Json.newObject()
+        JsonNode body = Json.newObject()
                 .put("name", "Televisoes")
                 .put("code", "tvs");
 
-        request("api/addCategory", "POST", null, parameters);
+        request("api/addCategory", "POST", body, null);
 
         //Adding a question. Should return empty JSON object
-        response = request("api/addQuestions", "POST", readJsonFromFile("addQuestions/body.json"), null);
+        response = request("api/addQuestions", POST, readJsonFromFile("addQuestions/body.json"), null);
 
         assert response != null;
         assertEquals(OK, response.getStatus());
@@ -113,21 +113,25 @@ public class BackOfficeAPITest extends APITest {
 
         //TODO check if Questions were added
 
-        response = request("api/addCategory", "POST",
+        response = request("api/questionsByCategory", GET,
                 null,
                 Json.newObject().put("code", "tvs")
         );
 
+        JsonNode questions = response.asJson().elements().next();
+
         assert response != null;
         assertEquals(OK, response.getStatus());
-        assertEquals(readJsonFromFile("addQuestions/response.json"), response.asJson());
+        assertEquals("Qual o tamanho da sua sala?", questions.get("text").asText());
+        //assertEquals("TVs", questions.get("code").asText());
     }
 
     @Test
     public void testAddQuestionsBadCategory() throws Exception {
-        request("api/addCategory", "POST", null, Json.newObject()
+        request("api/addCategory", "POST", Json.newObject()
                 .put("name", "Televisoes")
-                .put("code", "tvs")
+                .put("code", "tvs"),
+                null
         );
 
         //Adding a question. Should return empty JSON object
@@ -184,14 +188,20 @@ public class BackOfficeAPITest extends APITest {
 
     @Test
     public void testGetAllCategories() throws Exception {
-        request("api/addCategory", "POST", null, Json.newObject()
-                .put("name", "Televisoes")
-                .put("code", "tv")
+        request("api/addCategory",
+                "POST",
+                Json.newObject()
+                        .put("name", "Televisoes")
+                        .put("code", "tv"),
+                null
         );
 
-        request("api/addCategory", "POST", null, Json.newObject()
-                .put("name", "Maquinas de Lavar")
-                .put("code", "maqla")
+        request("api/addCategory",
+                "POST",
+                Json.newObject()
+                        .put("name", "Maquinas de Lavar")
+                        .put("code", "maqla"),
+                null
         );
 
         response = request("api/allCategories", "GET", null, null);

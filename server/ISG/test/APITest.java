@@ -1,26 +1,20 @@
-import akka.stream.Materializer;
-import akka.stream.javadsl.Sink;
-import akka.stream.javadsl.Source;
-import akka.util.ByteString;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import filters.AccessControlFilter;
 import neo4j.Neo4jSessionFactory;
 import org.junit.After;
-import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.neo4j.ogm.config.Configuration;
 import org.neo4j.ogm.config.DriverConfiguration;
 import org.neo4j.ogm.service.Components;
-import play.libs.ws.*;
-import play.libs.ws.ahc.AhcWSClient;
-import play.test.TestServer;
+import play.libs.ws.WS;
+import play.libs.ws.WSClient;
+import play.libs.ws.WSRequest;
+import play.libs.ws.WSResponse;
 import play.test.WithServer;
 
 import javax.inject.Inject;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.Map;
@@ -28,9 +22,6 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
 import java.util.function.Function;
 
-import static play.test.Helpers.*;
-
-@SuppressWarnings("Duplicates")
 public class APITest extends WithServer {
 
     /**
@@ -47,18 +38,17 @@ public class APITest extends WithServer {
     private final static ObjectMapper mapper = new ObjectMapper();
     @Inject
     private WSClient ws;
-    @Inject
-    Materializer materializer;
-
-    int i = 0;
-
 
     @BeforeClass
     public static void setUp() {
-        driverConfiguration.setDriverClassName("org.neo4j.ogm.drivers.embedded.driver.EmbeddedDriver");
-        Components.configure(configuration);
+        Components.configuration()
+                .driverConfiguration()
+                .setDriverClassName("org.neo4j.ogm.drivers.embedded.driver.EmbeddedDriver");
     }
 
+    /**
+     *
+     */
     @Before
     public void resetDatabase() {
         Neo4jSessionFactory.getInstance().getNeo4jSession().query("MATCH (n) DETACH DELETE n;", Collections.EMPTY_MAP);
@@ -71,11 +61,26 @@ public class APITest extends WithServer {
         ws = WS.newClient(testServer.port());
     }
 
+    /**
+     *
+     */
     @After
-    public void tearDown() throws IOException {
-        ws.close();
+    public void tearDown() {
+        try {
+            ws.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
+    /**
+     * @param route
+     * @param type
+     * @param body
+     * @param parameters
+     * @return
+     * @throws Exception
+     */
     WSResponse request(String route, String type, JsonNode body, JsonNode parameters) throws Exception {
 
         WSResponse response = null;
@@ -83,7 +88,7 @@ public class APITest extends WithServer {
 
             WSRequest request = ws
                     .url("http://localhost:" + testServer.port() + "/" + route)
-                    .setRequestTimeout(2000);
+                    .setRequestTimeout(5000);
 
             if (parameters != null) {
                 Map parametersMap = mapper.convertValue(parameters, Map.class);
