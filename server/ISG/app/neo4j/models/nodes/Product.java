@@ -6,7 +6,6 @@ import neo4j.models.edges.ProductAttribute;
 import org.neo4j.ogm.annotation.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 /**
  * Created by Lycantropus on 15-04-2016.
@@ -17,8 +16,8 @@ import java.util.Set;
 public class Product extends Entity
 {
     private String name;
-    private String EAN;
-    private Float price;
+    private String ean;
+    private String price;
 
 
     @Relationship(type = "VALUES")
@@ -35,17 +34,17 @@ public class Product extends Entity
 
     public Product() {}
 
-    public Product(String name, String EAN, Float price)
+    public Product(String name, String ean, String price)
     {
         this.name = name;
-        this.EAN = EAN;
+        this.ean = ean;
         this.price = price;
     }
 
-    public Product(String name, String EAN, Float price, Category category)
+    public Product(String name, String ean, String price, Category category)
     {
         this.name = name;
-        this.EAN = EAN;
+        this.ean = ean;
         this.price = price;
         this.category = category;
 
@@ -60,36 +59,36 @@ public class Product extends Entity
         this.name = name;
     }
 
-    public Float getPrice() {
+    public String getPrice() {
         return price;
     }
 
-    public void setPrice(Float price) {
+    public void setPrice(String price) {
         this.price = price;
     }
 
 
 
-    public String getEAN()
+    public String getEan()
     {
-        return this.EAN;
+        return this.ean;
     }
 
-    // Hashcode of each product is the EAN's hashcode:
+    // Hashcode of each product is the ean's hashcode:
     @Override
     public int hashCode()
     {
-        return this.EAN.hashCode();
+        return this.ean.hashCode();
     }
 
-    // Two Products are the same if they have the same EAN:
+    // Two Products are the same if they have the same ean:
     @Override
     public boolean equals(Object obj)
     {
         if (obj instanceof Product)
         {
             Product p = (Product) obj;
-            return (p.EAN.equals(this.EAN));
+            return (p.ean.equals(this.ean));
         } else
         {
             return false;
@@ -98,7 +97,7 @@ public class Product extends Entity
 
     @Override
     public String toString() {
-        return this.EAN;
+        return this.ean;
     }
 
     public List<ProductAttribute> getAttributes() {

@@ -1,24 +1,16 @@
 package controllers;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.node.ArrayNode;
-
-import neo4j.Neo4jSessionFactory;
 import neo4j.models.nodes.Category;
-import neo4j.services.AttributeService;
 import neo4j.services.CategoryService;
-//import org.neo4j.ogm.json.JSONObject;
 import play.libs.Json;
-import play.mvc.BodyParser;
 import play.mvc.Controller;
 import play.mvc.Result;
-
 import utils.ControllerUtils;
 
+import java.util.ArrayList;
+import java.util.List;
 
-import play.Logger;
-
-import java.util.*;
+//import org.neo4j.ogm.json.JSONObject;
 
 /**
  * Created by Lycantropus on 16-04-2016.
@@ -32,31 +24,8 @@ public class CategoryController extends Controller {
         List<Category> categories = new ArrayList<>();
         service.findAll().forEach(categories::add);
 
-        // Return JSON with name and code:
-        //ArrayNode jsonArray = Json.newArray();
-        //categories.forEach(x -> jsonArray.add(Json.newObject().put("name", x.getName()).put("code", x.getCode())));
-
         return ok(Json.toJson(categories));
     }
-
-    public Result retrieveCategory(Long id)
-    {
-        CategoryService service = new CategoryService();
-
-        Category res = service.find(id);
-
-        return ok(res.toString());
-    }
-
-    /*
-    public Result retrieveCategoryByCodename(String codename)
-    {
-        CategoryService service = new CategoryService();
-
-        Category res = service.findByCodename(codename);
-
-        return ok(res.toString());
-    }*/
 
     public Result createCategory(String name, String code)
     {

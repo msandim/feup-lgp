@@ -1,45 +1,32 @@
 package controllers;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
-
-import neo4j.Neo4jSessionFactory;
 import neo4j.models.edges.ProductAttribute;
 import neo4j.models.nodes.Attribute;
 import neo4j.models.nodes.Category;
 import neo4j.models.nodes.Product;
-
-import neo4j.services.*;
-import play.libs.Json;
-
+import neo4j.services.AttributeService;
 import neo4j.services.CategoryService;
 import neo4j.services.ProductService;
-import play.Logger;
 import play.libs.Json;
 import play.mvc.BodyParser;
-
 import play.mvc.Controller;
 import play.mvc.Http;
 import play.mvc.Result;
 import utils.ControllerUtils;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.*;
+import com.opencsv.CSVReader;
 
 /**
  * Created by Lycantropus on 17-04-2016.
  */
-public class ProductController extends Controller {
-
-    public Result retrieveAllProducts() {
-        ProductService service = new ProductService();
-
-        Iterable<Product> res = service.findAll();
-
-        return ok(res.toString());
-    }
-
-
+public class ProductController extends Controller
+{
     public Result getProductsByCategory(String code)
     {
         ProductService productService = new ProductService();
@@ -51,215 +38,171 @@ public class ProductController extends Controller {
         return ok(Json.toJson(productService.findByCategoryCode(code)));
     }
 
-
-    public Result retrieveProduct(Long id) {
-        ProductService service = new ProductService();
-
-
-        Product res = service.find(id);
-
-        return ok(res.toString());
-    }
-
-    public Result createOrUpdateProduct(String name, String EAN, Float price, String categoryCode) {
-        ProductService service = new ProductService();
-
-        // TODO Falta append a categoria
-
-        //Product temp = new Product (name, EAN, price, categoryCode);
-
-        //return ok(service.createOrUpdate(temp).getName());
-        return ok(Json.newObject());
-    }
-
-    public Result deleteProduct(Long id) {
-        ProductService service = new ProductService();
-
-        service.delete(id);
-
-        return ok(Long.toString(id));
-    }
-
-
     //@BodyParser.Of(BodyParser.FormUrlEncoded.class)
-    public Result importFromCsv() {
-
+    public Result importFromCsv()
+    {
         //getting the body and try to parse not files
         Map<String, String[]> result = request().body().asMultipartFormData().asFormUrlEncoded();
-
 
         // Get the category and verify if it exists
         CategoryService categoryService = new CategoryService();
         ProductService productService = new ProductService();
 
-        Map<String, String> errorMsg = new HashMap<>();
+        if (result.get("code") == null || result.get("code")[0] == null)
+            return badRequest(ControllerUtils.missingField("code"));
 
-        if (result.get("code") == null) {
-            errorMsg.put("error", "missing attribute keyword");
-            errorMsg.put("msg", "There is no code: ");
-            return badRequest(errorMsg.toString());
-        }
-
-        if (result.get("code")[0] == null) {
-            errorMsg.put("error", "NO_CODE");
-            errorMsg.put("msg", "There is no code in the request");
-            return badRequest(errorMsg.toString());
-        }
         String categoryCode = result.get("code")[0];
-        //Logger.debug("primeiro: " + result.get("code")[0]);
 
         Http.MultipartFormData body = request().body().asMultipartFormData();
         Http.MultipartFormData.FilePart csv = body.getFile("csv");
 
         Category targetCategory = categoryService.findByCode(categoryCode);
 
-        if (targetCategory == null) {
-            errorMsg.put("error", "INVALID_CODE");
-            errorMsg.put("msg", "There is no category with this code: ");
-            JsonNode node = ControllerUtils.missingField("code");
-            return badRequest(node);
-        }
+        if (targetCategory == null)
+            return badRequest(ControllerUtils.generalError("INVALID_CATEGORY", "Category not found!"));
 
-        if (csv != null) {
-            String fileName = csv.getFilename();
-            String contentType = csv.getContentType();
-            File file = (File) csv.getFile();
+        if (csv == null)
+            return badRequest(ControllerUtils.generalError("FILE_NOT_FOUND", "No file was found in your request!"));
 
-            BufferedReader br = null;
-            String line;
-            String cvsSplitBy = ";";
-            String attributeTypeSplitChar = ":";
-            AttributeService attributeService = new AttributeService();
-            Vector<String> attributeNames = new Vector<>();
+        //String fileName = csv.getFilename();
+        //String contentType = csv.getContentType();
+        File file = (File) csv.getFile();
 
-            // Delete all products from this category:
-            productService.deleteAllProductsByCategoryCode(categoryCode);
+        BufferedReader br = null;
+        String[] csvLine;
+        char cvsSplitBy = ';';
+        String attributeTypeSplitChar = ":";
 
-            try {
+        AttributeService attributeService = new AttributeService();
+        List<Attribute> attributes = new ArrayList<>();
 
-                br = new BufferedReader(new FileReader(file));
-                int linecounter = 0;
-                while ((line = br.readLine()) != null) {
-                    linecounter++;
-                    // use comma as separator
-                    String[] product = line.split(cvsSplitBy);
+        // Delete all products from this category:
+        productService.deleteAllProductsByCategoryCode(categoryCode);
 
-                    int tokencounter = 0;
-                    if (linecounter == 1) {
-                        for (String header : product) {
-                            if (tokencounter != 0 && tokencounter != 3 && tokencounter != 4) {
-                                String[] attInfo = header.split(attributeTypeSplitChar);
-                                String attName = attInfo[0];
+        try
+        {
+            CSVReader csvReader = new CSVReader(new FileReader(file), cvsSplitBy);
+            int lineCounter = 0;
+            while ((csvLine = csvReader.readNext()) != null)
+            {
+                lineCounter++;
 
-                                if (attInfo[1] == null) {
-                                    return ok("missing attribute type: use numerical or categorical");
-                                }
-                                String attType = attInfo[1];
-                                Attribute tmpAtt = new Attribute(attName);
-                                tmpAtt.setType(attType);
-                                attributeService.createOrUpdate(tmpAtt);
-                                attributeNames.add(attName);
-                                //Logger.debug("linha "+ linecounter+" |token= " + tokencounter+ " {cena] " + produto + "]");
-                            }
+                int attributeCounter = 0;
 
-                            tokencounter++;
+                // If it's the first line, list all the possible attributes:
+                if (lineCounter == 1)
+                {
+                    for (String attributeName : csvLine)
+                    {
+                        // Attributes from 0 to 2 are product's features (ean, Name, Price):
+                        if (attributeCounter != 0 && attributeCounter != 1 && attributeCounter != 2)
+                        {
+                            String[] attInfo = attributeName.split(attributeTypeSplitChar);
+                            String attName = attInfo[0];
+
+                            if (attInfo.length == 1)
+                                return badRequest(ControllerUtils.generalError("MISSING_ATTRIBUTE_TYPE", "Attribute '" + attName + "' lacks his type ('categorical' or 'numeric')!"));
+
+                            if (!attInfo[1].equals(Attribute.Type.CATEGORICAL) && !attInfo[1].equals(Attribute.Type.NUMERIC))
+                                return badRequest(ControllerUtils.generalError("INVALID_ATTRIBUTE_TYPE", "Attribute '" + attName + "' must have a valid type: ('categorical' or 'numeric')!"));
+
+                            String attType = attInfo[1];
+                            Attribute attribute = new Attribute(attName, attType);
+                            attributes.add(attributeService.createOrUpdate(attribute));
                         }
-                    } else {
-                        Vector<String> values = new Vector<>();
-                        Vector<String> attributeValues = new Vector<>();
-                        for (String feature : product) {
-                            if (tokencounter == 0 || tokencounter == 3 || tokencounter == 4) {
-                                values.add(feature);
-                                //Logger.debug("linha " + linecounter + " |token= " + tokencounter + " {cena] " + feature + "]");
-                            } else {
-                                attributeValues.add(feature);
-                            }
-
-                            tokencounter++;
-                        }
-                        String tmpPrice = values.get(2).replace(',', '.');
-                        //Logger.debug("attnames: " + attributeNames.toString());
-                        values.set(2, tmpPrice);
-
-                        List<ProductAttribute> tempList = new ArrayList<>();
-
-                        Product nodeProduct = new Product(values.get(1), values.get(0), Float.parseFloat(values.get(2)), targetCategory);
-                        //Logger.debug("attribute names: " + attributeNames.size());
-                        //Logger.debug("attribute values: " + attributeValues.size());
-                        for (int i = 0; i < attributeNames.size(); i++) {
-                            Attribute tempAttribute = attributeService.findByName(attributeNames.get(i));
-                            if (!Objects.equals(attributeValues.get(i), "NA") &&
-                                    !Objects.equals(attributeValues.get(i), " ")) {
-                                tempList.add(new ProductAttribute(nodeProduct, tempAttribute, attributeValues.get(i)));
-                            }
-                        }
-
-                        nodeProduct.setAttributes(tempList);
-
-                        productService.createOrUpdate(nodeProduct);
+                        attributeCounter++;
                     }
                 }
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-            } finally {
-                if (br != null) {
-                    try {
-                        br.close();
-                    } catch (IOException e) {
-                        e.printStackTrace();
+                else // if not, match the attributes to the products:
+                {
+                    List<String> productFeatures = new ArrayList<>();
+                    List<String> attributeValues = new ArrayList<>();
+                    for (String productAttribute : csvLine)
+                    {
+                        if (attributeCounter == 0 || attributeCounter == 1 || attributeCounter == 2)
+                            productFeatures.add(productAttribute);
+                        else
+                            attributeValues.add(productAttribute);
+
+                        attributeCounter++;
                     }
+
+                    // Replace price separator from "," to ".":
+                    productFeatures.set(2, productFeatures.get(2).replace(',', '.'));
+
+                    List<ProductAttribute> productAttributes = new ArrayList<>();
+
+                    // Create new product:
+                    Product product = new Product(productFeatures.get(1), productFeatures.get(0), productFeatures.get(2), targetCategory);
+
+                    // Link Attributes to Products:
+                    for (int i = 0; i < attributes.size(); i++)
+                    {
+                        Attribute attribute = attributes.get(i);
+
+                        // If attribute value is "NA" or empty space, then it has no value:
+                        if (!attributeValues.get(i).equals("NA") && !attributeValues.get(i).equals(" "))
+                        {
+                            productAttributes.add(new ProductAttribute(product, attribute, attributeValues.get(i)));
+                        }
+                    }
+
+                    product.setAttributes(productAttributes);
+                    productService.createOrUpdate(product);
                 }
             }
-            //Logger.debug("Done");
-        } else {
-            errorMsg.put("error", "FILE_NOT_FOUND");
-            errorMsg.put("msg", "No file was found in your request!");
-            return badRequest(errorMsg.toString());
+        } catch (IOException e)
+        {
+            e.printStackTrace();
+        } finally
+        {
         }
-        //Logger.debug("antes");
-        //Logger.debug("segundo: " + targetCategory.getName());
+
         return ok(Json.newObject());
     }
 
     @BodyParser.Of(BodyParser.Json.class)
-    public Result removeProducts(){
-
+    public Result removeProducts()
+    {
         JsonNode jsonRequest = request().body().asJson();
 
         //detect missing or null values
-        if(jsonRequest.get("category") == null)
+        if (jsonRequest.get("category") == null)
             return badRequest(ControllerUtils.missingField("category"));
-        if(jsonRequest.get("products") == null)
+        if (jsonRequest.get("products") == null)
             return badRequest(ControllerUtils.missingField("products"));
 
         // Service initialization
         CategoryService categoryService = new CategoryService();
-        ProductService productService= new ProductService();
+        ProductService productService = new ProductService();
+        AttributeService attributeService = new AttributeService();
 
         // Get the category and verify if it exists
         String categoryCode = jsonRequest.findPath("category").asText();
         Category category = categoryService.findByCode(categoryCode);
 
         if (category == null)
-            return badRequest(ControllerUtils.generalError("INVALID_CATEGORY","Category not found!"));
+            return badRequest(ControllerUtils.generalError("INVALID_CATEGORY", "Category not found!"));
 
         //parse questions
         JsonNode productsNode = jsonRequest.findPath("products");
         Iterator<JsonNode> itProducts = productsNode.elements();
 
         //check for product that doesnt exist in the DB
-        while (itProducts.hasNext()) {
+        while (itProducts.hasNext())
+        {
             JsonNode node = itProducts.next();
-            String productEAN = node.asText();
-            Product product = productService.findByEAN(productEAN);
+            String productEan = node.asText();
+            Product product = productService.findByEan(productEan);
 
             if (product == null)
                 return badRequest(ControllerUtils.generalError("INVALID_PRODUCTS", "One or more products specified for elimination do not exist!"));
 
             productService.delete(product.getId());
         }
+
+        // Delete attributes alone:
+        attributeService.deleteNotConnectedAttributes();
 
         return ok(Json.newObject());
     }

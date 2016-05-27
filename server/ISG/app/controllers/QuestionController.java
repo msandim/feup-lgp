@@ -9,14 +9,12 @@ import neo4j.models.edges.AnswerAttribute;
 import neo4j.models.edges.QuestionEdge;
 import neo4j.models.nodes.*;
 import neo4j.services.*;
-import play.Logger;
 import play.libs.Json;
 import play.mvc.BodyParser;
 import play.mvc.Controller;
 import play.mvc.Result;
 import utils.ControllerUtils;
 import utils.MapUtils;
-import utils.Statistics;
 
 import javax.inject.Singleton;
 import java.util.*;
@@ -131,8 +129,9 @@ public class QuestionController extends Controller
 
         ArrayNode products = result.putArray("products");
         orderedProductScores.forEach(x -> products.addObject()
-                .put("EAN", x.getKey().getEAN())
+                .put("ean", x.getKey().getEan())
                 .put("name", x.getKey().getName())
+                .put("price", x.getKey().getPrice())
                 .put("score", x.getValue()));
 
         return ok(result);
@@ -236,7 +235,7 @@ public class QuestionController extends Controller
                             "The sequence you supplied is not valid!"));
 
                 questionEdge.incNumberOfTimesChosen();
-                questionEdge.incMeanVariance(varianceAfterUpdate / varianceBeforeUpdate);
+                questionEdge.incMeanVariance(varianceAfterUpdate, varianceBeforeUpdate);
 
                 if (feedback == 1)
                     questionEdge.incNumberOfTimesGoodFeedback();
@@ -286,10 +285,12 @@ public class QuestionController extends Controller
         JsonNode questionsNode = jsonRequest.findPath("questions");
         Iterator<JsonNode> itQuestion = questionsNode.elements();
 
-
         //if field is present but has no content
         if (!itQuestion.hasNext())
             return badRequest(ControllerUtils.generalError("NO_QUESTIONS", "Questions empty!"));
+
+        List<Question> questionsAdded = new ArrayList<>();
+        List<Question> otherQuestions = questionService.findByCategoryCode(categoryCode, false); // Load all the questions
 
         //iterate through questions
         while (itQuestion.hasNext())
@@ -346,7 +347,6 @@ public class QuestionController extends Controller
                 //iterate through attributes
                 while (itAttributes.hasNext())
                 {
-
                     JsonNode attributeNode = itAttributes.next();
 
                     //detecting missing fields
@@ -417,40 +417,37 @@ public class QuestionController extends Controller
             //connecting answers to question
             question.setAnswers(answers);
 
-            //connecting same category questions
-            List<Question> sameCategoryQuestions = questionService.findByCategoryCode(categoryCode, false);
-            if (sameCategoryQuestions != null)
+            //adding answer to DB
+            questionsAdded.add(questionService.createOrUpdate(question, 2));
+        }
+
+        for(Question question: questionsAdded)
+        {
+            // Connect to existing questions:
+            for (Question q : otherQuestions)
             {
-                for (Question q : sameCategoryQuestions)
+                if (!q.equals(question))
                 {
-                    if (!q.equals(question))
-                    {
-                        QuestionEdge questionEdge = new QuestionEdge(question, q);
-                        questionEdgeService.createOrUpdate(questionEdge, 0);
-                        questionEdge = new QuestionEdge(q, question);
-                        questionEdgeService.createOrUpdate(questionEdge, 0);
-                    }
+                    QuestionEdge questionEdge = new QuestionEdge(question, q);
+                    questionEdgeService.createOrUpdate(questionEdge, 0);
+                    questionEdge = new QuestionEdge(q, question);
+                    questionEdgeService.createOrUpdate(questionEdge, 0);
                 }
             }
 
-            //adding answer to DB
-            questionService.createOrUpdate(question, 2);
+            // Connect to other added questions:
+            for (Question q : questionsAdded)
+            {
+                if (!q.equals(question))
+                {
+                    QuestionEdge questionEdge = new QuestionEdge(question, q);
+                    questionEdgeService.createOrUpdate(questionEdge, 0);
+                }
+            }
         }
 
         return ok(Json.newObject());
     }
-
-    /*
-    public Result retrieveAllQuestions()
-    {
-        // Retrieve all the questions in the system:
-        QuestionService service = new QuestionService();
-        List<Question> questions = new ArrayList<>();
-        service.findAll().forEach(questions::add);
-
-        return ok(Json.toJson(questions));
-    }
-    */
 
     public Result getQuestionsByCategory(String code)
     {
@@ -461,24 +458,6 @@ public class QuestionController extends Controller
             return badRequest(ControllerUtils.generalError("INVALID_CATEGORY", "Category not found!"));
 
         return ok(Json.toJson(questionService.findByCategoryCode(code, false)));
-    }
-
-    // TODO ver o que retorna se n existir a questao com este ID
-    /*
-    public Result retrieveQuestion(Long id)
-    {
-        QuestionService service = new QuestionService();
-        Question question = service.find(id);
-
-        return ok(Json.toJson(question));
-    }
-    */
-
-    public Result deleteQuestion(Long id)
-    {
-        QuestionService service = new QuestionService();
-        service.delete(id);
-        return ok(Json.toJson(id));
     }
 
     @BodyParser.Of(BodyParser.Json.class)
