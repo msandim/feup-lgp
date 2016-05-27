@@ -41,7 +41,8 @@ public class Question extends Entity
     //private Set<QuestionEdge> previousQuestions;
 
     public Question() {
-        this.code = IdGenerator.generate();
+
+        //this.code = IdGenerator.generate();
     }
 
     public Question(String text) {

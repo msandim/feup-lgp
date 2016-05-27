@@ -55,6 +55,10 @@ public class QuestionEdge extends Entity
         return varianceGainMean;
     }
 
+    public void setVarianceGainMean(Float varianceGainMean) {
+        this.varianceGainMean = varianceGainMean;
+    }
+
     // Source by: http://math.stackexchange.com/questions/106700/incremental-averageing
     public void incMeanVariance(Float newVarianceValue)
     {
