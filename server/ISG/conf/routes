@@ -12,12 +12,12 @@ DELETE  /api/removeQuestions                    controllers.QuestionController.r
 
 GET     /api/allCategories                      controllers.CategoryController.retrieveAllCategories
 POST    /api/addCategory                        controllers.CategoryController.createCategory(name: String, code: String)
-GET     /api/productsByCategory                 controllers.ProductController.getProductsByCategory(code: String)
 DELETE  /api/removeCategory                     controllers.CategoryController.removeCategory(code: String)
 
 GET     /api/sequencesByCategory                controllers.SequenceController.getSequencesByCategory(code: String)
 
 POST    /api/addProducts                        controllers.ProductController.importFromCsv()
+GET     /api/productsByCategory                 controllers.ProductController.getProductsByCategory(code: String)
 DELETE  /api/removeProducts                     controllers.ProductController.removeProducts
 
 # Backoffice:

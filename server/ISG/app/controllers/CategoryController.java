@@ -32,31 +32,8 @@ public class CategoryController extends Controller {
         List<Category> categories = new ArrayList<>();
         service.findAll().forEach(categories::add);
 
-        // Return JSON with name and code:
-        //ArrayNode jsonArray = Json.newArray();
-        //categories.forEach(x -> jsonArray.add(Json.newObject().put("name", x.getName()).put("code", x.getCode())));
-
         return ok(Json.toJson(categories));
     }
-
-    public Result retrieveCategory(Long id)
-    {
-        CategoryService service = new CategoryService();
-
-        Category res = service.find(id);
-
-        return ok(res.toString());
-    }
-
-    /*
-    public Result retrieveCategoryByCodename(String codename)
-    {
-        CategoryService service = new CategoryService();
-
-        Category res = service.findByCodename(codename);
-
-        return ok(res.toString());
-    }*/
 
     public Result createCategory(String name, String code)
     {
