@@ -12,6 +12,7 @@ public class AlgorithmParameters extends Entity
     private Float alfa;
     private Float beta;
     private Float gamma;
+    private Integer numberOfProducts;
 
     public AlgorithmParameters() { }
 
@@ -28,5 +29,30 @@ public class AlgorithmParameters extends Entity
     public Float getGamma()
     {
         return gamma;
+    }
+
+    public Integer getNumberOfProducts()
+    {
+        return numberOfProducts;
+    }
+
+    public void setAlfa(Float alfa)
+    {
+        this.alfa = alfa;
+    }
+
+    public void setBeta(Float beta)
+    {
+        this.beta = beta;
+    }
+
+    public void setGamma(Float gamma)
+    {
+        this.gamma = gamma;
+    }
+
+    public void setNumberOfProducts(Integer numberOfProducts)
+    {
+        this.numberOfProducts = numberOfProducts;
     }
 }

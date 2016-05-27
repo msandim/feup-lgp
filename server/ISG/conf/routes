@@ -20,6 +20,8 @@ POST    /api/addProducts                        controllers.ProductController.im
 GET     /api/productsByCategory                 controllers.ProductController.getProductsByCategory(code: String)
 DELETE  /api/removeProducts                     controllers.ProductController.removeProducts
 
+POST    /api/configAlgorithm                    controllers.AlgorithmConfigController.configAlgorithm(alfa: Float, beta: Float, gamma: Float, numberOfProducts: Integer)
+
 # Backoffice:
 GET     /backoffice/                            controllers.HomeController.index()
 GET     /backoffice/configurar_categorias       controllers.HomeController.configurarCategorias()

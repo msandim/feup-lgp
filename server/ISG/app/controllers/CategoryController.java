@@ -1,24 +1,16 @@
 package controllers;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.node.ArrayNode;
-
-import neo4j.Neo4jSessionFactory;
 import neo4j.models.nodes.Category;
-import neo4j.services.AttributeService;
 import neo4j.services.CategoryService;
-//import org.neo4j.ogm.json.JSONObject;
 import play.libs.Json;
-import play.mvc.BodyParser;
 import play.mvc.Controller;
 import play.mvc.Result;
-
 import utils.ControllerUtils;
 
+import java.util.ArrayList;
+import java.util.List;
 
-import play.Logger;
-
-import java.util.*;
+//import org.neo4j.ogm.json.JSONObject;
 
 /**
  * Created by Lycantropus on 16-04-2016.
