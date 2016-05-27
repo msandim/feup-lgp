@@ -36,6 +36,7 @@ public class APITest extends WithServer {
     private static DriverConfiguration driverConfiguration = new DriverConfiguration(configuration);
 
     private final static ObjectMapper mapper = new ObjectMapper();
+    protected WSResponse response;
     @Inject
     private WSClient ws;
 

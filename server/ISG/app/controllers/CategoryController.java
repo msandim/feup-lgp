@@ -19,8 +19,7 @@ import java.util.List;
  */
 public class CategoryController extends Controller {
 
-    public Result retrieveAllCategories()
-    {
+    public Result retrieveAllCategories() {
         // Gather all the categories:
         CategoryService service = new CategoryService();
         List<Category> categories = new ArrayList<>();
@@ -29,8 +28,7 @@ public class CategoryController extends Controller {
         return ok(Json.toJson(categories));
     }
 
-    public Result createCategory(String name, String code)
-    {
+    public Result createCategory(String name, String code) {
         CategoryService categoryService = new CategoryService();
 
         if (categoryService.findByCode(code) != null)
@@ -49,54 +47,32 @@ public class CategoryController extends Controller {
         Category category = categoryService.findByCode(code);
 
         if (category == null)
-            return badRequest(ControllerUtils.generalError("INVALID_CATEGORY","Category not found!"));
+            return badRequest(ControllerUtils.generalError("INVALID_CATEGORY", "Category not found!"));
 
         categoryService.deleteByCode(category.getCode());
 
         return ok(Json.newObject());
     }
 
-    public Result createOrUpdateCategory()
-    {
-        /*CategoryService service = new CategoryService();
-        Category temp = new Category(name, code);
-        service.createOrUpdate(temp);
-        //return ok("Ok");*/
+    public Result createOrUpdateCategory() {
+        JsonNode jsonRequest = request().body().asJson();
 
-
-        JsonNode json = request().body().asJson();
-
-
-
-        if(json == null) {
-            JsonNode obj =  Json.parse("{\"error\":\"INVALID NAME\", \"msg\":\"This category name already exists!\"}");
-            return badRequest(obj);
+        if (jsonRequest.get("name") == null) {
+            return badRequest(ControllerUtils.missingField("name"));
+        } else if (jsonRequest.get("code") == null) {
+            return badRequest(ControllerUtils.missingField("code"));
         } else {
-            String categoryName = json.findPath("name").asText();
-            Logger.info("e null?" + categoryName);
-            String categoryCode = json.findPath("code").asText();
-            Logger.info(categoryName);
-            if(categoryName == null) {
-                return badRequest("Missing parameter [name]");
+            String categoryName = jsonRequest.get("name").asText();
+            String categoryCode = jsonRequest.get("code").asText();
 
-            }
-            else if(categoryCode == null){
-                return badRequest("Missing parameter [code]");
-            }
-            else{
+            CategoryService service = new CategoryService();
+            Category temp = new Category(categoryName, categoryCode);
 
-                CategoryService service = new CategoryService();
-                Category temp = new Category(categoryName, categoryCode);
+            if (service.findByCode(temp.getCode()) != null)
+                return badRequest(ControllerUtils.generalError("INVALID_CODE", "This category code already exists!"));
 
-                if (service.findByCode(temp.getCode()) != null)
-                    return badRequest(ControllerUtils.generalError("INVALID_CODE", "This category code already exists!"));
-
-                service.createOrUpdate(temp);
-                return ok(Json.newObject());
-
-            }
+            service.createOrUpdate(temp);
+            return ok(Json.newObject());
         }
-
-
     }
 }
