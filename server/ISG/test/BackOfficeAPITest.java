@@ -98,11 +98,11 @@ public class BackOfficeAPITest extends APITest {
         Neo4jSessionFactory.getInstance().getNeo4jSession().query("CREATE (at1: Attribute {name: 'width (cm)', type: 'numeric'});", Collections.EMPTY_MAP);
         Neo4jSessionFactory.getInstance().getNeo4jSession().query("CREATE (at2: Attribute {name: 'resolution', type: 'categorical'});", Collections.EMPTY_MAP);
 
-        JsonNode node = Json.newObject()
+        JsonNode parameters = Json.newObject()
                 .put("name", "Televisoes")
                 .put("code", "tvs");
 
-        request("api/addCategory", "POST", null, node);
+        request("api/addCategory", "POST", null, parameters);
 
         //Adding a question. Should return empty JSON object
         response = request("api/addQuestions", "POST", readJsonFromFile("addQuestions/body.json"), null);
@@ -112,6 +112,15 @@ public class BackOfficeAPITest extends APITest {
         assertEquals(readJsonFromFile("addQuestions/response.json"), response.asJson());
 
         //TODO check if Questions were added
+
+        response = request("api/addCategory", "POST",
+                null,
+                Json.newObject().put("code", "tvs")
+        );
+
+        assert response != null;
+        assertEquals(OK, response.getStatus());
+        assertEquals(readJsonFromFile("addQuestions/response.json"), response.asJson());
     }
 
     @Test

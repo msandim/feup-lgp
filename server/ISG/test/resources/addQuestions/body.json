@@ -1,57 +1,57 @@
 {
-  "category":"tvs",
-  "questions":[
+  "category": "tvs",
+  "questions": [
     {
-      "text":"Qual o tamanho da sua sala?",
-      "answers":[
+      "text": "Qual o tamanho da sua sala?",
+      "answers": [
         {
-          "text":"Pequena",
-          "attributes":[
+          "text": "Pequena",
+          "attributes": [
             {
-              "name":"width (cm)",
-              "operator":"<",
-              "value":"400",
-              "score":"0.5"
+              "name": "width (cm)",
+              "operator": "<",
+              "value": "400",
+              "score": 0.5
             },
             {
-              "name":"resolution",
-              "operator":"=",
-              "value":"720p",
-              "score":"0.1"
+              "name": "resolution",
+              "operator": "=",
+              "value": "720p",
+              "score": 0.1
             }
           ]
         },
         {
-          "text":"Media",
-          "attributes":[
+          "text": "Média",
+          "attributes": [
             {
-              "name":"width (cm)",
-              "operator":">",
-              "value":"200",
-              "score":"0.5"
+              "name": "width (cm)",
+              "operator": ">",
+              "value": "200",
+              "score": 0.5
             },
             {
-              "name":"resolution",
-              "operator":"=",
-              "value":"1080p",
-              "score":"0.1"
+              "name": "resolution",
+              "operator": "=",
+              "value": "1080p",
+              "score": 0.1
             }
           ]
         },
         {
-          "text":"Grande",
-          "attributes":[
+          "text": "Grande",
+          "attributes": [
             {
-              "name":"width (cm)",
-              "operator":"<",
-              "value":"100",
-              "score":"0.5"
+              "name": "width (cm)",
+              "operator": "<",
+              "value": "100",
+              "score": 0.5
             },
             {
-              "name":"resolution",
-              "operator":"=",
-              "value":"2K",
-              "score":"0.1"
+              "name": "resolution",
+              "operator": "=",
+              "value": "2K",
+              "score": 0.1
             }
           ]
         }
