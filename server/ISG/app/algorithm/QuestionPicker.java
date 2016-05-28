@@ -21,7 +21,7 @@ import java.util.Map;
 /**
  * Created by Miguel on 06-05-2016.
  */
-public class AlgorithmLogic
+public class QuestionPicker
 {
     public static Question getFirstQuestion(String category)
     {
@@ -119,7 +119,7 @@ public class AlgorithmLogic
                 metricResult += frequency * (1 - productRatio) * mediumScore;
         }
 
-        return metricResult;
+        return (float) (metricResult + 0.00001); // Add just bit to never have an heuristic with value zero
     }
 
     public static Float getFrequency(Question question, Answer answer)

@@ -22,7 +22,7 @@ public class RandomCollection<E> {
     }
 
     public void add(Float weight, E result) {
-        if (weight <= 0) return;
+        if (weight < 0) return;
         total += weight;
         map.put(total, result);
     }

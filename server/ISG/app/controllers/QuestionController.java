@@ -1,7 +1,8 @@
 package controllers;
 
-import algorithm.AlgorithmLogic;
+import algorithm.QuestionPicker;
 import algorithm.SequenceBuilder;
+import algorithm.TopKProductPicker;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -94,15 +95,16 @@ public class QuestionController extends Controller
             }
 
             // Retrieve the top X products with higher score:
-            orderedProductScores = MapUtils.orderByValueDecreasing(productScores);
+            //orderedProductScores = MapUtils.orderByValueDecreasing(productScores);
+            orderedProductScores = TopKProductPicker.getTopProducts(productScores);
 
             // Return the next question:
-            nextQuestion = AlgorithmLogic.getNextQuestion(category, answeredQuestionCodes);
+            nextQuestion = QuestionPicker.getNextQuestion(category, answeredQuestionCodes);
         }
         // If we're seeking the first question:
         else
         {
-            nextQuestion = AlgorithmLogic.getFirstQuestion(category);
+            nextQuestion = QuestionPicker.getFirstQuestion(category);
 
             // If we can't even retrieve 1 question, we must give an error:
             if (nextQuestion == null)
@@ -198,14 +200,14 @@ public class QuestionController extends Controller
             if (answerCode == null)
                 return badRequest(ControllerUtils.missingField("answer"));
 
-            Float varianceBeforeUpdate = AlgorithmLogic.calculateScoreVariance(productScores);
+            Float varianceBeforeUpdate = QuestionPicker.calculateScoreVariance(productScores);
 
             // Update the scores:
             if (!productService.updateScores(questionCode, answerCode, productScores))
                 return badRequest(ControllerUtils.generalError("INVALID_QUESTION_ANSWER",
                         "One of the question ID or answer ID you supplied is not valid!"));
 
-            Float varianceAfterUpdate = AlgorithmLogic.calculateScoreVariance(productScores);
+            Float varianceAfterUpdate = QuestionPicker.calculateScoreVariance(productScores);
 
             // BEGIN TRANSACTION
 
