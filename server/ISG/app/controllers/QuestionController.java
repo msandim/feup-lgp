@@ -211,8 +211,6 @@ public class QuestionController extends Controller
 
             Float varianceAfterUpdate = QuestionPicker.calculateScoreVariance(productScores);
 
-            // BEGIN TRANSACTION
-
             Question currentQuestion = questionService.findByCode(questionCode);
             Answer currentAnswer = answerService.findByCode(questionCode, answerCode);
 
@@ -250,12 +248,10 @@ public class QuestionController extends Controller
 
             sequence.put(currentQuestion, currentAnswer);
             lastQuestion = currentQuestion;
-
-            // COMMIT
         }
 
         // Build Sequence:
-        SequenceBuilder.build(sequence);
+        SequenceBuilder.build(sequence, feedback);
 
         return ok(Json.newObject());
     }
