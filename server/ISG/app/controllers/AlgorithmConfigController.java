@@ -20,8 +20,8 @@ public class AlgorithmConfigController extends Controller
         JsonNode jsonRequest = request().body().asJson();
 
         // Check if fields exist:
-        if (jsonRequest.get("alfa") == null)
-            return badRequest(ControllerUtils.missingField("alfa"));
+        if (jsonRequest.get("alpha") == null)
+            return badRequest(ControllerUtils.missingField("alpha"));
 
         if (jsonRequest.get("beta") == null)
             return badRequest(ControllerUtils.missingField("beta"));
@@ -32,31 +32,42 @@ public class AlgorithmConfigController extends Controller
         if (jsonRequest.get("numberOfProducts") == null)
             return badRequest(ControllerUtils.missingField("numberOfProducts"));
 
-        Float alfa = (float) jsonRequest.get("alfa").asDouble();
+        if (jsonRequest.get("numberOfQuestions") == null)
+            return badRequest(ControllerUtils.missingField("numberOfProducts"));
+
+        Float alpha = (float) jsonRequest.get("alpha").asDouble();
         Float beta = (float) jsonRequest.get("beta").asDouble();
         Float gamma = (float) jsonRequest.get("gamma").asDouble();
         Integer numberOfProducts = jsonRequest.get("numberOfProducts").asInt();
+        Integer numberOfQuestions = jsonRequest.get("numberOfQuestions").asInt();
+
+        System.out.println(alpha);
+        System.out.println(alpha < 0);
 
         // Check if fields are valid:
-        if (alfa < 0 && alfa > 1)
-            return badRequest(ControllerUtils.generalError("INVALID_PARAMETER", "The parameter 'alfa' is invalid!"));
+        if (alpha < 0 || alpha > 1)
+            return badRequest(ControllerUtils.generalError("INVALID_FIELD", "The field 'alpha' is invalid!"));
 
-        if (beta < 0 && beta > 1)
-            return badRequest(ControllerUtils.generalError("INVALID_PARAMETER","The parameter 'beta' is invalid!"));
+        if (beta < 0 || beta > 1)
+            return badRequest(ControllerUtils.generalError("INVALID_FIELD","The field 'beta' is invalid!"));
 
-        if (gamma < 0 && gamma > 1)
-            return badRequest(ControllerUtils.generalError("INVALID_PARAMETER","The parameter 'gamma' is invalid!"));
+        if (gamma < 0 || gamma > 1)
+            return badRequest(ControllerUtils.generalError("INVALID_FIELD","The field 'gamma' is invalid!"));
 
         if (numberOfProducts <= 0)
-            return badRequest(ControllerUtils.generalError("INVALID_PARAMETER","The parameter 'numberOfProducts' is invalid!"));
+            return badRequest(ControllerUtils.generalError("INVALID_FIELD","The field 'numberOfProducts' is invalid!"));
+
+        if (numberOfQuestions <= 0)
+            return badRequest(ControllerUtils.generalError("INVALID_FIELD","The field 'numberOfQuestions' is invalid!"));
 
         AlgorithmParametersService service = new AlgorithmParametersService();
         AlgorithmParameters parameters = service.getAlgorithmParameters();
 
-        parameters.setAlfa(alfa);
+        parameters.setAlpha(alpha);
         parameters.setBeta(beta);
         parameters.setGamma(gamma);
         parameters.setNumberOfProducts(numberOfProducts);
+        parameters.setNumberOfQuestions(numberOfQuestions);
 
         service.createOrUpdate(parameters);
 
