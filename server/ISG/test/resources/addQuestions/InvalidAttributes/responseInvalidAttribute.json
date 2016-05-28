@@ -1,4 +1,4 @@
 {
-  "error":"INVALID_ATTRIBUTE",
-  "msg":"There is no attribute with this name: *attributeName*"
+  "error": "INVALID_ATTRIBUTE",
+  "msg": "There is no attribute with this name: INVALID_ATTRIBUTE"
 }

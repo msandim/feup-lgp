@@ -14,8 +14,7 @@
               "score": 0.5
             },
             {
-              "name": "INVALID_ATTRIBUTE",
-              "operator": "=",
+              "name": "resolution",
               "value": "720p",
               "score": 0.1
             }

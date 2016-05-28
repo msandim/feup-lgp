@@ -377,7 +377,7 @@ public class QuestionController extends Controller
 
                     //validate attribute operator relation
                     if (attr.getType().equals(Attribute.Type.CATEGORICAL) && !AnswerAttribute.Operators.isValidForCategorical(attributeOperator))
-                        return badRequest(ControllerUtils.generalError("INVALID_ATTRIBUTE_OPERATOR_RELATION", "The operator(" + attributeOperator + ") is not valid with the attribute " + attributeName));
+                        return badRequest(ControllerUtils.generalError("INVALID_ATTRIBUTE_OPERATOR_RELATION", "The operator '" + attributeOperator + "' is not valid with the attribute '" + attributeName + "'"));
 
                     //validate attribute
                     if (attr.getType().equals(Attribute.Type.NUMERIC))

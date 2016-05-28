@@ -14,7 +14,7 @@
               "score": 0.5
             },
             {
-              "name": "INVALID_ATTRIBUTE",
+              "name": "resolution",
               "operator": "=",
               "value": "720p",
               "score": 0.1
@@ -42,7 +42,6 @@
           "text": "Grande",
           "attributes": [
             {
-              "name": "width (cm)",
               "operator": "<",
               "value": "100",
               "score": 0.5

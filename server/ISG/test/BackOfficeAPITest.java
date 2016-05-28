@@ -7,11 +7,11 @@ import play.libs.ws.WSResponse;
 import play.mvc.Http;
 import play.mvc.Result;
 
-import java.io.File;
 import java.util.Collections;
 import java.util.List;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
 import static play.test.Helpers.*;
 
 @SuppressWarnings("Duplicates")
@@ -84,21 +84,6 @@ public class BackOfficeAPITest extends APITest {
         assertEquals(readJsonFromFile("addCategory/responseMissingFieldName.json"), response.asJson());
     }
 
-    //==========================All=================================//
-
-    @Test
-    public void testGetAllCategories() throws Exception {
-        request("api/addCategory", POST, Json.newObject().put("name", "Televisoes").put("code", "tv"), null);
-
-        request("api/addCategory", POST, Json.newObject().put("name", "Maquinas de Lavar").put("code", "maqla"), null);
-
-        response = request("api/allCategories", GET, null, null);
-
-        assert response != null;
-        assertEquals(OK, response.getStatus());
-        assertEquals(readJsonFromFile("getAllCategories/response.json"), response.asJson());
-    }
-
     //========================Removing==============================//
 
     //TODO check if category was added and then isn't after removing it
@@ -133,6 +118,21 @@ public class BackOfficeAPITest extends APITest {
         assertEquals(readJsonFromFile("removeCategory/responseWrongCode.json"), response.asJson());
     }
 
+    //==========================All=================================//
+
+    @Test
+    public void testGetAllCategories() throws Exception {
+        request("api/addCategory", POST, Json.newObject().put("name", "Televisoes").put("code", "tv"), null);
+
+        request("api/addCategory", POST, Json.newObject().put("name", "Maquinas de Lavar").put("code", "maqla"), null);
+
+        response = request("api/allCategories", GET, null, null);
+
+        assert response != null;
+        assertEquals(OK, response.getStatus());
+        assertEquals(readJsonFromFile("getAllCategories/response.json"), response.asJson());
+    }
+
     //==============================================================//
     //==============================================================//
     //========================Questions=============================//
@@ -161,7 +161,7 @@ public class BackOfficeAPITest extends APITest {
         assert response != null;
 
         JsonNode questions = response.asJson().elements().next();
-        List<String> text =  questions.findValuesAsText("text");
+        List<String> text = questions.findValuesAsText("text");
 
         assertEquals(OK, response.getStatus());
         assertEquals("Qual o tamanho da sua sala?", questions.get("text").asText());
@@ -192,16 +192,29 @@ public class BackOfficeAPITest extends APITest {
     }
 
     @Test
-    @Ignore
-    public void testAddQuestionsNoQuestions() throws Exception {
+    public void testAddQuestionsEmptyArrays() throws Exception {
         request("api/addCategory", POST, Json.newObject().put("name", "Televisoes").put("code", "tvs"), null);
 
-        //NO_QUESTIONS
-        response = request("api/addQuestions", POST, readJsonFromFile("addQuestions/bodyInvalidCategory.json"), null);
+        //Empty array Questions
+        response = request("api/addQuestions", POST, readJsonFromFile("addQuestions/EmptyArrays/bodyNoQuestions.json"), null);
 
         assert response != null;
         assertEquals(BAD_REQUEST, response.getStatus());
-        assertEquals(readJsonFromFile("addQuestions/responseInvalidCategory.json"), response.asJson());
+        assertEquals(readJsonFromFile("addQuestions/EmptyArrays/responseNoQuestions.json"), response.asJson()); //TODO Change the file or controller
+
+        //Empty array Answers
+        response = request("api/addQuestions", POST, readJsonFromFile("addQuestions/EmptyArrays/bodyNoAnswers.json"), null);
+
+        assert response != null;
+        assertEquals(BAD_REQUEST, response.getStatus());
+        assertEquals(readJsonFromFile("addQuestions/EmptyArrays/responseNoAnswers.json"), response.asJson());
+
+        //Empty array Attributes
+        response = request("api/addQuestions", POST, readJsonFromFile("addQuestions/EmptyArrays/bodyNoAttributes.json"), null);
+
+        assert response != null;
+        assertEquals(BAD_REQUEST, response.getStatus());
+        assertEquals(readJsonFromFile("addQuestions/EmptyArrays/responseNoAttributes.json"), response.asJson());
 
         //Checking if Questions were not added
         response = request("api/questionsByCategory", GET, null, Json.newObject().put("code", "tvs"));
@@ -212,90 +225,47 @@ public class BackOfficeAPITest extends APITest {
     }
 
     @Test
-    @Ignore
-    public void testAddQuestionsNoAnswers() throws Exception {
-        request("api/addCategory", POST, Json.newObject().put("name", "Televisoes").put("code", "tvs"), null);
-
-        //NO_ANSWERS
-        response = request("api/addQuestions", POST, readJsonFromFile("addQuestions/bodyInvalidCategory.json"), null);
-
-        assert response != null;
-        assertEquals(BAD_REQUEST, response.getStatus());
-        assertEquals(readJsonFromFile("addQuestions/responseInvalidCategory.json"), response.asJson());
-
-        //Checking if Questions were not added
-        response = request("api/questionsByCategory", GET, null, Json.newObject().put("code", "tvs"));
-
-        assert response != null;
-        assertEquals(OK, response.getStatus());
-        assertEquals("[]", response.getBody());
-    }
-
-    @Test
-    @Ignore
-    public void testAddQuestionsNoAttributes() throws Exception {
-        request("api/addCategory", POST, Json.newObject().put("name", "Televisoes").put("code", "tvs"), null);
-
-        //NO_ATTRIBUTES
-        response = request("api/addQuestions", POST, readJsonFromFile("addQuestions/bodyInvalidCategory.json"), null);
-
-        assert response != null;
-        assertEquals(BAD_REQUEST, response.getStatus());
-        assertEquals(readJsonFromFile("addQuestions/responseInvalidCategory.json"), response.asJson());
-
-        //Checking if Questions were not added
-        response = request("api/questionsByCategory", GET, null, Json.newObject().put("code", "tvs"));
-
-        assert response != null;
-        assertEquals(OK, response.getStatus());
-        assertEquals("[]", response.getBody());
-    }
-
-    @Test
-    @Ignore
     public void testAddQuestionsInvalidAttributes() throws Exception {
-        //INVALID_ATTRIBUTE
-        //INVALID_OPERATOR
-        //INVALID_ATTRIBUTE_OPERATOR_RELATION
-        //INVALID_VALUE
-        //INVALID_SCORE
+        Neo4jSessionFactory.getInstance().getNeo4jSession().query("CREATE (at1: Attribute {name: 'width (cm)', type: 'numeric'});", Collections.EMPTY_MAP);
+        Neo4jSessionFactory.getInstance().getNeo4jSession().query("CREATE (at2: Attribute {name: 'resolution', type: 'categorical'});", Collections.EMPTY_MAP);
 
         request("api/addCategory", POST, Json.newObject().put("name", "Televisoes").put("code", "tvs"), null);
 
-        //INVALID_ATTRIBUTE
-        response = request("api/addQuestions", POST, readJsonFromFile("addQuestions/bodyInvalidCategory.json"), null);
+        //Invalid Attribute Name
+        response = request("api/addQuestions", POST, readJsonFromFile("addQuestions/InvalidAttributes/bodyInvalidAttribute.json"), null);
 
         assert response != null;
         assertEquals(BAD_REQUEST, response.getStatus());
-        assertEquals(readJsonFromFile("addQuestions/responseInvalidCategory.json"), response.asJson());
+        assertEquals(readJsonFromFile("addQuestions/InvalidAttributes/responseInvalidAttribute.json"), response.asJson());
 
-        //INVALID_OPERATOR
-        response = request("api/addQuestions", POST, readJsonFromFile("addQuestions/bodyInvalidCategory.json"), null);
-
-        assert response != null;
-        assertEquals(BAD_REQUEST, response.getStatus());
-        assertEquals(readJsonFromFile("addQuestions/responseInvalidCategory.json"), response.asJson());
-
-        //INVALID_ATTRIBUTE_OPERATOR_RELATION
-        response = request("api/addQuestions", POST, readJsonFromFile("addQuestions/bodyInvalidCategory.json"), null);
+        //Invalid Operator
+        response = request("api/addQuestions", POST, readJsonFromFile("addQuestions/InvalidAttributes/bodyInvalidOperator.json"), null);
 
         assert response != null;
         assertEquals(BAD_REQUEST, response.getStatus());
-        assertEquals(readJsonFromFile("addQuestions/responseInvalidCategory.json"), response.asJson());
+        assertEquals(readJsonFromFile("addQuestions/InvalidAttributes/responseInvalidOperator.json"), response.asJson());
 
-        //INVALID_VALUE
-        response = request("api/addQuestions", POST, readJsonFromFile("addQuestions/bodyInvalidCategory.json"), null);
-
-        assert response != null;
-        assertEquals(BAD_REQUEST, response.getStatus());
-        assertEquals(readJsonFromFile("addQuestions/responseInvalidCategory.json"), response.asJson());
-
-        //INVALID_SCORE
-        response = request("api/addQuestions", POST, readJsonFromFile("addQuestions/bodyInvalidCategory.json"), null);
+        //Invalid Attribute operator relation
+        response = request("api/addQuestions", POST, readJsonFromFile("addQuestions/InvalidAttributes/bodyInvalidRelation.json"), null);
 
         assert response != null;
         assertEquals(BAD_REQUEST, response.getStatus());
-        assertEquals(readJsonFromFile("addQuestions/responseInvalidCategory.json"), response.asJson());
+        assertEquals(readJsonFromFile("addQuestions/InvalidAttributes/responseInvalidRelation.json"), response.asJson());
+
+
+        //Invalid Value //FIXME This request probably should not exist
+        response = request("api/addQuestions", POST, readJsonFromFile("addQuestions/InvalidAttributes/bodyInvalidValue.json"), null);
+
+        assert response != null;
+        assertEquals(BAD_REQUEST, response.getStatus());
+        assertEquals(readJsonFromFile("addQuestions/InvalidAttributes/responseInvalidValue.json"), response.asJson());
+
+        //Invalid Score
+        response = request("api/addQuestions", POST, readJsonFromFile("addQuestions/InvalidAttributes/bodyInvalidScore.json"), null);
+
+        assert response != null;
+        assertEquals(BAD_REQUEST, response.getStatus());
+        assertEquals(readJsonFromFile("addQuestions/InvalidAttributes/responseInvalidScore.json"), response.asJson());
 
         //Checking if Questions were not added
         response = request("api/questionsByCategory", GET, null, Json.newObject().put("code", "tvs"));
@@ -306,73 +276,67 @@ public class BackOfficeAPITest extends APITest {
     }
 
     @Test
-    @Ignore
     public void testAddQuestionsMissingFields() throws Exception {
-        //category
-        //questions
-        //answers
-        //attributes
-        //attribute name
-        //attribute operator
-        //attribute value
-        //attribute score
+        Neo4jSessionFactory.getInstance().getNeo4jSession().query("CREATE (at1: Attribute {name: 'width (cm)', type: 'numeric'});", Collections.EMPTY_MAP);
+        Neo4jSessionFactory.getInstance().getNeo4jSession().query("CREATE (at2: Attribute {name: 'resolution', type: 'categorical'});", Collections.EMPTY_MAP);
+
         request("api/addCategory", POST, Json.newObject().put("name", "Televisoes").put("code", "tvs"), null);
 
-        //category
-        response = request("api/addQuestions", POST, readJsonFromFile("addQuestions/bodyInvalidCategory.json"), null);
+        //Missing field Category
+        response = request("api/addQuestions", POST, readJsonFromFile("addQuestions/MissingFields/bodyMissingCategory.json"), null);
 
         assert response != null;
         assertEquals(BAD_REQUEST, response.getStatus());
-        assertEquals(readJsonFromFile("addQuestions/responseInvalidCategory.json"), response.asJson());
+        assertEquals(readJsonFromFile("addQuestions/MissingFields/responseMissingCategory.json"), response.asJson());
 
-        //questions
-        response = request("api/addQuestions", POST, readJsonFromFile("addQuestions/bodyInvalidCategory.json"), null);
-
-        assert response != null;
-        assertEquals(BAD_REQUEST, response.getStatus());
-        assertEquals(readJsonFromFile("addQuestions/responseInvalidCategory.json"), response.asJson());
-
-        //answers
-        response = request("api/addQuestions", POST, readJsonFromFile("addQuestions/bodyInvalidCategory.json"), null);
+        //Missing field Questions
+        response = request("api/addQuestions", POST, readJsonFromFile("addQuestions/MissingFields/bodyMissingQuestions.json"), null);
 
         assert response != null;
         assertEquals(BAD_REQUEST, response.getStatus());
-        assertEquals(readJsonFromFile("addQuestions/responseInvalidCategory.json"), response.asJson());
+        assertEquals(readJsonFromFile("addQuestions/MissingFields/responseMissingQuestions.json"), response.asJson());
 
-        //attributes
-        response = request("api/addQuestions", POST, readJsonFromFile("addQuestions/bodyInvalidCategory.json"), null);
-
-        assert response != null;
-        assertEquals(BAD_REQUEST, response.getStatus());
-        assertEquals(readJsonFromFile("addQuestions/responseInvalidCategory.json"), response.asJson());
-
-        //attribute name
-        response = request("api/addQuestions", POST, readJsonFromFile("addQuestions/bodyInvalidCategory.json"), null);
+        //Missing field Answers//FIXME response is different than expected
+        response = request("api/addQuestions", POST, readJsonFromFile("addQuestions/MissingFields/bodyMissingAnswers.json"), null);
 
         assert response != null;
         assertEquals(BAD_REQUEST, response.getStatus());
-        assertEquals(readJsonFromFile("addQuestions/responseInvalidCategory.json"), response.asJson());
+        assertEquals(readJsonFromFile("addQuestions/MissingFields/responseMissingAnswers.json"), response.asJson());
 
-        //attribute operator
-        response = request("api/addQuestions", POST, readJsonFromFile("addQuestions/bodyInvalidCategory.json"), null);
-
-        assert response != null;
-        assertEquals(BAD_REQUEST, response.getStatus());
-        assertEquals(readJsonFromFile("addQuestions/responseInvalidCategory.json"), response.asJson());
-
-        //attribute value
-        response = request("api/addQuestions", POST, readJsonFromFile("addQuestions/bodyInvalidCategory.json"), null);
+        //Missing field Attributes //FIXME response is different than expected
+        response = request("api/addQuestions", POST, readJsonFromFile("addQuestions/MissingFields/bodyMissingAttributes.json"), null);
 
         assert response != null;
         assertEquals(BAD_REQUEST, response.getStatus());
-        assertEquals(readJsonFromFile("addQuestions/responseInvalidCategory.json"), response.asJson());
+        assertEquals(readJsonFromFile("addQuestions/MissingFields/responseMissingAttributes.json"), response.asJson());
 
-        //attribute score
-        response = request("api/addQuestions", POST, readJsonFromFile("addQuestions/bodyInvalidCategory.json"), null);
+        //Missing field Attribute Name
+        response = request("api/addQuestions", POST, readJsonFromFile("addQuestions/MissingFields/bodyMissingAttributeName.json"), null);
 
         assert response != null;
         assertEquals(BAD_REQUEST, response.getStatus());
-        assertEquals(readJsonFromFile("addQuestions/responseInvalidCategory.json"), response.asJson());
+        assertEquals(readJsonFromFile("addQuestions/MissingFields/responseMissingAttributeName.json"), response.asJson());
+
+        //Missing field Attribute Operator
+        response = request("api/addQuestions", POST, readJsonFromFile("addQuestions/MissingFields/bodyMissingAttributeOperator.json"), null);
+
+        assert response != null;
+        assertEquals(BAD_REQUEST, response.getStatus());
+        assertEquals(readJsonFromFile("addQuestions/MissingFields/responseMissingAttributeOperator.json"), response.asJson());
+
+        //Missing field Attribute Value
+        response = request("api/addQuestions", POST, readJsonFromFile("addQuestions/MissingFields/bodyMissingAttributeValue.json"), null);
+
+        assert response != null;
+        assertEquals(BAD_REQUEST, response.getStatus());
+        assertEquals(readJsonFromFile("addQuestions/MissingFields/responseMissingAttributeValue.json"), response.asJson());
+
+        //Missing field Attribute Score
+        response = request("api/addQuestions", POST, readJsonFromFile("addQuestions/MissingFields/bodyMissingAttributeScore.json"), null);
+
+        assert response != null;
+        assertEquals(BAD_REQUEST, response.getStatus());
+        assertEquals(readJsonFromFile("addQuestions/MissingFields/responseMissingAttributeScore.json"), response.asJson());
 
         //Checking if Questions were not added
         response = request("api/questionsByCategory", GET, null, Json.newObject().put("code", "tvs"));
@@ -380,6 +344,26 @@ public class BackOfficeAPITest extends APITest {
         assert response != null;
         assertEquals(OK, response.getStatus());
         assertEquals("[]", response.getBody());
+    }
+
+    //========================Removing==============================//
+
+    @Test
+    @Ignore
+    public void testRemoveQuestions() throws Exception {
+
+    }
+
+    @Test
+    @Ignore
+    public void testRemoveQuestionsMissingField() throws Exception {
+
+    }
+
+    @Test
+    @Ignore
+    public void testRemoveQuestionsInvalidQuestions() throws Exception {
+
     }
 
     //==========================All=================================//
@@ -392,15 +376,19 @@ public class BackOfficeAPITest extends APITest {
 
     @Test
     @Ignore
-    public void testGetQuestionsByCategoryBadCategory() throws Exception {
+    public void testGetQuestionsByCategoryInvalidCategory() throws Exception {
 
     }
 
-    //========================Removing==============================//
+    @Test
+    @Ignore
+    public void testGetSequencesByCategory() throws Exception {
+
+    }
 
     @Test
     @Ignore
-    public void testRemoveQuestions() throws Exception {
+    public void testGetSequencesByCategoryInvalidCategory() throws Exception {
 
     }
 
@@ -447,14 +435,6 @@ public class BackOfficeAPITest extends APITest {
         assertEquals(readJsonFromFile("addQuestions/responseBadFile.json"), response.asJson());
     }
 
-    //==========================All=================================//
-
-    @Test
-    @Ignore
-    public void testGetProductsByCategoryBadCategory() throws Exception {
-
-    }
-
     //========================Removing==============================//
 
     @Test
@@ -466,6 +446,14 @@ public class BackOfficeAPITest extends APITest {
     @Test
     @Ignore
     public void testGetProductsByCategory() throws Exception {
+
+    }
+
+    //==========================All=================================//
+
+    @Test
+    @Ignore
+    public void testGetProductsByCategoryBadCategory() throws Exception {
 
     }
 

@@ -6,20 +6,7 @@
       "answers":[
         {
           "text":"Pequena",
-          "attributes":[
-            {
-              "name":"width (cm)",
-              "operator":"EQUAL",
-              "value":"400",
-              "score":"0.5"
-            },
-            {
-              "name":"resolution",
-              "operator":"=",
-              "value":"720p",
-              "score":"0.1"
-            }
-          ]
+          "attributes":[]
         },
         {
           "text":"Média",

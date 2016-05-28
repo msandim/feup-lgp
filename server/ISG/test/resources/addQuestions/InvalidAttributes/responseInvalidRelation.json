@@ -1,4 +1,4 @@
 {
-  "error":"INVALID_ATTRIBUTE",
-  "msg":"There is no attribute with this name: *attributeName*"
+  "error":"INVALID_ATTRIBUTE_OPERATOR_RELATION",
+  "msg":"The operator '<' is not valid with the attribute 'resolution'"
 }
