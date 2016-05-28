@@ -9,16 +9,17 @@ import org.neo4j.ogm.annotation.NodeEntity;
 @NodeEntity
 public class AlgorithmParameters extends Entity
 {
-    private Float alfa;
+    private Float alpha;
     private Float beta;
     private Float gamma;
     private Integer numberOfProducts;
+    private Integer numberOfQuestions;
 
     public AlgorithmParameters() { }
 
-    public Float getAlfa()
+    public Float getAlpha()
     {
-        return alfa;
+        return alpha;
     }
 
     public Float getBeta()
@@ -36,9 +37,14 @@ public class AlgorithmParameters extends Entity
         return numberOfProducts;
     }
 
-    public void setAlfa(Float alfa)
+    public Integer getNumberOfQuestions()
     {
-        this.alfa = alfa;
+        return numberOfQuestions;
+    }
+
+    public void setAlpha(Float alpha)
+    {
+        this.alpha = alpha;
     }
 
     public void setBeta(Float beta)
@@ -54,5 +60,10 @@ public class AlgorithmParameters extends Entity
     public void setNumberOfProducts(Integer numberOfProducts)
     {
         this.numberOfProducts = numberOfProducts;
+    }
+
+    public void setNumberOfQuestions(Integer numberOfQuestions)
+    {
+        this.numberOfQuestions = numberOfQuestions;
     }
 }

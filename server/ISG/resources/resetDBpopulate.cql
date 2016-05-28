@@ -2,7 +2,7 @@
 MATCH (n) DETACH
 DELETE n;
 
-CREATE (x:AlgorithmParameters {alfa: 0.333, beta: 0.333, gamma: 0.333, numberOfProducts: 10})
+CREATE (x:AlgorithmParameters {alpha: 0.333, beta: 0.333, gamma: 0.333, numberOfProducts: 10, numberOfQuestions: 3})
 
 // Create categories:
 CREATE (c1:Category {code: 'tvs', name: 'Televisions'})

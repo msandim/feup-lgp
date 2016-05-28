@@ -69,7 +69,7 @@ public class QuestionPicker
         questionEdges.forEach(questionEdge ->
         {
             Float heuristicValue =
-                    (parameters.getAlfa() * getQuestionHeuristicValue(category, questionEdge.getNextQuestion()))
+                    (parameters.getAlpha() * getQuestionHeuristicValue(category, questionEdge.getNextQuestion()))
                     + (parameters.getBeta() * getVarianceGain(questionEdge))
                     + (parameters.getGamma() * getGoodSequenceRatio(questionEdge));
 
