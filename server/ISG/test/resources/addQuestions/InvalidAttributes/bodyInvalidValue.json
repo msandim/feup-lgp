@@ -10,13 +10,13 @@
             {
               "name": "width (cm)",
               "operator": "<",
-              "value": "400",
+              "value": "INVALID_VALUE",
               "score": 0.5
             },
             {
               "name": "resolution",
               "operator": "=",
-              "value": "INVALID_VALUE",
+              "value": "720p",
               "score": 0.1
             }
           ]

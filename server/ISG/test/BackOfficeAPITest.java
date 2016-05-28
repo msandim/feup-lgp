@@ -1,4 +1,6 @@
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import neo4j.Neo4jSessionFactory;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -7,6 +9,7 @@ import play.libs.ws.WSResponse;
 import play.mvc.Http;
 import play.mvc.Result;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -19,9 +22,7 @@ public class BackOfficeAPITest extends APITest {
 
     private WSResponse response;
 
-    //TODO add tests for missing arguments, wrong argument names, wrong number of parameters, etc
     //TODO maybe change to not use other APIs and insert directly to the database
-
 
     //==============================================================//
     //==============================================================//
@@ -200,7 +201,7 @@ public class BackOfficeAPITest extends APITest {
 
         assert response != null;
         assertEquals(BAD_REQUEST, response.getStatus());
-        assertEquals(readJsonFromFile("addQuestions/EmptyArrays/responseNoQuestions.json"), response.asJson()); //TODO Change the file or controller
+        assertEquals(readJsonFromFile("addQuestions/EmptyArrays/responseNoQuestions.json"), response.asJson());
 
         //Empty array Answers
         response = request("api/addQuestions", POST, readJsonFromFile("addQuestions/EmptyArrays/bodyNoAnswers.json"), null);
@@ -252,7 +253,7 @@ public class BackOfficeAPITest extends APITest {
         assertEquals(BAD_REQUEST, response.getStatus());
         assertEquals(readJsonFromFile("addQuestions/InvalidAttributes/responseInvalidRelation.json"), response.asJson());
 
-        //Invalid Value //FIXME This request probably should not exist
+        //Invalid Value
         response = request("api/addQuestions", POST, readJsonFromFile("addQuestions/InvalidAttributes/bodyInvalidValue.json"), null);
 
         assert response != null;
@@ -295,14 +296,14 @@ public class BackOfficeAPITest extends APITest {
         assertEquals(BAD_REQUEST, response.getStatus());
         assertEquals(readJsonFromFile("addQuestions/MissingFields/responseMissingQuestions.json"), response.asJson());
 
-        //Missing field Answers//FIXME response is different than expected
+        //Missing field Answers //FIXME response is different than expected. Its detecting empty array of the missing field and not that its a missing field
         response = request("api/addQuestions", POST, readJsonFromFile("addQuestions/MissingFields/bodyMissingAnswers.json"), null);
 
         assert response != null;
         assertEquals(BAD_REQUEST, response.getStatus());
         assertEquals(readJsonFromFile("addQuestions/MissingFields/responseMissingAnswers.json"), response.asJson());
 
-        //Missing field Attributes //FIXME response is different than expected
+        //Missing field Attributes //FIXME response is different than expected. Its detecting empty array of the missing field and not that its a missing field
         response = request("api/addQuestions", POST, readJsonFromFile("addQuestions/MissingFields/bodyMissingAttributes.json"), null);
 
         assert response != null;
@@ -348,21 +349,89 @@ public class BackOfficeAPITest extends APITest {
     //========================Removing==============================//
 
     @Test
-    @Ignore
     public void testRemoveQuestions() throws Exception {
+        Neo4jSessionFactory.getInstance().getNeo4jSession().query("CREATE (at1: Attribute {name: 'width (cm)', type: 'numeric'});", Collections.EMPTY_MAP);
+        Neo4jSessionFactory.getInstance().getNeo4jSession().query("CREATE (at2: Attribute {name: 'resolution', type: 'categorical'});", Collections.EMPTY_MAP);
 
+        request("api/addCategory", POST, Json.newObject().put("name", "Televisoes").put("code", "tvs"), null);
+
+        //Adding a question. Should return empty JSON object
+        response = request("api/addQuestions", POST, readJsonFromFile("addQuestions/body.json"), null);
+
+        assert response != null;
+        assertEquals(OK, response.getStatus());
+        assertEquals(readJsonFromFile("removeQuestions/response.json"), response.asJson());
+
+        response = request("api/questionsByCategory", GET, null, Json.newObject().put("code", "tvs"));
+
+        JsonNode body = Json.newObject().set("questions", Json.newArray().add(response.asJson().findValue("code")));
+
+        //Removing questions. Should return empty JSON object
+        response = request("api/removeQuestions", DELETE, body, null);
+
+        assert response != null;
+        assertEquals(OK, response.getStatus());
+        assertEquals(readJsonFromFile("removeQuestions/response.json"), response.asJson());
+
+        response = request("api/questionsByCategory", GET, null, Json.newObject().put("code", "tvs"));
+
+        assert response != null;
+        assertEquals(OK, response.getStatus());
+        assertEquals(Json.newArray(), response.asJson());
     }
 
     @Test
-    @Ignore
     public void testRemoveQuestionsMissingField() throws Exception {
+        Neo4jSessionFactory.getInstance().getNeo4jSession().query("CREATE (at1: Attribute {name: 'width (cm)', type: 'numeric'});", Collections.EMPTY_MAP);
+        Neo4jSessionFactory.getInstance().getNeo4jSession().query("CREATE (at2: Attribute {name: 'resolution', type: 'categorical'});", Collections.EMPTY_MAP);
 
+        request("api/addCategory", POST, Json.newObject().put("name", "Televisoes").put("code", "tvs"), null);
+
+        //Adding a question. Should return empty JSON object
+        response = request("api/addQuestions", POST, readJsonFromFile("addQuestions/body.json"), null);
+
+        assert response != null;
+        assertEquals(OK, response.getStatus());
+        assertEquals(readJsonFromFile("removeQuestions/response.json"), response.asJson());
+
+        response = request("api/removeQuestions", DELETE, readJsonFromFile("removeQuestions/bodyMissingField.json"), null);
+
+        assert response != null;
+        assertEquals(BAD_REQUEST, response.getStatus());
+        assertEquals(readJsonFromFile("removeQuestions/responseMissingField.json"), response.asJson());
+
+        response = request("api/questionsByCategory", GET, null, Json.newObject().put("code", "tvs"));
+
+        assert response != null;
+        assertEquals(OK, response.getStatus());
+        assertNotEquals(Json.newArray(), response.asJson());
     }
 
     @Test
-    @Ignore
     public void testRemoveQuestionsInvalidQuestions() throws Exception {
+        Neo4jSessionFactory.getInstance().getNeo4jSession().query("CREATE (at1: Attribute {name: 'width (cm)', type: 'numeric'});", Collections.EMPTY_MAP);
+        Neo4jSessionFactory.getInstance().getNeo4jSession().query("CREATE (at2: Attribute {name: 'resolution', type: 'categorical'});", Collections.EMPTY_MAP);
 
+        request("api/addCategory", POST, Json.newObject().put("name", "Televisoes").put("code", "tvs"), null);
+
+        //Adding a question. Should return empty JSON object
+        response = request("api/addQuestions", POST, readJsonFromFile("addQuestions/body.json"), null);
+
+        assert response != null;
+        assertEquals(OK, response.getStatus());
+        assertEquals(readJsonFromFile("removeQuestions/response.json"), response.asJson());
+
+        response = request("api/removeQuestions", DELETE, readJsonFromFile("removeQuestions/bodyInvalidQuestion.json"), null);
+
+        assert response != null;
+        assertEquals(BAD_REQUEST, response.getStatus());
+        assertEquals(readJsonFromFile("removeQuestions/responseInvalidQuestion.json"), response.asJson());
+
+        response = request("api/questionsByCategory", GET, null, Json.newObject().put("code", "tvs"));
+
+        assert response != null;
+        assertEquals(OK, response.getStatus());
+        assertNotEquals(Json.newArray(), response.asJson());
     }
 
     //==========================All=================================//
