@@ -15,7 +15,7 @@ var configs={
 var CategoryArray = [];
 var CodeCategoryArray = [];
 var ProductsArray= [];
-var Products = [];
+var ProductEarArray = [];
 var removeCategoryArr = [];
 var removeProductsArr = [];
 
@@ -80,7 +80,9 @@ function addCategory() {
 
 
     $.ajax({
-        url: configs.server+configs.addCategoryApi+'?name='+categoryName+'&code='+categoryCode,
+        url: configs.server+configs.addCategoryApi,
+        contentType: "application/json; charset=utf-8",
+        data: JSON.stringify({name: categoryName , code: categoryCode}),
         type: "POST",
         crossDomain: true,
     })
@@ -95,15 +97,7 @@ function addCategory() {
     //boxGroup.append('<div class="box"><div class="box-header"><div class="col-sm-5 product-padding table-col-border table-col-border-left table-col-border-top color-backgorund-category col-size"><h3>'+categoryName+'</h3></div><div class="col-sm-3 text-center table-col-border table-col-border-top contain-button col-size"><button type="button"class="btn btn-block product-button addProduct">Adicionar Produtos</button> </div><div class="col-sm-3 text-center table-col-border table-col-border-top contain-button col-size"><button type="button" class="btn btn-block product-button expandProducts">Lista de Produtos <span class="glyphicon glyphicon-menu-down"></span></button></div> <div class="col-sm-1 table-col-border table-col-border-top contain-button col-size"><button type="button" class="btn btn-block product-button removeCategory"><span class="glyphicon glyphicon-remove"></span></button></div></div><div class="inputFile" style="display:none"> <div ><label class="btn btn-primary col-sm-11 product-padding table-col-border table-col-border-left table-col-border-top color-backgorund-category col-size" for="my-file-selector"><input id="my-file-selector" name="file" type="file" style="display:none;"> <!--accept=".csv"--><h4>Escolher ficheiro</h4></label><button type="submit" form="form1" value="Submit" class="col-sm-1 table-col-border table-col-border-top contain-button col-size btn btn-danger addFile">Submeter</button></div></div><div class="box-body box-body-scroll"></div></div>');
     boxGroup.append('<div class="box"><div class="row"><div class="col-sm-5 table-col-border-first table-col-size table-contain-h3"><h3>'+categoryName+'</h3></div><div class="col-sm-3 text-center table-col-border-first table-col-size table-contain-button"><button type="button"class="btn btn-block table-button addProduct">Adicionar Produtos</button> </div><div class="col-sm-3 text-center table-col-border-first table-col-size table-contain-button"><button type="button" class="btn btn-block table-button expandProducts">Lista de Produtos <span class="glyphicon glyphicon-menu-down"></span></button></div><div class="col-sm-1 table-col-border-first table-col-size table-contain-button"><button type="button" class="btn btn-block table-button removeCategory"><span class="glyphicon glyphicon-remove"></span></button></div> <div class="inputFile" style="display:none"> <div ><label class="btn btn-primary col-sm-11 product-padding table-col-border table-col-border-left table-col-border-top color-backgorund-category col-size" ><input class="my-file-selector" name="file" type="file" style="display:none;"> <!--accept=".csv"--><h4>Escolher ficheiro</h4></label></div></div><div class="box-of-products"><div class="container-fluid"></div></div></div><div>');
 
-    //Add new category to arrays
-    Products.push(categoryName);
-    Products.sort();
-
-    var toInsert={
-      "category": categoryName,
-      "products":[]
-    }
-    ProductsArray.push(toInsert);
+  
 
     //Unbind all elements with the class and then rebbind to include the new element
       $(".expandProducts").unbind("click", expandProducts());
@@ -145,10 +139,6 @@ function autoAddCategory(){
 
               //boxGroup.append('<div class="box"><div class="box-header"><div class="col-sm-5 product-padding table-col-border table-col-border-left table-col-border-top color-backgorund-category col-size"><h3>'+categoryName+'</h3></div><div class="col-sm-3 text-center table-col-border table-col-border-top contain-button col-size"><button type="button"class="btn btn-block product-button addProduct">Adicionar Produtos</button> </div><div class="col-sm-3 text-center table-col-border table-col-border-top contain-button col-size"><button type="button" class="btn btn-block product-button expandProducts">Lista de Produtos <span class="glyphicon glyphicon-menu-down"></span></button></div> <div class="col-sm-1 table-col-border table-col-border-top contain-button col-size"><button type="button" class="btn btn-block product-button removeCategory"><span class="glyphicon glyphicon-remove"></span></button></div></div><div class="inputFile" style="display:none"> <div ><label class="btn btn-primary col-sm-11 product-padding table-col-border table-col-border-left table-col-border-top color-backgorund-category col-size" for="my-file-selector"><input id="my-file-selector" name="file" type="file" style="display:none;"> <!--accept=".csv"--><h4>Escolher ficheiro</h4></label><button type="submit" form="form1" value="Submit" class="col-sm-1 table-col-border table-col-border-top contain-button col-size btn btn-danger addFile">Submeter</button></div></div><div class="box-body box-body-scroll"></div></div>');
              boxGroup.append('<div class="box"><div class="row"><div class="col-sm-5 table-col-border-first table-col-size table-contain-h3"><h3>'+response[i][j]+'</h3></div><div class="col-sm-3 text-center table-col-border-first table-col-size table-contain-button"><button type="button"class="btn btn-block table-button addProduct">Adicionar Produtos</button> </div><div class="col-sm-3 text-center table-col-border-first table-col-size table-contain-button"><button type="button" class="btn btn-block table-button expandProducts">Lista de Produtos <span class="glyphicon glyphicon-menu-down"></span></button></div><div class="col-sm-1 table-col-border-first table-col-size table-contain-button"><button type="button" class="btn btn-block table-button removeCategory"><span class="glyphicon glyphicon-remove"></span></button></div> <div class="inputFile" style="display:none"> <div ><label class="btn btn-primary col-xs-12  col-lg-11 col-md-11 product-padding table-col-border table-col-border-left table-col-border-top color-backgorund-category col-size" ><input class="my-file-selector" name="file" type="file" style="display:none;"> <!--accept=".csv"--><h4>Escolher ficheiro</h4></label></div></div><div class="box-of-products"><div class="container-fluid"></div></div></div><div>');
-
-              Products.push(response[i][j]);
-              Products.sort();
-
               CategoryArray.push(response[i][j]);
 
               //Unbind all elements with the class and then rebbind to include the new element
@@ -203,10 +193,15 @@ function autoAddProducts(categoryName,lastChild) {
                   for(j in response[i]) {
                     if(!j.localeCompare("name")) {
                      //console.log("property name: " + j,"value: "+response[i][j]);
+                     ProductsArray.push(response[i][j]);
 
                     boxProducts.append('<div class="row"><div class="col-sm-10 table-col-border-first table-col-size nameProducts"> '+response[i][j]+' </div> <div class="col-sm-1 table-col-border-first table-col-size table-contain-button"><button type="button" class="btn btn-block table-button removeProduct"><span class="glyphicon glyphicon-remove"></span></button></div></div>');
                     $(".removeProduct").unbind("click", removeProduct());
                     $(".removeProduct").bind("click", removeProduct());
+                    }
+                    else if (!j.localeCompare("ean")) {
+                      //console.log(response[i][j]);
+                      ProductEarArray.push(response[i][j]);
                     }
                   }
                }).fail(function(err){
@@ -215,6 +210,7 @@ function autoAddProducts(categoryName,lastChild) {
           });   
         } 
   }
+
 }
 
 
@@ -255,7 +251,6 @@ $(document).ready(function() {
      });
 
       $(document).on('click', '.saveChanges', function() {
-        //chamar o delete category and delete products
         //REMOVER CATEGORIA
         for(var c=0; c < removeCategoryArr.length; c++) {
           $.ajax({
@@ -264,6 +259,7 @@ $(document).ready(function() {
               crossDomain: true,
               success: function(result) {
                   // Do something with the result
+                  removeCategoryArr.length = 0;
               }
           });
         }
@@ -271,23 +267,42 @@ $(document).ready(function() {
         //remover produtos 
         for(var c=0; c < CodeCategoryArray.length; c++) {
           var arrayproducts=[];
+
             for(var i=0; i < removeProductsArr.length; i++) {              
               if(removeProductsArr[i][0] === CodeCategoryArray[c]) {
-                arrayproducts.push(removeProductsArr[i][1]);
+                console.log("LOL " + removeProductsArr.length + "  " + ProductsArray.length);
+
+                  for(var x=0; x < ProductsArray.length; x++) {
+
+                    var nomePro = removeProductsArr[i][1].trim();
+                    var nomeProd = ProductsArray[x].trim();
+                    //console.log("PEA " + nomePro+ " E " + nomeProd);
+                    if(nomePro === nomeProd) {
+                      //console.log("AQUIIII");
+                      arrayproducts.push(ProductEarArray[x]);
+                    }
+
+                  }   
+
               }
             }
-            //console.log(CodeCategoryArray[c] + " " +arrayproducts);
-             $.ajax({
-              url: configs.server+configs.deleteProducts,
-              type: 'DELETE',
-              data: {category: CodeCategoryArray[c], products: arrayproducts},
-              contentType: "application/json; charset=utf-8",
-              dataType: "json",
-              crossDomain: true,
-              success: function(result) {
-                  // Do something with the result
-              }
-          });
+
+            
+            //console.log("FINAL " +  CodeCategoryArray[c] + " EEE " + arrayproducts + "  EARNS  " + ProductEarArray.length);
+            if(arrayproducts.length != 0) {
+               $.ajax({
+                url: configs.server+configs.deleteProducts,
+                type: 'DELETE',
+                data: JSON.stringify({category: CodeCategoryArray[c], products: arrayproducts}),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                crossDomain: true,
+                success: function(result) {
+                    // Do something with the result
+                    removeProductsArr.length = 0;
+                }
+               });
+           }
         }
           
         // adicionar produtos
@@ -296,33 +311,35 @@ $(document).ready(function() {
             var filename = self.val().split('\\').pop();
             var myFile = self.prop('files');
 
+            console.log(myFile);
+
             if(filename.length !== 0) {
               var fatherInputFile = self.parent().parent().parent().parent();
               var nameCategory = fatherInputFile.find(">:first-child").find('h3').text();
 
-                var index;
-                for (var i = 0; i < CategoryArray.length; i++) {
-                  if(nameCategory === CategoryArray[i]) {
-                    index = i;
-                    break;
-                  }
+              var index;
+              for (var i = 0; i < CategoryArray.length; i++) {
+                if(nameCategory === CategoryArray[i]) {
+                  index = i;
+                  break;
                 }
-              var code = CodeCategoryArray[index];
-
-              $.ajax({
-              url:  configs.server+configs.addProducts,
-              type: 'POST',
-              data: {code: nameCategory, products: myFile},
-              processData: false,  // tell jQuery not to process the data
-              contentType: false,  // tell jQuery not to set contentType
-              crossDomain: true,
-              success: function(result) {
-                  // Do something with the result
-                  console.log("SUCESSO   ADD PRODUCTS");
               }
-             });
+
+              var code = CodeCategoryArray[index];
+             
+              $.ajax({
+                  url:  configs.server+configs.addProducts,
+                  type: 'POST',
+                  data: {code: code, csv: myFile},
+                  dataType : 'json',
+                  contentType: false,
+                  processData: false,
+                  success: function (data) {
+                       console.log("SUCESSO   ADD PRODUCTS");
+                  },
+              });
             
-              //console.log(filename + " E " +nameCategory + " C " + code);
+              console.log(filename + " E " +nameCategory + " C " + code);
             }
         });
         
@@ -369,7 +386,7 @@ function removeCategory() {
         }
       }
     removeCategoryArr.push(CodeCategoryArray[index]);
-     console.log(CodeCategoryArray[index]);
+    // console.log(CodeCategoryArray[index]);
     
      currentBox.remove();
   });

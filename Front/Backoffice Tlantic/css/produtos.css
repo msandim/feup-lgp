@@ -1,3 +1,7 @@
+body {
+  padding: 20px;
+}
+
 .interface-size {
   max-height:70%;
   max-height:70vh;

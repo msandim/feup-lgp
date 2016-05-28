@@ -1,15 +1,26 @@
 //GLOBALS
 
-//server:"http://intelligentsalesguide.me/",
-//  getAllCategories:"api/allCategories",
-// getQuestionsByCategory  -> CODE Código da categoria.  => GET
-// api/sequencesByCategory -> CODE Código da categoria. => GET
-// api/addQuestions/ “category”: categoria onde adicionar as perguntas./“questions”: Perguntas a serem adicionadas.  => POST
-// api/removeQuestions/  “questions”: Código das Perguntas a serem removidas.
+//Servidor e serviços
+var configs={
+  server:"http://intelligentsalesguide.me:9000/",
+  getAllCategories:"api/allCategories",
+  addCategoryApi :"api/addCategory", //?name=x&code=   -> POST
 
+  // getQuestionsByCategory  -> CODE Código da categoria.  => GET
+  // api/sequencesByCategory -> CODE Código da categoria. => GET
+  // api/addQuestions/ “category”: categoria onde adicionar as perguntas./“questions”: Perguntas a serem adicionadas.  => POST
+  // api/removeQuestions/  “questions”: Código das Perguntas a serem removidas.
+}
+
+//arrays
+var CategoryArray = [];
+var CodeCategoryArray = [];
+
+
+var categoryArray = [];
 
    //Trocar por serviço
-   var categoryArray =
+  /* var categoryArray =
      [
        {
          "category":"Televisão",
@@ -72,42 +83,9 @@
             }
           ]
         }
-      ];
+      ];*/
 
    catItems=ko.observableArray();
-
-
-function filter(){
-
-  var ViewModel = function() {
-    var self = this;
-
-      self.filter = ko.observable('');
-
-      /*self.items = ko.observableArray(["Televisão", "Computador", "Micro-ondas", "Frigorífico", "Telemóvel", "Colunas", "Rádio",
-        "Televisão", "Computador", "Frigorífico", "Telemóvel", "Colunas", "Rádio", "Televisão", "Computador", "Micro-ondas", "Frigorífico",
-         "Telemóvel", "Colunas", "Rádio", "Televisão", "Computador", "Frigorífico", "Telemóvel", "Colunas", "Rádio"]);*()
-
-      self.items.sort();*/
-
-      self.filteredItems = ko.computed(function() {
-        /*var filter = self.filter().toLowerCase();
-        if(!filter) { return self.items(); }
-        return self.items().filter(function(i) {
-          return i.toLowerCase().indexOf(filter) > -1;
-        });*/
-        var filter = self.filter().toLowerCase();
-        if(!filter) { return catItems(); }
-        return catItems().filter(function(i) {
-          return i.toLowerCase().indexOf(filter) > -1;
-        });
-      });
-    };
-
-    ko.applyBindings(new ViewModel());
-
-}
-
 
 function expandCategoria() {
   var self = this;
@@ -177,7 +155,9 @@ function addCategory(){
   $('.AddCategory').click(function(){
     
     var categoryName = $('.inputCatName').val();
-    var CategoryExists = [];
+    var categoryCode = $('.inputCatCode').val();
+    
+    /*var CategoryExists = [];
     var nameCategory = false;
 
     for (var i = 0; i < categoryArray.length; i++) {
@@ -206,22 +186,25 @@ function addCategory(){
           nameCategory=true;
         }
       }
-    }
+    }*/
+    
+      $.ajax({
+        url: configs.server+configs.addCategoryApi,
+        contentType: "application/json; charset=utf-8",
+        data: JSON.stringify({name: categoryName , code: categoryCode}),
+        type: "POST",
+        crossDomain: true,
+    })
+    
+    //add array
+    CategoryArray.push(categoryName);
+    CodeCategoryArray.push(categoryCode);
 
     var boxGroup = $('#boxOfGoodies');
 
     categoryName = capitalizeFirstLetter(categoryName);
     boxGroup.append('<div class="box"><div class="row"><div class="col-xs-4 table-col-border-first table-col-size table-contain-h3"><h3>'+categoryName+'</h3></div><div class="col-xs-3 table-col-border-first table-col-size table-contain-button"><button type="button" href="#" class="btn btn-block table-button toggle-login inputQuestion">Adicionar Pergunta</button><div style="display:none" class="login"><div id="triangle"></div><h1>Nova Pergunta</h1><input type="text" class="value" placeholder=">" required/><input class="addQuestion" type="submit" value="Adicionar" /></div></div><div class="col-xs-4 table-col-border-first table-col-size table-contain-button"><button type="button" class="btn btn-block table-button expandCategoria">Lista de Perguntas/Repostas <span class=" glyphicon glyphicon-menu-down"></span></button></div><div class="col-xs-1 table-col-border-end-first table-col-size table-contain-button"><button type="button" class="btn btn-block table-button removeCategory"><span class="glyphicon glyphicon-remove"></span></button></div></div><div class="box-of-questions"><div class="container-fluid"></div></div></div>');
-        
-    //Add new category to arrays
-    catItems.push(categoryName);
-    catItems.sort();
-
-    var toInsert={
-      "category": categoryName,
-      "questions":[]
-    }
-    categoryArray.push(toInsert);
+    
 
     //Unbind all elements with the class and then rebbind to include the new element
     var addQuestionElement = boxGroup.find(".addQuestion");
@@ -442,33 +425,61 @@ function addCharacteristic(){
 
 function autoAddCategory(){
   $(document).ready(function(){
-    categoryArray.forEach(function(category){
-      var self = this;
-      var boxGroup = $('#boxOfGoodies');
 
-      categoryName = capitalizeFirstLetter(category['category']);
-       boxGroup.append('<div class="box"><div class="row"><div class="col-xs-4 table-col-border-first table-col-size table-contain-h3"><h3>'+categoryName+'</h3></div><div class="col-xs-3 table-col-border-first table-col-size table-contain-button"><button type="button" href="#" class="btn btn-block table-button toggle-login inputQuestion">Adicionar Pergunta</button><div style="display:none" class="login"><div id="triangle"></div><h1>Nova Pergunta</h1><input type="text" class="value" placeholder=">" required/><input class="addQuestion" type="submit" value="Adicionar" /></div></div><div class="col-xs-4 table-col-border-first table-col-size table-contain-button"><button type="button" class="btn btn-block table-button expandCategoria">Lista de Perguntas/Repostas <span class=" glyphicon glyphicon-menu-down"></span></button></div><div class="col-xs-1 table-col-border-end-first table-col-size table-contain-button"><button type="button" class="btn btn-block table-button removeCategory"><span class="glyphicon glyphicon-remove"></span></button></div></div><div class="box-of-questions"><div class="container-fluid"></div></div></div>');
-      
-      catItems.push(categoryName);
-      catItems.sort();
+    $.ajax({
+        url: configs.server+configs.getAllCategories,
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        type: "GET",
+        crossDomain: true,
+      }).done(function(response){
+        loadFinished();
+        var i, j;
 
-      //Unbind all elements with the class and then rebbind to include the new element
-      var addQuestionElement = boxGroup.find(".addQuestion");
-      addQuestionElement.unbind("click", addQuestion());
-      addQuestionElement.bind("click", addQuestion());
-      var expandCategoriaElement = boxGroup.find(".expandCategoria");
-      expandCategoriaElement.unbind("click", expandCategoria());
-      expandCategoriaElement.bind("click", expandCategoria());
-      var removeCategoryElement = boxGroup.find(".removeCategory");
-      removeCategoryElement.unbind("click", removeCategory());
-      removeCategoryElement.bind("click", removeCategory());
-      $(document).unbind("ready");
-       $(document).bind("ready", function () {  $(document).on('click','.addQuestion',function(){ var parent = $( this ).parent(); var question = parent.children("input[type='text']").val(); if(question != "") {$('.login').val(''); $('.login').attr("placeholder", ">"); $(".login").click(); } }); $("document ").on("click", ".toggle-login", function(){$(this).next(".login").toggle(); });  $(document).on('click','.addCharacteristic',function(){ var parent = $( this ).parent(); var operator = parent.children("input[id='inputOperator']").val(); var value = parent.children("input[id='inputValue']").val();var score = parent.children("input[id='inputScore']").val(); var characteristic = parent.children("input[id='inputCharacteristic']").val(); if(operator != "" && value != "" && score != "" && characteristic != "") { $('.login').val(''); $('.login').attr("placeholder", ">"); $('.login').hide(); }});}); 
+        for(i=0;i<response.length;i++)
+          for(j in response[i]) {
+            console.log("property name: " + j,"value: "+response[i][j]);
 
-      var lastChild = boxGroup.find(">:last-child");
+            if(!j.localeCompare("name")) {
+              var self = this;
+              var boxGroup = $('#boxOfGoodies');
 
-      autoAddQuestions(categoryName,lastChild);
-    });
+               boxGroup.append('<div class="box"><div class="row"><div class="col-xs-4 table-col-border-first table-col-size table-contain-h3"><h3>'+response[i][j]+'</h3></div><div class="col-xs-3 table-col-border-first table-col-size table-contain-button"><button type="button" href="#" class="btn btn-block table-button toggle-login inputQuestion">Adicionar Pergunta</button><div style="display:none" class="login"><div id="triangle"></div><h1>Nova Pergunta</h1><input type="text" class="value" placeholder=">" required/><input class="addQuestion" type="submit" value="Adicionar" /></div></div><div class="col-xs-4 table-col-border-first table-col-size table-contain-button"><button type="button" class="btn btn-block table-button expandCategoria">Lista de Perguntas/Repostas <span class=" glyphicon glyphicon-menu-down"></span></button></div><div class="col-xs-1 table-col-border-end-first table-col-size table-contain-button"><button type="button" class="btn btn-block table-button removeCategory"><span class="glyphicon glyphicon-remove"></span></button></div></div><div class="box-of-questions"><div class="container-fluid"></div></div></div>');
+              
+                CategoryArray.push(response[i][j]);
+
+              //Unbind all elements with the class and then rebbind to include the new element
+              var addQuestionElement = boxGroup.find(".addQuestion");
+              addQuestionElement.unbind("click", addQuestion());
+              addQuestionElement.bind("click", addQuestion());
+              var expandCategoriaElement = boxGroup.find(".expandCategoria");
+              expandCategoriaElement.unbind("click", expandCategoria());
+              expandCategoriaElement.bind("click", expandCategoria());
+              var removeCategoryElement = boxGroup.find(".removeCategory");
+              removeCategoryElement.unbind("click", removeCategory());
+              removeCategoryElement.bind("click", removeCategory());
+              $(document).unbind("ready");
+               $(document).bind("ready", function () {  $(document).on('click','.addQuestion',function(){ var parent = $( this ).parent(); var question = parent.children("input[type='text']").val(); if(question != "") {$('.login').val(''); $('.login').attr("placeholder", ">"); $(".login").click(); } }); $("document ").on("click", ".toggle-login", function(){$(this).next(".login").toggle(); });  $(document).on('click','.addCharacteristic',function(){ var parent = $( this ).parent(); var operator = parent.children("input[id='inputOperator']").val(); var value = parent.children("input[id='inputValue']").val();var score = parent.children("input[id='inputScore']").val(); var characteristic = parent.children("input[id='inputCharacteristic']").val(); if(operator != "" && value != "" && score != "" && characteristic != "") { $('.login').val(''); $('.login').attr("placeholder", ">"); $('.login').hide(); }});}); 
+
+              var lastChild = boxGroup.find(">:last-child");
+
+              autoAddQuestions(response[i][j],lastChild);
+              
+            }
+            else {
+               CodeCategoryArray.push(response[i][j]);
+              //autoAddProducts(response[i][j], lastChild);
+            }
+           
+          }
+            
+        console.log(CodeCategoryArray); 
+        console.log(CategoryArray);
+      }).fail(function(err){
+        loadFinished();
+        processError(err);
+      });
+
   });
 }
 
@@ -783,4 +794,16 @@ $(document).ready(function() {
 
 function capitalizeFirstLetter(string) {
     return string.charAt(0).toUpperCase() + string.slice(1);
+}
+
+function loadFinished(){
+  $('#loady').remove();
+  $("body").find("*").removeAttr("disabled");
+  $('.interface-square').children().show();
+}
+
+function processError(err){
+  var msg = err;
+  msg = JSON.parse(msg['responseText']);
+  alert(msg['msg']);
 }
