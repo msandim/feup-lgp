@@ -252,7 +252,6 @@ public class BackOfficeAPITest extends APITest {
         assertEquals(BAD_REQUEST, response.getStatus());
         assertEquals(readJsonFromFile("addQuestions/InvalidAttributes/responseInvalidRelation.json"), response.asJson());
 
-
         //Invalid Value //FIXME This request probably should not exist
         response = request("api/addQuestions", POST, readJsonFromFile("addQuestions/InvalidAttributes/bodyInvalidValue.json"), null);
 

@@ -4,8 +4,6 @@ import neo4j.Neo4jSessionFactory;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;
-import org.neo4j.ogm.config.Configuration;
-import org.neo4j.ogm.config.DriverConfiguration;
 import org.neo4j.ogm.service.Components;
 import play.libs.ws.WS;
 import play.libs.ws.WSClient;
@@ -18,27 +16,13 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.Map;
-import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
-import java.util.function.Function;
 
 public class APITest extends WithServer {
 
-    /**
-     * TODO
-     * Test with:
-     * Bad number of parameters;
-     * Missing parameters;
-     * Bad syntax;
-     */
-
-    private static Configuration configuration = new Configuration();
-    private static DriverConfiguration driverConfiguration = new DriverConfiguration(configuration);
-
     private final static ObjectMapper mapper = new ObjectMapper();
-    protected WSResponse response;
-    @Inject
-    private WSClient ws;
+
+    @Inject private WSClient ws;
 
     @BeforeClass
     public static void setUp() {
@@ -47,13 +31,10 @@ public class APITest extends WithServer {
                 .setDriverClassName("org.neo4j.ogm.drivers.embedded.driver.EmbeddedDriver");
     }
 
-    /**
-     *
-     */
     @Before
     public void resetDatabase() {
         Neo4jSessionFactory.getInstance().getNeo4jSession().query("MATCH (n) DETACH DELETE n;", Collections.EMPTY_MAP);
-        //TODO CREATE (x:AlgorithmParameters {alfa: 0.333, beta: 0.333, gamma: 0.333, numberOfProducts: 10})
+        //TODO Test using Neo4jSessionFactory.getInstance().getNeo4jSession().query("CREATE (x:AlgorithmParameters {alfa: 0.333, beta: 0.333, gamma: 0.333, numberOfProducts: 10});", Collections.EMPTY_MAP); Add
         /*try {
             Thread.sleep(5000);
         } catch (InterruptedException ex) {
@@ -62,9 +43,6 @@ public class APITest extends WithServer {
         ws = WS.newClient(testServer.port());
     }
 
-    /**
-     *
-     */
     @After
     public void tearDown() {
         try {
@@ -74,14 +52,6 @@ public class APITest extends WithServer {
         }
     }
 
-    /**
-     * @param route
-     * @param type
-     * @param body
-     * @param parameters
-     * @return
-     * @throws Exception
-     */
     WSResponse request(String route, String type, JsonNode body, JsonNode parameters) throws Exception {
 
         WSResponse response = null;
@@ -89,7 +59,7 @@ public class APITest extends WithServer {
 
             WSRequest request = ws
                     .url("http://localhost:" + testServer.port() + "/" + route)
-                    .setRequestTimeout(5000);
+                    .setRequestTimeout(10000);
 
             if (parameters != null) {
                 Map parametersMap = mapper.convertValue(parameters, Map.class);
@@ -103,59 +73,61 @@ public class APITest extends WithServer {
             }
 
             CompletionStage<WSResponse> stage;
-            CompletionStage<WSResponse> recoverPromise;
+            //CompletionStage<WSResponse> recoverPromise;
             switch (type) {
                 case "GET":
                     stage = request.get();
-                    recoverPromise = stage.toCompletableFuture().handle((result, error) -> {
+                    /*recoverPromise = stage.toCompletableFuture().handle((result, error) -> {
                         if (error != null) {
                             return request.get().toCompletableFuture();
                         } else {
                             return CompletableFuture.completedFuture(result);
                         }
-                    }).thenCompose(Function.identity());
+                    }).thenCompose(Function.identity());*/
                     break;
                 case "POST":
                     stage = request.post(body);
-                    recoverPromise = stage.toCompletableFuture().handle((result, error) -> {
+                    /*recoverPromise = stage.toCompletableFuture().handle((result, error) -> {
                         if (error != null) {
                             return request.post(body).toCompletableFuture();
                         } else {
                             return CompletableFuture.completedFuture(result);
                         }
-                    }).thenCompose(Function.identity());
+                    }).thenCompose(Function.identity());*/
                     break;
                 case "PUT":
                     stage = request.put(body);
-                    recoverPromise = stage.toCompletableFuture().handle((result, error) -> {
+                    /*recoverPromise = stage.toCompletableFuture().handle((result, error) -> {
                         if (error != null) {
                             return request.put(body).toCompletableFuture();
                         } else {
                             return CompletableFuture.completedFuture(result);
                         }
-                    }).thenCompose(Function.identity());
+                    }).thenCompose(Function.identity());*/
                     break;
                 case "DELETE":
                     stage = request.delete();
-                    recoverPromise = stage.toCompletableFuture().handle((result, error) -> {
+                    /*recoverPromise = stage.toCompletableFuture().handle((result, error) -> {
                         if (error != null) {
                             return request.delete().toCompletableFuture();
                         } else {
                             return CompletableFuture.completedFuture(result);
                         }
-                    }).thenCompose(Function.identity());
+                    }).thenCompose(Function.identity());*/
                     break;
                 default:
                     return null;
             }
 
-            try {
+            /*try {
                 Thread.sleep(250);
             } catch (InterruptedException ex) {
                 Thread.currentThread().interrupt();
-            }
+            }*/
 
-            response = recoverPromise.toCompletableFuture().get();
+            //response = recoverPromise.toCompletableFuture().get();
+
+            response = stage.toCompletableFuture().get();
 
         } catch (Exception e) {
             e.printStackTrace();
