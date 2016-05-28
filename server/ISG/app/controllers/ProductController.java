@@ -38,16 +38,6 @@ public class ProductController extends Controller
         return ok(Json.toJson(productService.findByCategoryCode(code)));
     }
 
-    public Result deleteProduct(Long id)
-    {
-        ProductService service = new ProductService();
-
-        service.delete(id);
-
-        return ok(Long.toString(id));
-    }
-
-
     //@BodyParser.Of(BodyParser.FormUrlEncoded.class)
     public Result importFromCsv()
     {

@@ -11,14 +11,16 @@ GET     /api/questionsByCategory                controllers.QuestionController.g
 DELETE  /api/removeQuestions                    controllers.QuestionController.removeQuestions
 
 GET     /api/allCategories                      controllers.CategoryController.retrieveAllCategories
-POST    /api/addCategory                        controllers.CategoryController.createCategory(name: String, code: String)
-GET     /api/productsByCategory                 controllers.ProductController.getProductsByCategory(code: String)
+POST    /api/addCategory                        controllers.CategoryController.createOrUpdateCategory
 DELETE  /api/removeCategory                     controllers.CategoryController.removeCategory(code: String)
 
 GET     /api/sequencesByCategory                controllers.SequenceController.getSequencesByCategory(code: String)
 
 POST    /api/addProducts                        controllers.ProductController.importFromCsv()
+GET     /api/productsByCategory                 controllers.ProductController.getProductsByCategory(code: String)
 DELETE  /api/removeProducts                     controllers.ProductController.removeProducts
+
+POST    /api/configAlgorithm                    controllers.AlgorithmConfigController.configAlgorithm()
 
 # Backoffice:
 GET     /backoffice/                            controllers.HomeController.index()

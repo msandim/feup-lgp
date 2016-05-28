@@ -68,7 +68,9 @@ public class QuestionService extends GenericService<Question>
 
     public void deleteQuestion(String code)
     {
-        String query = new StringBuilder("MATCH (q:Question{code:\'" + code + "\'}) OPTIONAL MATCH (q)-[]->(a:Answer) detach delete q,a").toString();
+        // Delete questions and associated questions:
+        String query = new StringBuilder("MATCH (q:Question{code:\'" + code + "\'}) OPTIONAL MATCH (q)-[]->(a:Answer) ")
+        .append("OPTIONAL MATCH (q)<-[:QUESTION]-(n1) OPTIONAL MATCH (n2)<-[:NEXT_NODE*1..]-(n1) OPTIONAL MATCH (n1)<-[:NEXT_NODE*1..]-(n3) detach delete q,a,n1,n2,n3").toString();
         Neo4jSessionFactory.getInstance().getNeo4jSession().query(query, Collections.EMPTY_MAP);
     }
 }

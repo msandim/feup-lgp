@@ -6,18 +6,18 @@ var configs={
   getAllCategories:"api/allCategories",
   productsByCategory: "api/productsByCategory?code=",
   addCategoryApi :"api/addCategory", //?name=x&code=   -> POST
-  removeCategoryApi : "api/removeCategory/", //code = Código da categoria a remover    -> DELETE
+  removeCategoryApi : "api/removeCategory", //code = Código da categoria a remover    -> DELETE
   addProducts : "api/addProducts", //code  E  products (ficheiro csv)  -> POST
-  deleteProducts : "api/removeProducts/" //category (codigo da cat)  products (array dos produtos a serem removidos)
+  deleteProducts : "api/removeProducts" //category (codigo da cat)  products (array dos produtos a serem removidos)
 }
 
+//arrays
 var CategoryArray = [];
 var CodeCategoryArray = [];
 var ProductsArray= [];
 var Products = [];
 var removeCategoryArr = [];
 var removeProductsArr = [];
-var addProductsArr = [];
 
 function expandProducts() {
   var self = this;
@@ -38,32 +38,6 @@ function expandProducts() {
       span.attr("class","glyphicon glyphicon-menu-up");
     }
   });
-}
-
-
-function addFile() {
-   //add produtos a uma categoria
-  $('.btn-danger').click( function(){
-      $(this).parent().parent().hide('fast');
-
-  var fatherInputFile = $(this).parent().parent().parent();
-  var nameCategory = fatherInputFile.find(">:first-child").find('h3').text();
-
-  var filename = $('.my-file-selector').val().split('\\').pop();
-  var myFile = $('.my-file-selector').prop('files');
-
-  //console.log("OLA " + fatherInputFile.attr('class') + " " + filename +"  " + nameCategory);
-
-  $.ajax({
-    url: '/api/addc/',
-    data: {name: nameCategory, products: myFile},
-    type: 'POST',
-    success: function(data){
-      alert(data);
-    }
-  });
-
-   });
 }
 
 function addCategory() {
@@ -103,14 +77,17 @@ function addCategory() {
         }
       }
     }*/
-   
+
 
     $.ajax({
         url: configs.server+configs.addCategoryApi+'?name='+categoryName+'&code='+categoryCode,
         type: "POST",
         crossDomain: true,
     })
-
+    
+    //add array
+    CategoryArray.push(categoryName);
+    CodeCategoryArray.push(categoryCode);
 
     var boxGroup = $('#boxOfGoodies');
 
@@ -131,13 +108,11 @@ function addCategory() {
     //Unbind all elements with the class and then rebbind to include the new element
       $(".expandProducts").unbind("click", expandProducts());
       $(".expandProducts").bind("click", expandProducts());
-      $(".btn-danger").unbind("click", addFile());
-      $(".btn-danger").bind("click", addFile());
       $(".removeCategory").unbind("click", removeCategory());
       $(".removeCategory").bind("click", removeCategory());
       $(document).unbind("ready");
-     $(document).bind("ready", function () { $(".my-file-selector").change(function(){var FileName = $(this).val().split('\\').pop(); $(this).parent().find('h4').text(FileName);});  $(document).on('click','.addProduct',function(){var boxParent = $( this ).parent().parent();var boxInputFile = boxParent.next(); if(boxInputFile.is(":visible")){$(boxInputFile).hide('fast'); }else{$(boxInputFile).show('medium');}var DefaultName = boxParent.parent().find('h4').text("Escolher ficheiro"); }); $(document).on('change', '.my-file-selector', function() {var FileName = $(this).val().split('\\').pop(); $(this).parent().find('h4').text(FileName); }); });
-      
+      $(document).bind("ready", function () { $(".my-file-selector").change(function(){var FileName = $(this).val().split('\\').pop(); $(this).parent().find('h4').text(FileName);});  $(document).on('click','.addProduct',function(){var boxParent = $( this ).parent().parent();var boxInputFile = boxParent.next(); if(boxInputFile.is(":visible")){$(boxInputFile).hide('fast'); }else{$(boxInputFile).show('medium');}var DefaultName = boxParent.parent().find('h4').text("Escolher ficheiro"); }); $(document).on('change', '.my-file-selector', function() {var FileName = $(this).val().split('\\').pop(); $(this).parent().find('h4').text(FileName); });   $(document).on('click', '.saveChanges', function() { for(var c=0; c < removeCategoryArr.length; c++) { $.ajax({ url: configs.server+configs.removeCategoryApi+'?code='+removeCategoryArr[c], type: 'DELETE', crossDomain: true, success: function(result) {} });}}); });
+              
       //clear placeholder
       $('.inputCatName').val('');
       $('.inputCatName').attr("placeholder", ">");
@@ -179,13 +154,11 @@ function autoAddCategory(){
               //Unbind all elements with the class and then rebbind to include the new element
               $(".expandProducts").unbind("click", expandProducts());
               $(".expandProducts").bind("click", expandProducts());
-              $(".btn-danger").unbind("click", addFile());
-              $(".btn-danger").bind("click", addFile());
               $(".removeCategory").unbind("click", removeCategory());
               $(".removeCategory").bind("click", removeCategory());
               $(document).unbind("ready");
-              $(document).bind("ready", function () { $(".my-file-selector").change(function(){var FileName = $(this).val().split('\\').pop(); $(this).parent().find('h4').text(FileName);});  $(document).on('click','.addProduct',function(){var boxParent = $( this ).parent().parent();var boxInputFile = boxParent.next(); if(boxInputFile.is(":visible")){$(boxInputFile).hide('fast'); }else{$(boxInputFile).show('medium');}var DefaultName = boxParent.parent().find('h4').text("Escolher ficheiro"); }); $(document).on('change', '.my-file-selector', function() {var FileName = $(this).val().split('\\').pop(); $(this).parent().find('h4').text(FileName); }); $(document).on('click', '.saveChanges', function() {console.log("AQUI "); }); });
-                
+              $(document).bind("ready", function () { $(".my-file-selector").change(function(){var FileName = $(this).val().split('\\').pop(); $(this).parent().find('h4').text(FileName);});  $(document).on('click','.addProduct',function(){var boxParent = $( this ).parent().parent();var boxInputFile = boxParent.next(); if(boxInputFile.is(":visible")){$(boxInputFile).hide('fast'); }else{$(boxInputFile).show('medium');}var DefaultName = boxParent.parent().find('h4').text("Escolher ficheiro"); }); $(document).on('change', '.my-file-selector', function() {var FileName = $(this).val().split('\\').pop(); $(this).parent().find('h4').text(FileName); });   $(document).on('click', '.saveChanges', function() { for(var c=0; c < removeCategoryArr.length; c++) { $.ajax({ url: configs.server+configs.removeCategoryApi+'?code='+removeCategoryArr[c], type: 'DELETE', crossDomain: true, success: function(result) {} });}}); });
+              
                var lastChild = boxGroup.find(">:last-child");
               //console.log("OLA " + lastChild.attr('class') );
               
@@ -279,19 +252,88 @@ $(document).ready(function() {
      $(document).on('change', '.my-file-selector', function() {
       var FileName = $(this).val().split('\\').pop();
       $(this).parent().find('h4').text(FileName);
-    });
+     });
 
-     $(document).on('click', '.saveChanges', function() {
-        console.log("AQUI ");
+      $(document).on('click', '.saveChanges', function() {
         //chamar o delete category and delete products
+        //REMOVER CATEGORIA
+        for(var c=0; c < removeCategoryArr.length; c++) {
+          $.ajax({
+              url: configs.server+configs.removeCategoryApi+'?code='+removeCategoryArr[c],
+              type: 'DELETE',
+              crossDomain: true,
+              success: function(result) {
+                  // Do something with the result
+              }
+          });
+        }
+
+        //remover produtos 
+        for(var c=0; c < CodeCategoryArray.length; c++) {
+          var arrayproducts=[];
+            for(var i=0; i < removeProductsArr.length; i++) {              
+              if(removeProductsArr[i][0] === CodeCategoryArray[c]) {
+                arrayproducts.push(removeProductsArr[i][1]);
+              }
+            }
+            //console.log(CodeCategoryArray[c] + " " +arrayproducts);
+             $.ajax({
+              url: configs.server+configs.deleteProducts,
+              type: 'DELETE',
+              data: {category: CodeCategoryArray[c], products: arrayproducts},
+              contentType: "application/json; charset=utf-8",
+              dataType: "json",
+              crossDomain: true,
+              success: function(result) {
+                  // Do something with the result
+              }
+          });
+        }
+          
+        // adicionar produtos
+        $(".my-file-selector").each(function() {
+            var self = $(this);
+            var filename = self.val().split('\\').pop();
+            var myFile = self.prop('files');
+
+            if(filename.length !== 0) {
+              var fatherInputFile = self.parent().parent().parent().parent();
+              var nameCategory = fatherInputFile.find(">:first-child").find('h3').text();
+
+                var index;
+                for (var i = 0; i < CategoryArray.length; i++) {
+                  if(nameCategory === CategoryArray[i]) {
+                    index = i;
+                    break;
+                  }
+                }
+              var code = CodeCategoryArray[index];
+
+              $.ajax({
+              url:  configs.server+configs.addProducts,
+              type: 'POST',
+              data: {code: nameCategory, products: myFile},
+              processData: false,  // tell jQuery not to process the data
+              contentType: false,  // tell jQuery not to set contentType
+              crossDomain: true,
+              success: function(result) {
+                  // Do something with the result
+                  console.log("SUCESSO   ADD PRODUCTS");
+              }
+             });
+            
+              //console.log(filename + " E " +nameCategory + " C " + code);
+            }
+        });
+        
     });
 
 });
 
 
 function removeProduct() {
-  var self = this;
-  $('.removeProduct').click(function(){
+
+  $('.removeProduct').on('click', function(){
 
     var currentRow = $(this).closest(".row");
     var nameCategory = currentRow.parent().closest(".row").find(">:first-child").find("h3").text();
@@ -306,48 +348,29 @@ function removeProduct() {
       }
     }
 
-    var valueToPush = new Array();
-    valueToPush[0][0] = CodeCategoryArray[index];
-    valueToPush[0][1] = product;
-    removeProductsArr.push(valueToPush);
+    removeProductsArr.push([CodeCategoryArray[index] , product]);
     console.log(removeProductsArr);
-      /*$.ajax({
-        url: '/api/removep/',
-        data: {category: nameCategory, products: product},
-        type: 'POST',
-        success: function(data){
-          alert(data);
-        }
-        });*/
-
-      currentRow.remove();
+  
+    currentRow.remove();
   });
 }
 
 function removeCategory() {
    var self = this;
-  $('.removeCategory').click(function(){
+  $('.removeCategory').on('click', function(){
 
      var currentBox = $(this).closest(".box");
      var categoryName = currentBox.find(">:first-child").find(">:first-child").find('h3').text();
      var index;
-    for (var i = 0; i < CategoryArray.length; i++) {
-      if(categoryName === CategoryArray[i]) {
-        index = i;
-        break;
+      for (var i = 0; i < CategoryArray.length; i++) {
+        if(categoryName === CategoryArray[i]) {
+          index = i;
+          break;
+        }
       }
-    }
     removeCategoryArr.push(CodeCategoryArray[index]);
      console.log(CodeCategoryArray[index]);
-     /*$.ajax({
-      url: 'api/removec/',
-      data: categoryName,
-      type: 'POST',
-      success: function(data){
-        alert(data);
-      }
-    });*/
-
+    
      currentBox.remove();
   });
 }

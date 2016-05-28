@@ -1,10 +1,11 @@
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.ObjectReader;
 import neo4j.Neo4jSessionFactory;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;
-import org.neo4j.ogm.model.Result;
+import org.neo4j.ogm.config.Configuration;
+import org.neo4j.ogm.config.DriverConfiguration;
 import org.neo4j.ogm.service.Components;
 import play.libs.ws.WS;
 import play.libs.ws.WSClient;
@@ -12,49 +13,88 @@ import play.libs.ws.WSRequest;
 import play.libs.ws.WSResponse;
 import play.test.WithServer;
 
+import javax.inject.Inject;
 import java.io.File;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
+import java.util.function.Function;
 
 public class APITest extends WithServer {
 
-    /** TODO
+    /**
+     * TODO
      * Test with:
-     *  Bad number of parameters;
-     *  Missing parameters;
-     *  Bad syntax;
+     * Bad number of parameters;
+     * Missing parameters;
+     * Bad syntax;
      */
+
+    private static Configuration configuration = new Configuration();
+    private static DriverConfiguration driverConfiguration = new DriverConfiguration(configuration);
 
     private final static ObjectMapper mapper = new ObjectMapper();
     protected WSResponse response;
+    @Inject
+    private WSClient ws;
 
     @BeforeClass
-    public static void databaseConfiguration() {
+    public static void setUp() {
         Components.configuration()
                 .driverConfiguration()
                 .setDriverClassName("org.neo4j.ogm.drivers.embedded.driver.EmbeddedDriver");
-        //.setDriverClassName("org.neo4j.ogm.drivers.http.driver.HttpDriver")
-        //.setURI("http://neo4j:neo@104.167.113.111:7474");
-        //.setURI("http://neo4j:neo@localhost:7474");
     }
 
+    /**
+     *
+     */
     @Before
     public void resetDatabase() {
         Neo4jSessionFactory.getInstance().getNeo4jSession().query("MATCH (n) DETACH DELETE n;", Collections.EMPTY_MAP);
+
+        /*try {
+            Thread.sleep(5000);
+        } catch (InterruptedException ex) {
+            Thread.currentThread().interrupt();
+        }*/
+        ws = WS.newClient(testServer.port());
     }
 
-    protected WSResponse request(String route, String type, JsonNode body /*TODO maybe change to File*/, JsonNode parameters) throws Exception {
-        String url = "http://localhost:" + testServer.port() + "/" + route;
-        try (WSClient ws = WS.newClient(testServer.port())) {
-            WSRequest request = ws.url(url);
+    /**
+     *
+     */
+    @After
+    public void tearDown() {
+        try {
+            ws.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * @param route
+     * @param type
+     * @param body
+     * @param parameters
+     * @return
+     * @throws Exception
+     */
+    WSResponse request(String route, String type, JsonNode body, JsonNode parameters) throws Exception {
+
+        WSResponse response = null;
+        try {
+
+            WSRequest request = ws
+                    .url("http://localhost:" + testServer.port() + "/" + route)
+                    .setRequestTimeout(5000);
 
             if (parameters != null) {
-                ObjectMapper mapper = new ObjectMapper();
-                Map result = mapper.convertValue(parameters, Map.class);
+                Map parametersMap = mapper.convertValue(parameters, Map.class);
 
-                for (Object o : result.entrySet()) {
+                for (Object o : parametersMap.entrySet()) {
                     Map.Entry thisEntry = (Map.Entry) o;
                     Object key = thisEntry.getKey();
                     Object value = thisEntry.getValue();
@@ -63,30 +103,68 @@ public class APITest extends WithServer {
             }
 
             CompletionStage<WSResponse> stage;
+            CompletionStage<WSResponse> recoverPromise;
             switch (type) {
                 case "GET":
                     stage = request.get();
+                    recoverPromise = stage.toCompletableFuture().handle((result, error) -> {
+                        if (error != null) {
+                            return request.get().toCompletableFuture();
+                        } else {
+                            return CompletableFuture.completedFuture(result);
+                        }
+                    }).thenCompose(Function.identity());
                     break;
                 case "POST":
                     stage = request.post(body);
+                    recoverPromise = stage.toCompletableFuture().handle((result, error) -> {
+                        if (error != null) {
+                            return request.post(body).toCompletableFuture();
+                        } else {
+                            return CompletableFuture.completedFuture(result);
+                        }
+                    }).thenCompose(Function.identity());
                     break;
                 case "PUT":
                     stage = request.put(body);
+                    recoverPromise = stage.toCompletableFuture().handle((result, error) -> {
+                        if (error != null) {
+                            return request.put(body).toCompletableFuture();
+                        } else {
+                            return CompletableFuture.completedFuture(result);
+                        }
+                    }).thenCompose(Function.identity());
                     break;
                 case "DELETE":
                     stage = request.delete();
+                    recoverPromise = stage.toCompletableFuture().handle((result, error) -> {
+                        if (error != null) {
+                            return request.delete().toCompletableFuture();
+                        } else {
+                            return CompletableFuture.completedFuture(result);
+                        }
+                    }).thenCompose(Function.identity());
                     break;
                 default:
                     return null;
             }
-            return stage.toCompletableFuture().get();
-        } catch (InterruptedException e) {
+
+            try {
+                Thread.sleep(250);
+            } catch (InterruptedException ex) {
+                Thread.currentThread().interrupt();
+            }
+
+            response = recoverPromise.toCompletableFuture().get();
+
+        } catch (Exception e) {
             e.printStackTrace();
         }
-        return null;
+
+        return response;
     }
 
-    protected JsonNode readJsonFromFile(String fileLocation) throws IOException {
+    JsonNode readJsonFromFile(String fileLocation) throws IOException {
         return mapper.readValue(new File(fileLocation), JsonNode.class);
     }
 }
