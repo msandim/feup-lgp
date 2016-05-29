@@ -15,6 +15,7 @@ import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertTrue;
 import static play.test.Helpers.*;
 
 @SuppressWarnings("Duplicates")
@@ -87,8 +88,6 @@ public class BackOfficeAPITest extends APITest {
 
     //========================Removing==============================//
 
-    //TODO check if category was added and then isn't after removing it
-
     @Test
     public void testRemoveCategory() throws Exception {
         response = request("api/addCategory", POST, readJsonFromFile("addCategory/parameters.json"), null);
@@ -102,6 +101,12 @@ public class BackOfficeAPITest extends APITest {
         assert response != null;
         assertEquals(OK, response.getStatus());
         assertEquals(readJsonFromFile("removeCategory/response.json"), response.asJson());
+
+        response = request("api/allCategories", GET, null, null);
+
+        assert response != null;
+        assertEquals(OK, response.getStatus());
+        assertEquals(Json.newArray(), response.asJson());
     }
 
     @Test
@@ -117,6 +122,12 @@ public class BackOfficeAPITest extends APITest {
         assert response != null;
         assertEquals(BAD_REQUEST, response.getStatus());
         assertEquals(readJsonFromFile("removeCategory/responseWrongCode.json"), response.asJson());
+
+        response = request("api/allCategories", GET, null, null);
+
+        assert response != null;
+        assertEquals(OK, response.getStatus());
+        assertNotEquals(Json.newArray(), response.asJson());
     }
 
     //==========================All=================================//
@@ -169,8 +180,6 @@ public class BackOfficeAPITest extends APITest {
         assertNotEquals(text.indexOf("Pequena"), -1);
         assertNotEquals(text.indexOf("Media"), -1);
         assertNotEquals(text.indexOf("Grande"), -1);
-
-        //TODO Can be verified with more values
     }
 
     @Test
@@ -437,9 +446,50 @@ public class BackOfficeAPITest extends APITest {
     //==========================All=================================//
 
     @Test
-    @Ignore
     public void testGetQuestionsByCategory() throws Exception {
+        List<String> text;
+        Neo4jSessionFactory.getInstance().getNeo4jSession().query("CREATE (at1: Attribute {name: 'width (cm)', type: 'numeric'});", Collections.EMPTY_MAP);
+        Neo4jSessionFactory.getInstance().getNeo4jSession().query("CREATE (at2: Attribute {name: 'resolution', type: 'categorical'});", Collections.EMPTY_MAP);
 
+        request("api/addCategory", POST, Json.newObject().put("name", "Televisoes").put("code", "tvs"), null);
+        request("api/addCategory", POST, Json.newObject().put("name", "Computadores").put("code", "pcs"), null);
+
+        request("api/addQuestions", POST, readJsonFromFile("getQuestionsByCategory/question1.json"), null);
+        request("api/addQuestions", POST, readJsonFromFile("getQuestionsByCategory/question2.json"), null);
+        request("api/addQuestions", POST, readJsonFromFile("getQuestionsByCategory/question3.json"), null);
+        request("api/addQuestions", POST, readJsonFromFile("getQuestionsByCategory/question4.json"), null);
+
+        response = request("api/questionsByCategory", GET, null, Json.newObject().put("code", "tvs"));
+
+        assert response != null;
+        assertEquals(OK, response.getStatus());
+
+        text = response.asJson().findValuesAsText("text");
+
+        assertTrue(text.contains("QUESTION_1"));
+        assertTrue(text.contains("QUESTION_1_1"));
+        assertTrue(text.contains("QUESTION_1_2"));
+        assertTrue(text.contains("QUESTION_1_3"));
+        assertTrue(text.contains("QUESTION_2"));
+        assertTrue(text.contains("QUESTION_2_1"));
+        assertTrue(text.contains("QUESTION_2_2"));
+        assertTrue(text.contains("QUESTION_2_3"));
+
+        response = request("api/questionsByCategory", GET, null, Json.newObject().put("code", "pcs"));
+
+        assert response != null;
+        assertEquals(OK, response.getStatus());
+
+        text = response.asJson().findValuesAsText("text");
+
+        assertTrue(text.contains("QUESTION_3"));
+        assertTrue(text.contains("QUESTION_3_1"));
+        assertTrue(text.contains("QUESTION_3_2"));
+        assertTrue(text.contains("QUESTION_3_3"));
+        assertTrue(text.contains("QUESTION_4"));
+        assertTrue(text.contains("QUESTION_4_1"));
+        assertTrue(text.contains("QUESTION_4_2"));
+        assertTrue(text.contains("QUESTION_4_3"));
     }
 
     @Test
