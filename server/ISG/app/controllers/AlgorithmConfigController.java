@@ -33,7 +33,7 @@ public class AlgorithmConfigController extends Controller
             return badRequest(ControllerUtils.missingField("numberOfProducts"));
 
         if (jsonRequest.get("numberOfQuestions") == null)
-            return badRequest(ControllerUtils.missingField("numberOfProducts"));
+            return badRequest(ControllerUtils.missingField("numberOfQuestions"));
 
         Float alpha = (float) jsonRequest.get("alpha").asDouble();
         Float beta = (float) jsonRequest.get("beta").asDouble();

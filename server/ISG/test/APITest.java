@@ -34,7 +34,7 @@ public class APITest extends WithServer {
     @Before
     public void resetDatabase() {
         Neo4jSessionFactory.getInstance().getNeo4jSession().query("MATCH (n) DETACH DELETE n;", Collections.EMPTY_MAP);
-        //TODO Test using Neo4jSessionFactory.getInstance().getNeo4jSession().query("CREATE (x:AlgorithmParameters {alfa: 0.333, beta: 0.333, gamma: 0.333, numberOfProducts: 10, numberOfQuestions: 3})", Collections.EMPTY_MAP); Add
+        Neo4jSessionFactory.getInstance().getNeo4jSession().query("CREATE (x:AlgorithmParameters {alpha: 0.333, beta: 0.333, gamma: 0.333, numberOfProducts: 10, numberOfQuestions: 3});", Collections.EMPTY_MAP);
         /*try {
             Thread.sleep(5000);
         } catch (InterruptedException ex) {

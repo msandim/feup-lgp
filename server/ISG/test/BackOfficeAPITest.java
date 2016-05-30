@@ -600,18 +600,74 @@ public class BackOfficeAPITest extends APITest {
         response = request("api/configAlgorithm", POST, readJsonFromFile("configAlgorithm/body.json"), null);
 
         assert response != null;
-        //assertEquals(OK, response.getStatus());
+        assertEquals(OK, response.getStatus());
         assertEquals(readJsonFromFile("configAlgorithm/response.json"), response.asJson());
     }
 
     @Test
     public void testConfigAlgorithmInvalidFields() throws Exception {
+        response = request("api/configAlgorithm", POST, readJsonFromFile("configAlgorithm/InvalidFields/bodyInvalidFieldAlpha.json"), null);
 
+        assert response != null;
+        assertEquals(BAD_REQUEST, response.getStatus());
+        assertEquals(readJsonFromFile("configAlgorithm/InvalidFields/responseInvalidFieldAlpha.json"), response.asJson());
+
+        response = request("api/configAlgorithm", POST, readJsonFromFile("configAlgorithm/InvalidFields/bodyInvalidFieldBeta.json"), null);
+
+        assert response != null;
+        assertEquals(BAD_REQUEST, response.getStatus());
+        assertEquals(readJsonFromFile("configAlgorithm/InvalidFields/responseInvalidFieldBeta.json"), response.asJson());
+
+        response = request("api/configAlgorithm", POST, readJsonFromFile("configAlgorithm/InvalidFields/bodyInvalidFieldGamma.json"), null);
+
+        assert response != null;
+        assertEquals(BAD_REQUEST, response.getStatus());
+        assertEquals(readJsonFromFile("configAlgorithm/InvalidFields/responseInvalidFieldGamma.json"), response.asJson());
+
+        response = request("api/configAlgorithm", POST, readJsonFromFile("configAlgorithm/InvalidFields/bodyInvalidFieldNumberOfProducts.json"), null);
+
+        assert response != null;
+        assertEquals(BAD_REQUEST, response.getStatus());
+        assertEquals(readJsonFromFile("configAlgorithm/InvalidFields/responseInvalidFieldNumberOfProducts.json"), response.asJson());
+
+        response = request("api/configAlgorithm", POST, readJsonFromFile("configAlgorithm/InvalidFields/bodyInvalidFieldNumberOfQuestions.json"), null);
+
+        assert response != null;
+        assertEquals(BAD_REQUEST, response.getStatus());
+        assertEquals(readJsonFromFile("configAlgorithm/InvalidFields/responseInvalidFieldNumberOfQuestions.json"), response.asJson());
     }
 
     @Test
     public void testConfigAlgorithmMissingFields() throws Exception {
+        response = request("api/configAlgorithm", POST, readJsonFromFile("configAlgorithm/MissingFields/bodyMissingFieldAlpha.json"), null);
 
+        assert response != null;
+        assertEquals(BAD_REQUEST, response.getStatus());
+        assertEquals(readJsonFromFile("configAlgorithm/MissingFields/responseMissingFieldAlpha.json"), response.asJson());
+
+        response = request("api/configAlgorithm", POST, readJsonFromFile("configAlgorithm/MissingFields/bodyMissingFieldBeta.json"), null);
+
+        assert response != null;
+        assertEquals(BAD_REQUEST, response.getStatus());
+        assertEquals(readJsonFromFile("configAlgorithm/MissingFields/responseMissingFieldBeta.json"), response.asJson());
+
+        response = request("api/configAlgorithm", POST, readJsonFromFile("configAlgorithm/MissingFields/bodyMissingFieldGamma.json"), null);
+
+        assert response != null;
+        assertEquals(BAD_REQUEST, response.getStatus());
+        assertEquals(readJsonFromFile("configAlgorithm/MissingFields/responseMissingFieldGamma.json"), response.asJson());
+
+        response = request("api/configAlgorithm", POST, readJsonFromFile("configAlgorithm/MissingFields/bodyMissingFieldNumberOfProducts.json"), null);
+
+        assert response != null;
+        assertEquals(BAD_REQUEST, response.getStatus());
+        assertEquals(readJsonFromFile("configAlgorithm/MissingFields/responseMissingFieldNumberOfProducts.json"), response.asJson());
+
+        response = request("api/configAlgorithm", POST, readJsonFromFile("configAlgorithm/MissingFields/bodyMissingFieldNumberOfQuestions.json"), null);
+
+        assert response != null;
+        assertEquals(BAD_REQUEST, response.getStatus());
+        assertEquals(readJsonFromFile("configAlgorithm/MissingFields/responseMissingFieldNumberOfQuestions.json"), response.asJson());
     }
 
     //==============================================================//
