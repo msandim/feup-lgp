@@ -493,9 +493,23 @@ public class BackOfficeAPITest extends APITest {
     }
 
     @Test
-    @Ignore
     public void testGetQuestionsByCategoryInvalidCategory() throws Exception {
+        Neo4jSessionFactory.getInstance().getNeo4jSession().query("CREATE (at1: Attribute {name: 'width (cm)', type: 'numeric'});", Collections.EMPTY_MAP);
+        Neo4jSessionFactory.getInstance().getNeo4jSession().query("CREATE (at2: Attribute {name: 'resolution', type: 'categorical'});", Collections.EMPTY_MAP);
 
+        request("api/addCategory", POST, Json.newObject().put("name", "Televisoes").put("code", "tvs"), null);
+        request("api/addCategory", POST, Json.newObject().put("name", "Computadores").put("code", "pcs"), null);
+
+        request("api/addQuestions", POST, readJsonFromFile("getQuestionsByCategory/question1.json"), null);
+        request("api/addQuestions", POST, readJsonFromFile("getQuestionsByCategory/question2.json"), null);
+        request("api/addQuestions", POST, readJsonFromFile("getQuestionsByCategory/question3.json"), null);
+        request("api/addQuestions", POST, readJsonFromFile("getQuestionsByCategory/question4.json"), null);
+
+        response = request("api/questionsByCategory", GET, null, Json.newObject().put("code", "INVALID_CATEGORY"));
+
+        assert response != null;
+        assertEquals(BAD_REQUEST, response.getStatus());
+        assertEquals(readJsonFromFile("getQuestionsByCategory/responseInvalidCategory.json"), response.asJson());
     }
 
     @Test
@@ -582,14 +596,21 @@ public class BackOfficeAPITest extends APITest {
     //==============================================================//
 
     @Test
-    @Ignore
     public void testConfigAlgorithm() throws Exception {
+        response = request("api/configAlgorithm", POST, readJsonFromFile("configAlgorithm/body.json"), null);
+
+        assert response != null;
+        //assertEquals(OK, response.getStatus());
+        assertEquals(readJsonFromFile("configAlgorithm/response.json"), response.asJson());
+    }
+
+    @Test
+    public void testConfigAlgorithmInvalidFields() throws Exception {
 
     }
 
     @Test
-    @Ignore
-    public void testConfigAlgorithmBadNumber() throws Exception {
+    public void testConfigAlgorithmMissingFields() throws Exception {
 
     }
 
