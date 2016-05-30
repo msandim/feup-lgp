@@ -1,0 +1,24 @@
+{
+  "question": {},
+  "answers": [],
+  "products": [
+    {
+      "ean": "001",
+      "name": "TV1",
+      "price": "1399",
+      "score": 0.7
+    },
+    {
+      "ean": "003",
+      "name": "TV3",
+      "price": "1399",
+      "score": 0.5
+    },
+    {
+      "ean": "002",
+      "name": "TV2",
+      "price": "1399",
+      "score": 0.1
+    }
+  ]
+}

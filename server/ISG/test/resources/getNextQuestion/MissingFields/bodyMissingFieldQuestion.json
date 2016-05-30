@@ -10,12 +10,7 @@
       "answer":"1"
     },
     {
-      "question":"5",
       "answer":"3"
     }
-  ],
-  "blacklist_questions":[
-    "2",
-    "6"
   ]
 }

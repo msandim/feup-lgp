@@ -1,3 +1,4 @@
+import com.sun.jna.platform.FileUtils;
 import org.junit.Ignore;
 import org.junit.Test;
 
@@ -9,17 +10,16 @@ import play.libs.ws.WSResponse;
 import play.mvc.Http;
 import play.mvc.Result;
 
-import java.io.File;
+import java.io.*;
 import java.util.Collections;
 import java.util.List;
+import java.util.Scanner;
 
 import static org.junit.Assert.*;
 import static play.test.Helpers.*;
 
 @SuppressWarnings({"Duplicates", "unchecked"})
 public class BackOfficeAPITest extends APITest {
-
-    private WSResponse response;
 
     //TODO maybe change to not use other APIs and insert directly to the database
 
@@ -516,10 +516,21 @@ public class BackOfficeAPITest extends APITest {
     //==============================================================//
     //==============================================================//
 
+    //TODO
     @Test
     @Ignore
     public void testGetSequencesByCategory() {
+        populateDatabase();
 
+        response = request("api/sequencesByCategory", GET, null, Json.newObject().put("code", "tvs"));
+
+        assert response != null;
+
+        List<String> text = response.asJson().findValuesAsText("code");
+
+        assertEquals(OK, response.getStatus());
+        System.out.println(response.getBody());
+        assertNotEquals(text.indexOf("q1"), -1);
     }
 
     @Test

@@ -21,8 +21,7 @@ import play.libs.ws.WSResponse;
 import play.test.WithServer;
 import play.mvc.Http.MultipartFormData.*;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Map;
@@ -31,6 +30,8 @@ import java.util.concurrent.CompletionStage;
 public class APITest extends WithServer {
 
     private final static ObjectMapper mapper = new ObjectMapper();
+
+    protected static WSResponse response;
 
     @Inject
     private WSClient ws;
@@ -148,6 +149,25 @@ public class APITest extends WithServer {
             e.printStackTrace();
         }
         return null;
+    }
+
+    void populateDatabase(){
+        File file = new File("other/populateDB.cql");
+        try (BufferedReader br = new BufferedReader(new FileReader(file))) {
+            for (String line; (line = br.readLine()) != null; ) {
+                Neo4jSessionFactory
+                        .getInstance()
+                        .getNeo4jSession()
+                        .query(
+                                line,
+                                Collections.EMPTY_MAP
+                        );
+            }
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
 }
