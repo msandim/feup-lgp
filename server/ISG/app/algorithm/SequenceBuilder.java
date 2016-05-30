@@ -14,7 +14,7 @@ import java.util.Map;
  */
 public class SequenceBuilder
 {
-    public static void build(Map<Question, Answer> sequence)
+    public static void build(Map<Question, Answer> sequence, Integer feedback)
     {
         // Initiate Services:
         StartSequenceNodeService startSequenceNodeService = new StartSequenceNodeService();
@@ -31,7 +31,7 @@ public class SequenceBuilder
             if (startNode == null)
             {
                 SequenceNode firstSequenceNode = new SequenceNode(question, answer);
-                startNode = new StartSequenceNode(firstSequenceNode);
+                startNode = new StartSequenceNode(firstSequenceNode, feedback);
 
                 // Save the start node pointing to the first element of the sequence:
                 startNode = startSequenceNodeService.createOrUpdate(startNode, 2);

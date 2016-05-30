@@ -53,6 +53,7 @@ public class QuestionController extends Controller
 
         ProductService productService = new ProductService();
         CategoryService categoryService = new CategoryService();
+        AlgorithmParametersService parametersService = new AlgorithmParametersService();
 
         // **Semantic Error handling **:
         if (categoryService.findByCode(category) == null)
@@ -98,8 +99,9 @@ public class QuestionController extends Controller
             //orderedProductScores = MapUtils.orderByValueDecreasing(productScores);
             orderedProductScores = TopKProductPicker.getTopProducts(productScores);
 
-            // Return the next question:
-            nextQuestion = QuestionPicker.getNextQuestion(category, answeredQuestionCodes);
+            // Return the next question if we want more questions:
+            if (answeredQuestionCodes.size() < parametersService.getAlgorithmParameters().getNumberOfQuestions())
+                nextQuestion = QuestionPicker.getNextQuestion(category, answeredQuestionCodes);
         }
         // If we're seeking the first question:
         else
@@ -209,8 +211,6 @@ public class QuestionController extends Controller
 
             Float varianceAfterUpdate = QuestionPicker.calculateScoreVariance(productScores);
 
-            // BEGIN TRANSACTION
-
             Question currentQuestion = questionService.findByCode(questionCode);
             Answer currentAnswer = answerService.findByCode(questionCode, answerCode);
 
@@ -248,12 +248,10 @@ public class QuestionController extends Controller
 
             sequence.put(currentQuestion, currentAnswer);
             lastQuestion = currentQuestion;
-
-            // COMMIT
         }
 
         // Build Sequence:
-        SequenceBuilder.build(sequence);
+        SequenceBuilder.build(sequence, feedback);
 
         return ok(Json.newObject());
     }

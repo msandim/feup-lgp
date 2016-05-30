@@ -11,13 +11,15 @@ import play.libs.Json;
 public class StartSequenceNode extends Entity
 {
     private SequenceNode nextNode;
+    private Integer feedback;
 
     public StartSequenceNode()
     { }
 
-    public StartSequenceNode(SequenceNode nextNode)
+    public StartSequenceNode(SequenceNode nextNode, Integer feedback)
     {
         this.nextNode = nextNode;
+        this.feedback = feedback;
     }
 
     public SequenceNode getNextNode()
@@ -25,9 +27,12 @@ public class StartSequenceNode extends Entity
         return nextNode;
     }
 
-    public ArrayNode toJson()
+    public ObjectNode toJson()
     {
-        ArrayNode array = Json.newArray();
+        ObjectNode sequence = Json.newObject();
+        sequence.put("feedback", feedback);
+
+        ArrayNode array = sequence.putArray("questions");
         SequenceNode sequenceNode = nextNode;
 
         while(sequenceNode != null)
@@ -38,6 +43,6 @@ public class StartSequenceNode extends Entity
             sequenceNode = sequenceNode.getNextNode();
         }
 
-        return array;
+        return sequence;
     }
 }
