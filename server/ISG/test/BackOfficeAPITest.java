@@ -1,24 +1,22 @@
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.node.ArrayNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
-import neo4j.Neo4jSessionFactory;
 import org.junit.Ignore;
 import org.junit.Test;
+
+import com.fasterxml.jackson.databind.JsonNode;
+import neo4j.Neo4jSessionFactory;
+
 import play.libs.Json;
 import play.libs.ws.WSResponse;
 import play.mvc.Http;
 import play.mvc.Result;
 
-import java.util.ArrayList;
+import java.io.File;
 import java.util.Collections;
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 import static play.test.Helpers.*;
 
-@SuppressWarnings("Duplicates")
+@SuppressWarnings({"Duplicates", "unchecked"})
 public class BackOfficeAPITest extends APITest {
 
     private WSResponse response;
@@ -34,7 +32,7 @@ public class BackOfficeAPITest extends APITest {
     //==========================Add=================================//
 
     @Test
-    public void testAddCategory() throws Exception {
+    public void testAddCategory() {
         //Adding a category. Should return empty JSON object
         response = request("api/addCategory", POST, readJsonFromFile("addCategory/parameters.json"), null);
 
@@ -55,7 +53,7 @@ public class BackOfficeAPITest extends APITest {
     }
 
     @Test
-    public void testAddCategoryBadName() throws Exception {
+    public void testAddCategoryBadName() {
         //Adding a category. Should return empty JSON object
         response = request("api/addCategory", POST, readJsonFromFile("addCategory/parameters.json"), null);
 
@@ -72,7 +70,7 @@ public class BackOfficeAPITest extends APITest {
     }
 
     @Test
-    public void testAddCategoryMissingField() throws Exception {
+    public void testAddCategoryMissingField() {
         response = request("api/addCategory", POST, readJsonFromFile("addCategory/parametersMissingFieldCode.json"), null);
 
         assert response != null;
@@ -89,7 +87,7 @@ public class BackOfficeAPITest extends APITest {
     //========================Removing==============================//
 
     @Test
-    public void testRemoveCategory() throws Exception {
+    public void testRemoveCategory() {
         response = request("api/addCategory", POST, readJsonFromFile("addCategory/parameters.json"), null);
 
         assert response != null;
@@ -110,7 +108,7 @@ public class BackOfficeAPITest extends APITest {
     }
 
     @Test
-    public void testRemoveCategoryError() throws Exception {
+    public void testRemoveCategoryError() {
         response = request("api/addCategory", POST, readJsonFromFile("addCategory/parameters.json"), null);
 
         assert response != null;
@@ -133,7 +131,7 @@ public class BackOfficeAPITest extends APITest {
     //==========================All=================================//
 
     @Test
-    public void testGetAllCategories() throws Exception {
+    public void testGetAllCategories() {
         request("api/addCategory", POST, Json.newObject().put("name", "Televisoes").put("code", "tv"), null);
 
         request("api/addCategory", POST, Json.newObject().put("name", "Maquinas de Lavar").put("code", "maqla"), null);
@@ -154,7 +152,7 @@ public class BackOfficeAPITest extends APITest {
     //==========================Add=================================//
 
     @Test
-    public void testAddQuestions() throws Exception {
+    public void testAddQuestions() {
         Neo4jSessionFactory.getInstance().getNeo4jSession().query("CREATE (at1: Attribute {name: 'width (cm)', type: 'numeric'});", Collections.EMPTY_MAP);
         Neo4jSessionFactory.getInstance().getNeo4jSession().query("CREATE (at2: Attribute {name: 'resolution', type: 'categorical'});", Collections.EMPTY_MAP);
 
@@ -183,7 +181,7 @@ public class BackOfficeAPITest extends APITest {
     }
 
     @Test
-    public void testAddQuestionsInvalidCategory() throws Exception {
+    public void testAddQuestionsInvalidCategory() {
         request("api/addCategory", POST, Json.newObject().put("name", "Televisoes").put("code", "tvs"), null);
 
         //Adding a question. Should return the wrong category error
@@ -202,7 +200,7 @@ public class BackOfficeAPITest extends APITest {
     }
 
     @Test
-    public void testAddQuestionsEmptyArrays() throws Exception {
+    public void testAddQuestionsEmptyArrays() {
         request("api/addCategory", POST, Json.newObject().put("name", "Televisoes").put("code", "tvs"), null);
 
         //Empty array Questions
@@ -235,7 +233,7 @@ public class BackOfficeAPITest extends APITest {
     }
 
     @Test
-    public void testAddQuestionsInvalidAttributes() throws Exception {
+    public void testAddQuestionsInvalidAttributes() {
         Neo4jSessionFactory.getInstance().getNeo4jSession().query("CREATE (at1: Attribute {name: 'width (cm)', type: 'numeric'});", Collections.EMPTY_MAP);
         Neo4jSessionFactory.getInstance().getNeo4jSession().query("CREATE (at2: Attribute {name: 'resolution', type: 'categorical'});", Collections.EMPTY_MAP);
 
@@ -285,7 +283,7 @@ public class BackOfficeAPITest extends APITest {
     }
 
     @Test
-    public void testAddQuestionsMissingFields() throws Exception {
+    public void testAddQuestionsMissingFields() {
         Neo4jSessionFactory.getInstance().getNeo4jSession().query("CREATE (at1: Attribute {name: 'width (cm)', type: 'numeric'});", Collections.EMPTY_MAP);
         Neo4jSessionFactory.getInstance().getNeo4jSession().query("CREATE (at2: Attribute {name: 'resolution', type: 'categorical'});", Collections.EMPTY_MAP);
 
@@ -358,7 +356,7 @@ public class BackOfficeAPITest extends APITest {
     //========================Removing==============================//
 
     @Test
-    public void testRemoveQuestions() throws Exception {
+    public void testRemoveQuestions() {
         Neo4jSessionFactory.getInstance().getNeo4jSession().query("CREATE (at1: Attribute {name: 'width (cm)', type: 'numeric'});", Collections.EMPTY_MAP);
         Neo4jSessionFactory.getInstance().getNeo4jSession().query("CREATE (at2: Attribute {name: 'resolution', type: 'categorical'});", Collections.EMPTY_MAP);
 
@@ -390,7 +388,7 @@ public class BackOfficeAPITest extends APITest {
     }
 
     @Test
-    public void testRemoveQuestionsMissingField() throws Exception {
+    public void testRemoveQuestionsMissingField() {
         Neo4jSessionFactory.getInstance().getNeo4jSession().query("CREATE (at1: Attribute {name: 'width (cm)', type: 'numeric'});", Collections.EMPTY_MAP);
         Neo4jSessionFactory.getInstance().getNeo4jSession().query("CREATE (at2: Attribute {name: 'resolution', type: 'categorical'});", Collections.EMPTY_MAP);
 
@@ -417,7 +415,7 @@ public class BackOfficeAPITest extends APITest {
     }
 
     @Test
-    public void testRemoveQuestionsInvalidQuestions() throws Exception {
+    public void testRemoveQuestionsInvalidQuestions() {
         Neo4jSessionFactory.getInstance().getNeo4jSession().query("CREATE (at1: Attribute {name: 'width (cm)', type: 'numeric'});", Collections.EMPTY_MAP);
         Neo4jSessionFactory.getInstance().getNeo4jSession().query("CREATE (at2: Attribute {name: 'resolution', type: 'categorical'});", Collections.EMPTY_MAP);
 
@@ -446,7 +444,7 @@ public class BackOfficeAPITest extends APITest {
     //==========================All=================================//
 
     @Test
-    public void testGetQuestionsByCategory() throws Exception {
+    public void testGetQuestionsByCategory() {
         List<String> text;
         Neo4jSessionFactory.getInstance().getNeo4jSession().query("CREATE (at1: Attribute {name: 'width (cm)', type: 'numeric'});", Collections.EMPTY_MAP);
         Neo4jSessionFactory.getInstance().getNeo4jSession().query("CREATE (at2: Attribute {name: 'resolution', type: 'categorical'});", Collections.EMPTY_MAP);
@@ -493,7 +491,7 @@ public class BackOfficeAPITest extends APITest {
     }
 
     @Test
-    public void testGetQuestionsByCategoryInvalidCategory() throws Exception {
+    public void testGetQuestionsByCategoryInvalidCategory() {
         Neo4jSessionFactory.getInstance().getNeo4jSession().query("CREATE (at1: Attribute {name: 'width (cm)', type: 'numeric'});", Collections.EMPTY_MAP);
         Neo4jSessionFactory.getInstance().getNeo4jSession().query("CREATE (at2: Attribute {name: 'resolution', type: 'categorical'});", Collections.EMPTY_MAP);
 
@@ -512,15 +510,21 @@ public class BackOfficeAPITest extends APITest {
         assertEquals(readJsonFromFile("getQuestionsByCategory/responseInvalidCategory.json"), response.asJson());
     }
 
+    //==============================================================//
+    //==============================================================//
+    //========================Sequences=============================//
+    //==============================================================//
+    //==============================================================//
+
     @Test
     @Ignore
-    public void testGetSequencesByCategory() throws Exception {
+    public void testGetSequencesByCategory() {
 
     }
 
     @Test
     @Ignore
-    public void testGetSequencesByCategoryInvalidCategory() throws Exception {
+    public void testGetSequencesByCategoryInvalidCategory() {
 
     }
 
@@ -533,60 +537,209 @@ public class BackOfficeAPITest extends APITest {
     //==========================Add=================================//
 
     @Test
-    @Ignore
-    public void testAddProducts() throws Exception {
-        request("api/addCategory", POST, null, readJsonFromFile("addCategory/parameters.json"));
+    public void testAddProducts() {
+        request("api/addCategory", POST, Json.newObject().put("name", "Televisoes").put("code", "tvs"), null);
 
         //Adding products. Should return empty JSON object
-        //response = requestFile("api/addProducts", POST, new File("addProducts/tv.csv"), readJsonFromFile("addProducts/parameters.json"));
+        response = requestAddProducts("api/addProducts", new File("addProducts/files/file.csv"), "tvs");
 
         assert response != null;
         assertEquals(OK, response.getStatus());
-        assertEquals(readJsonFromFile("addQuestions/response.json"), response.asJson());
+        assertEquals(readJsonFromFile("addProducts/response.json"), response.asJson());
+
+        response = request("api/productsByCategory", GET, null, Json.newObject().put("code", "tvs"));
+
+        assert response != null;
+        assertEquals(OK, response.getStatus());
+
+        List<String> prices = response.asJson().findValuesAsText("price");
+
+        assertEquals("TV LED Smart TV 55'' PANASONIC TX-55CX680", response.asJson().findValue("name").asText());
+        assertNotEquals(prices.indexOf("1999"), -1);
+        assertNotEquals(prices.indexOf("1129"), -1);
+        assertNotEquals(prices.indexOf("1399"), -1);
     }
 
     @Test
-    @Ignore
-    public void testAddProductsBadCategory() throws Exception {
-        response = request("api/addProducts", POST, null /* TODO use file */, readJsonFromFile("addProducts/parameters.json"));
+    public void testAddProductsInvalidCategory() {
+        request("api/addCategory", POST, Json.newObject().put("name", "Televisoes").put("code", "tvs"), null);
+
+        response = requestAddProducts("api/addProducts", new File("addProducts/files/file.csv"), "INVALID_CATEGORY");
 
         assert response != null;
         assertEquals(BAD_REQUEST, response.getStatus());
-        assertEquals(readJsonFromFile("addQuestions/responseBadCategory.json"), response.asJson());
+        assertEquals(readJsonFromFile("addProducts/responseInvalidCategory.json"), response.asJson());
+
+        response = request("api/productsByCategory", GET, null, Json.newObject().put("code", "tvs"));
+
+        assert response != null;
+        assertEquals(OK, response.getStatus());
+        assertEquals(Json.newArray(), response.asJson());
     }
 
     @Test
-    @Ignore
-    public void testAddProductsBadFile() throws Exception {
-        request("api/addCategory", POST, null, readJsonFromFile("addCategory/parameters.json"));
+    public void testAddProductsMissingFile() {
+        request("api/addCategory", POST, Json.newObject().put("name", "Televisoes").put("code", "tvs"), null);
 
-        response = request("api/addProducts", POST, null /* TODO use file */, readJsonFromFile("addProducts/parameters.json"));
+        response = requestAddProducts("api/addProducts", null, "tvs");
 
         assert response != null;
         assertEquals(BAD_REQUEST, response.getStatus());
-        assertEquals(readJsonFromFile("addQuestions/responseBadFile.json"), response.asJson());
+        assertEquals(readJsonFromFile("addProducts/responseMissingFile.json"), response.asJson());
+
+        response = request("api/productsByCategory", GET, null, Json.newObject().put("code", "tvs"));
+
+        assert response != null;
+        assertEquals(OK, response.getStatus());
+        assertEquals(Json.newArray(), response.asJson());
+    }
+
+    @Test
+    public void testAddProductsMissingAttributeType() {
+        request("api/addCategory", POST, Json.newObject().put("name", "Televisoes").put("code", "tvs"), null);
+
+        response = requestAddProducts("api/addProducts", new File("addProducts/files/fileMissingAttribute.csv"), "tvs");
+
+        assert response != null;
+        assertEquals(BAD_REQUEST, response.getStatus());
+        assertEquals(readJsonFromFile("addProducts/responseMissingAttribute.json"), response.asJson());
+
+        response = request("api/productsByCategory", GET, null, Json.newObject().put("code", "tvs"));
+
+        assert response != null;
+        assertEquals(OK, response.getStatus());
+        assertEquals(Json.newArray(), response.asJson());
+    }
+
+    @Test
+    public void testAddProductsInvalidAttributeType() {
+        request("api/addCategory", POST, Json.newObject().put("name", "Televisoes").put("code", "tvs"), null);
+
+        response = requestAddProducts("api/addProducts", new File("addProducts/files/fileInvalidAttribute.csv"), "tvs");
+
+        assert response != null;
+        assertEquals(BAD_REQUEST, response.getStatus());
+        assertEquals(readJsonFromFile("addProducts/responseInvalidAttribute.json"), response.asJson());
+
+        response = request("api/productsByCategory", GET, null, Json.newObject().put("code", "tvs"));
+
+        assert response != null;
+        assertEquals(OK, response.getStatus());
+        assertEquals(Json.newArray(), response.asJson());
     }
 
     //========================Removing==============================//
 
-    @Test
-    @Ignore
-    public void testRemoveProducts() throws Exception {
+    //TODO verify if they are still in the database or not
 
+    @Test
+    public void testRemoveProducts() {
+        request("api/addCategory", POST, Json.newObject().put("name", "Televisoes").put("code", "tvs"), null);
+
+        requestAddProducts("api/addProducts", new File("removeProducts/products.csv"), "tvs");
+
+        response = request("api/removeProducts", DELETE, readJsonFromFile("removeProducts/body.json"), null);
+
+        assert response != null;
+        assertEquals(OK, response.getStatus());
+        assertEquals(readJsonFromFile("removeProducts/response.json"), response.asJson());
     }
 
     @Test
-    @Ignore
-    public void testGetProductsByCategory() throws Exception {
+    public void testRemoveProductsInvalidCategory() {
+        request("api/addCategory", POST, Json.newObject().put("name", "Televisoes").put("code", "tvs"), null);
 
+        requestAddProducts("api/addProducts", new File("removeProducts/products.csv"), "tvs");
+
+        response = request("api/removeProducts", DELETE, readJsonFromFile("removeProducts/bodyInvalidCategory.json"), null);
+
+        assert response != null;
+        assertEquals(BAD_REQUEST, response.getStatus());
+        assertEquals(readJsonFromFile("removeProducts/responseInvalidCategory.json"), response.asJson());
+    }
+
+    @Test
+    public void testRemoveProductsMissingFields() {
+        request("api/addCategory", POST, Json.newObject().put("name", "Televisoes").put("code", "tvs"), null);
+
+        requestAddProducts("api/addProducts", new File("removeProducts/products.csv"), "tvs");
+
+        response = request("api/removeProducts", DELETE, readJsonFromFile("removeProducts/bodyMissingFieldCategory.json"), null);
+
+        assert response != null;
+        assertEquals(BAD_REQUEST, response.getStatus());
+        assertEquals(readJsonFromFile("removeProducts/responseMissingFieldCategory.json"), response.asJson());
+
+        response = request("api/removeProducts", DELETE, readJsonFromFile("removeProducts/bodyMissingFieldProducts.json"), null);
+
+        assert response != null;
+        assertEquals(BAD_REQUEST, response.getStatus());
+        assertEquals(readJsonFromFile("removeProducts/responseMissingFieldProducts.json"), response.asJson());
+    }
+
+    @Test
+    public void testRemoveProductsInvalidProducts() {
+        request("api/addCategory", POST, Json.newObject().put("name", "Televisoes").put("code", "tvs"), null);
+
+        requestAddProducts("api/addProducts", new File("removeProducts/products.csv"), "tvs");
+
+        response = request("api/removeProducts", DELETE, readJsonFromFile("removeProducts/bodyInvalidProducts.json"), null);
+
+        assert response != null;
+        assertEquals(BAD_REQUEST, response.getStatus());
+        assertEquals(readJsonFromFile("removeProducts/responseInvalidProducts.json"), response.asJson());
     }
 
     //==========================All=================================//
 
     @Test
-    @Ignore
-    public void testGetProductsByCategoryBadCategory() throws Exception {
+    public void testGetProductsByCategory() {
+        request("api/addCategory", POST, Json.newObject().put("name", "Televisoes").put("code", "tvs"), null);
 
+        response = requestAddProducts("api/addProducts", new File("addProducts/files/file.csv"), "tvs");
+
+        assert response != null;
+        assertEquals(OK, response.getStatus());
+
+        response = request("api/productsByCategory", GET, null, readJsonFromFile("getProductsByCategory/parameters.json"));
+
+        assert response != null;
+        assertEquals(OK, response.getStatus());
+
+        List<String> ean = response.asJson().findValuesAsText("ean");
+        List<String> names = response.asJson().findValuesAsText("name");
+        List<String> prices = response.asJson().findValuesAsText("price");
+
+        assertNotEquals(names.indexOf("TV LED Smart TV 3D 48'' SAMSUNG UE48JU7500T"), -1);
+        assertNotEquals(names.indexOf("TV LED Smart TV 60'' SAMSUNG UE60JU6400KXXC"), -1);
+        assertNotEquals(names.indexOf("TV LED Smart TV 55'' PANASONIC TX-55CX680"), -1);
+        assertNotEquals(names.indexOf("TV LED PANASONIC Smart TV UHD 3D 48'' TX-48CX400"), -1);
+
+        assertNotEquals(ean.indexOf("1"), -1);
+        assertNotEquals(ean.indexOf("3"), -1);
+        assertNotEquals(ean.indexOf("4"), -1);
+        assertNotEquals(ean.indexOf("2"), -1);
+
+        assertNotEquals(prices.indexOf("649.99"), -1);
+        assertNotEquals(prices.indexOf("1129"), -1);
+        assertNotEquals(prices.indexOf("1399"), -1);
+        assertNotEquals(prices.indexOf("1999"), -1);
+    }
+
+    @Test
+    public void testGetProductsByCategoryInvalidCategory() {
+        request("api/addCategory", POST, Json.newObject().put("name", "Televisoes").put("code", "tvs"), null);
+
+        response = requestAddProducts("api/addProducts", new File("addProducts/files/file.csv"), "tvs");
+
+        assert response != null;
+        assertEquals(OK, response.getStatus());
+
+        response = request("api/productsByCategory", GET, null, readJsonFromFile("getProductsByCategory/parametersInvalidCategory.json"));
+
+        assert response != null;
+        assertEquals(BAD_REQUEST, response.getStatus());
+        assertEquals(readJsonFromFile("getProductsByCategory/responseInvalidCategory.json"), response.asJson());
     }
 
     //==============================================================//
@@ -595,8 +748,10 @@ public class BackOfficeAPITest extends APITest {
     //==============================================================//
     //==============================================================//
 
+    //TODO verify is values were changed by querying the database
+
     @Test
-    public void testConfigAlgorithm() throws Exception {
+    public void testConfigAlgorithm() {
         response = request("api/configAlgorithm", POST, readJsonFromFile("configAlgorithm/body.json"), null);
 
         assert response != null;
@@ -605,7 +760,7 @@ public class BackOfficeAPITest extends APITest {
     }
 
     @Test
-    public void testConfigAlgorithmInvalidFields() throws Exception {
+    public void testConfigAlgorithmInvalidFields() {
         response = request("api/configAlgorithm", POST, readJsonFromFile("configAlgorithm/InvalidFields/bodyInvalidFieldAlpha.json"), null);
 
         assert response != null;
@@ -638,7 +793,7 @@ public class BackOfficeAPITest extends APITest {
     }
 
     @Test
-    public void testConfigAlgorithmMissingFields() throws Exception {
+    public void testConfigAlgorithmMissingFields() {
         response = request("api/configAlgorithm", POST, readJsonFromFile("configAlgorithm/MissingFields/bodyMissingFieldAlpha.json"), null);
 
         assert response != null;
@@ -677,7 +832,7 @@ public class BackOfficeAPITest extends APITest {
     //==============================================================//
 
     @Test
-    public void testRequest() throws Exception {
+    public void testRequest() {
 
         Http.RequestBuilder request = new Http.RequestBuilder()
                 .method(GET)

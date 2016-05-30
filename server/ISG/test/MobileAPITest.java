@@ -2,63 +2,89 @@ import org.junit.*;
 
 public class MobileAPITest extends APITest {
 
+    //==============================================================//
+    //==============================================================//
+    //======================Next Question===========================//
+    //==============================================================//
+    //==============================================================//
+
+    //=========================Normal===============================//
+
     @Test
     @Ignore
-    public void testGetNextQuestion() throws Exception {
+    public void testGetNextQuestion() {
 
     }
 
     @Test
     @Ignore
-    public void testGetNextQuestionFirstQuestion() throws Exception {
+    public void testGetNextQuestionFirstQuestion() {
 
     }
 
     @Test
     @Ignore
-    public void testGetNextQuestionFinal() throws Exception {
+    public void testGetNextQuestionFinal() {
+
+    }
+
+    //=========================Errors================================//
+
+    @Test
+    @Ignore
+    public void testGetNextQuestionNoQuestions() {
 
     }
 
     @Test
     @Ignore
-    public void testGetNextQuestionNoQuestions() throws Exception {
+    public void testGetNextQuestionBadCategory() {
 
     }
 
     @Test
     @Ignore
-    public void testGetNextQuestionBadCategory() throws Exception {
+    public void testGetNextQuestionBadQuestionsAnswers() {
 
     }
 
     @Test
     @Ignore
-    public void testGetNextQuestionBadQuestionsAnswers() throws Exception {
+    public void testGetNextQuestionBadBlacklistQuestions() {
+
+    }
+
+    //==============================================================//
+    //==============================================================//
+    //========================FeedBack==============================//
+    //==============================================================//
+    //==============================================================//
+
+    //=========================Normal===============================//
+
+    @Test
+    @Ignore
+    public void testSendFeedback() {
+
+    }
+
+    //=========================Errors===============================//
+
+    @Test
+    @Ignore
+    public void testSendFeedbackInvalidCategory() {
 
     }
 
     @Test
     @Ignore
-    public void testGetNextQuestionBadBlacklistQuestions() throws Exception {
+    public void testSendFeedbackBadAnswers() {
 
     }
 
     @Test
     @Ignore
-    public void testSendFeedback() throws Exception {
-
-    }
-
-    @Test
-    @Ignore
-    public void testSendFeedbackBadAnswers() throws Exception {
-
-    }
-
-    @Test
-    @Ignore
-    public void testSendFeedbackBadFeedback() throws Exception {
+    public void testSendFeedbackBadFeedback() {
 
     }
 }

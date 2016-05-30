@@ -1,0 +1,4 @@
+{
+  "error":"MISSING_ATTRIBUTE_TYPE",
+  "msg":"Attribute 'Marca' lacks his type ('categorical' or 'numeric')!"
+}

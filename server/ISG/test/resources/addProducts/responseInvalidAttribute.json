@@ -1,0 +1,4 @@
+{
+  "error":"INVALID_ATTRIBUTE_TYPE",
+  "msg":"Attribute 'Diagonal do Ecra' must have a valid type: ('categorical' or 'numeric')!"
+}

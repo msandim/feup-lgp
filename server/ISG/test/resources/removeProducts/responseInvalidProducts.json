@@ -1,0 +1,4 @@
+{
+  "error":"INVALID_PRODUCTS",
+  "msg":"One or more products specified for elimination do not exist!"
+}
