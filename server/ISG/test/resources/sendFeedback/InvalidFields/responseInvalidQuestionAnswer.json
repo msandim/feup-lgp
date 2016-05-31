@@ -1,4 +1,4 @@
 {
-  "error":"INVALID_ANSWER",
+  "error":"INVALID_QUESTION_ANSWER",
   "msg":"One of the question ID or answer ID you supplied is not valid!"
 }

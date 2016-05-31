@@ -301,27 +301,27 @@ public class BackOfficeAPITest extends APITest {
         assertEquals(readJsonFromFile("addQuestions/MissingFields/responseMissingQuestions.json"), response.asJson());
 
         //Missing field Answers Text
-        response = request("api/addQuestions", POST, readJsonFromFile("addQuestions/MissingFields/bodyMissingAnswersText.json"), null);
+        response = request("api/addQuestions", POST, readJsonFromFile("addQuestions/MissingFields/bodyMissingAnswerText.json"), null);
 
         assert response != null;
         assertEquals(BAD_REQUEST, response.getStatus());
-        assertEquals(readJsonFromFile("addQuestions/MissingFields/responseMissingText.json"), response.asJson());
+        assertEquals(readJsonFromFile("addQuestions/MissingFields/responseMissingAnswerText.json"), response.asJson());
 
         //Missing field Questions Text
-        response = request("api/addQuestions", POST, readJsonFromFile("addQuestions/MissingFields/bodyMissingQuestionsText.json"), null);
+        response = request("api/addQuestions", POST, readJsonFromFile("addQuestions/MissingFields/bodyMissingQuestionText.json"), null);
 
         assert response != null;
         assertEquals(BAD_REQUEST, response.getStatus());
-        assertEquals(readJsonFromFile("addQuestions/MissingFields/responseMissingText.json"), response.asJson());
+        assertEquals(readJsonFromFile("addQuestions/MissingFields/responseMissingQuestionText.json"), response.asJson());
 
-        //Missing field Answers //FIXME response is different than expected. Its detecting empty array of the missing field and not that its a missing field
+        //Missing field Answers
         response = request("api/addQuestions", POST, readJsonFromFile("addQuestions/MissingFields/bodyMissingAnswers.json"), null);
 
         assert response != null;
         assertEquals(BAD_REQUEST, response.getStatus());
         assertEquals(readJsonFromFile("addQuestions/MissingFields/responseMissingAnswers.json"), response.asJson());
 
-        //Missing field Attributes //FIXME response is different than expected. Its detecting empty array of the missing field and not that its a missing field
+        //Missing field Attributes
         response = request("api/addQuestions", POST, readJsonFromFile("addQuestions/MissingFields/bodyMissingAttributes.json"), null);
 
         assert response != null;
@@ -795,6 +795,7 @@ public class BackOfficeAPITest extends APITest {
     //==============================================================//
 
     //TODO verify is values were changed by querying the database
+    //TODO verify if the change in numberOfProducts and numberOfQuestions affect the responses on getNextQuestion
 
     @Test
     public void testConfigAlgorithm() {
