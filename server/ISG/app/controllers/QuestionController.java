@@ -304,7 +304,7 @@ public class QuestionController extends Controller
         {
             JsonNode questionNode = itQuestion.next();
 
-            if (questionNode.findPath("text") == null)
+            if (questionNode.get("text") == null)
                 return badRequest(ControllerUtils.missingField("question text"));
 
             String questionText = questionNode.findPath("text").asText();
@@ -316,7 +316,7 @@ public class QuestionController extends Controller
             question.setCategory(category);
 
             //parse answers
-            JsonNode answersNode = questionNode.findPath("answers");
+            JsonNode answersNode = questionNode.get("answers");
 
             if (answersNode == null)
                 return badRequest(ControllerUtils.missingField("answers"));
@@ -332,7 +332,7 @@ public class QuestionController extends Controller
             {
                 JsonNode answerNode = itAnswer.next();
 
-                if (questionNode.findPath("text") == null)
+                if (answerNode.get("text") == null)
                     return badRequest(ControllerUtils.missingField("answer text"));
 
                 String answerText = answerNode.findValue("text").asText();
@@ -340,7 +340,7 @@ public class QuestionController extends Controller
                 //create answer object
                 Answer answer = new Answer(answerText);
 
-                JsonNode attributesNode = answerNode.findPath("attributes");
+                JsonNode attributesNode = answerNode.get("attributes");
 
                 if (attributesNode == null)
                     return badRequest(ControllerUtils.missingField("attributes"));
