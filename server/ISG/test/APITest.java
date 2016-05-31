@@ -27,11 +27,12 @@ import java.util.Collections;
 import java.util.Map;
 import java.util.concurrent.CompletionStage;
 
+@SuppressWarnings("unchecked")
 public class APITest extends WithServer {
 
     private final static ObjectMapper mapper = new ObjectMapper();
 
-    protected static WSResponse response;
+    static WSResponse response;
 
     @Inject
     private WSClient ws;
@@ -163,8 +164,6 @@ public class APITest extends WithServer {
                                 Collections.EMPTY_MAP
                         );
             }
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }

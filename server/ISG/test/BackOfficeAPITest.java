@@ -15,7 +15,7 @@ import java.util.List;
 import static org.junit.Assert.*;
 import static play.test.Helpers.*;
 
-@SuppressWarnings({"Duplicates", "unchecked"})
+@SuppressWarnings("unchecked")
 public class BackOfficeAPITest extends APITest {
 
     //TODO maybe change to not use other APIs and insert directly to the database
