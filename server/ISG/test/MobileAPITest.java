@@ -1,7 +1,12 @@
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import neo4j.Neo4jSessionFactory;
 import org.junit.*;
 import play.libs.Json;
 
+import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 
 import static org.junit.Assert.*;
@@ -228,13 +233,6 @@ public class MobileAPITest extends APITest {
         assertEquals(BAD_REQUEST, response.getStatus());
         assertEquals(readJsonFromFile("sendFeedback/InvalidFields/responseInvalidFeedback.json"), response.asJson());
 
-        //FIXME
-        /*response = request("api/sendFeedback", POST, readJsonFromFile("sendFeedback/InvalidFields/bodyInvalidSequence.json"), null);
-
-        assert response != null;
-        assertEquals(BAD_REQUEST, response.getStatus());
-        assertEquals(readJsonFromFile("sendFeedback/InvalidFields/responseInvalidSequence.json"), response.asJson());*/
-
         response = request("api/sendFeedback", POST, readJsonFromFile("sendFeedback/InvalidFields/bodyInvalidQuestion.json"), null);
 
         assert response != null;
@@ -246,6 +244,35 @@ public class MobileAPITest extends APITest {
         assert response != null;
         assertEquals(BAD_REQUEST, response.getStatus());
         assertEquals(readJsonFromFile("sendFeedback/InvalidFields/responseInvalidQuestionAnswer.json"), response.asJson());
+
+        Neo4jSessionFactory.getInstance().getNeo4jSession().query("CREATE (at1: Attribute {name: 'width (cm)', type: 'numeric'});", Collections.EMPTY_MAP);
+        Neo4jSessionFactory.getInstance().getNeo4jSession().query("CREATE (at2: Attribute {name: 'resolution', type: 'categorical'});", Collections.EMPTY_MAP);
+
+        response = request("api/addQuestions", POST, readJsonFromFile("sendFeedback/InvalidFields/bodyAddingQuestionsForSequence.json"), null);
+        assert response != null;
+        assertEquals(OK, response.getStatus());
+
+        response = request("api/questionsByCategory", GET, null, Json.newObject().put("code", "dws"));
+        assert response != null;
+        assertEquals(OK, response.getStatus());
+
+        List<String> codes = response.asJson().findValuesAsText("code");
+
+        JsonNode body = readJsonFromFile("sendFeedback/InvalidFields/bodyInvalidSequence.json");
+
+        ((ArrayNode) body.get("answers"))
+                .add(Json.newObject()
+                        .put("question", codes.get(0))
+                        .put("answer", codes.get(1))
+                );
+
+        System.out.println(body);
+
+        response = request("api/sendFeedback", POST, body, null);
+
+        assert response != null;
+        assertEquals(BAD_REQUEST, response.getStatus());
+        assertEquals(readJsonFromFile("sendFeedback/InvalidFields/responseInvalidSequence.json"), response.asJson());
     }
 
     @Test

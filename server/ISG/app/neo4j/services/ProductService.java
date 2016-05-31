@@ -212,7 +212,7 @@ public class ProductService extends GenericService<Product>
 
     public void deleteAllProductsByCategoryCode(String code)
     {
-        String query = new StringBuilder("MATCH (c:Category{code: \'" + code + "\'})-[]->(p:Product)-[]->(a:Attribute) detach delete p, a").toString();
+        String query = new StringBuilder("MATCH (c:Category{code: \'" + code + "\'})-[]->(p:Product) OPTIONAL MATCH (p)-[]->(a:Attribute) detach delete p, a").toString();
         Neo4jSessionFactory.getInstance().getNeo4jSession().query(query, Collections.EMPTY_MAP);
 
         // Delete leftover attributes:
