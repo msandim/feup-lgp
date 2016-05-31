@@ -59,6 +59,16 @@ public class QuestionController extends Controller
         if (categoryService.findByCode(category) == null)
             return badRequest(ControllerUtils.generalError("INVALID_CATEGORY", "Category not found!"));
 
+        // See if the field question and answer exist for each pair question-answer:
+        for (JsonNode questionAnswer : answers)
+        {
+            if (questionAnswer.get("question") == null)
+                return badRequest(ControllerUtils.missingField("question"));
+
+            if (questionAnswer.get("answer") == null)
+                return badRequest(ControllerUtils.missingField("answer"));
+        }
+
 
         // *******************************************************************
         // ********************* Request Processing **************************
@@ -79,12 +89,6 @@ public class QuestionController extends Controller
             {
                 String questionCode = questionAnswer.get("question").asText();
                 String answerCode = questionAnswer.get("answer").asText();
-
-                if (questionCode == null)
-                    return badRequest(ControllerUtils.missingField("question"));
-
-                if (answerCode == null)
-                    return badRequest(ControllerUtils.missingField("answer"));
 
                 // Update the scores:
                 if (!productService.updateScores(questionCode, answerCode, productScores))
@@ -183,6 +187,15 @@ public class QuestionController extends Controller
         if (categoryService.findByCode(category) == null)
             return badRequest(ControllerUtils.generalError("INVALID_CATEGORY", "Category not found!"));
 
+        for (JsonNode questionAnswer : answers)
+        {
+            if (questionAnswer.get("question") == null)
+                return badRequest(ControllerUtils.missingField("question"));
+
+            if (questionAnswer.get("answer") == null)
+                return badRequest(ControllerUtils.missingField("answer"));
+        }
+
         // *******************************************************************
         // ********************* Request Processing **************************
 
@@ -195,12 +208,6 @@ public class QuestionController extends Controller
         {
             String questionCode = questionAnswer.get("question").asText();
             String answerCode = questionAnswer.get("answer").asText();
-
-            if (questionCode == null)
-                return badRequest(ControllerUtils.missingField("question"));
-
-            if (answerCode == null)
-                return badRequest(ControllerUtils.missingField("answer"));
 
             Float varianceBeforeUpdate = QuestionPicker.calculateScoreVariance(productScores);
 
