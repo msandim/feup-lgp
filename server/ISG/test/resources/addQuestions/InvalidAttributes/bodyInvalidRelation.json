@@ -15,7 +15,7 @@
             },
             {
               "name": "resolution",
-              "operator": "=",
+              "operator": "<",
               "value": "720p",
               "score": 0.1
             }

@@ -10,7 +10,7 @@
             {
               "name": "width (cm)",
               "operator": "<",
-              "value": "400",
+              "value": "INVALID_VALUE",
               "score": 0.5
             },
             {

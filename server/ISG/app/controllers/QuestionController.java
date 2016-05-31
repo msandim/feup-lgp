@@ -59,6 +59,16 @@ public class QuestionController extends Controller
         if (categoryService.findByCode(category) == null)
             return badRequest(ControllerUtils.generalError("INVALID_CATEGORY", "Category not found!"));
 
+        // See if the field question and answer exist for each pair question-answer:
+        for (JsonNode questionAnswer : answers)
+        {
+            if (questionAnswer.get("question") == null)
+                return badRequest(ControllerUtils.missingField("question"));
+
+            if (questionAnswer.get("answer") == null)
+                return badRequest(ControllerUtils.missingField("answer"));
+        }
+
 
         // *******************************************************************
         // ********************* Request Processing **************************
@@ -79,12 +89,6 @@ public class QuestionController extends Controller
             {
                 String questionCode = questionAnswer.get("question").asText();
                 String answerCode = questionAnswer.get("answer").asText();
-
-                if (questionCode == null)
-                    return badRequest(ControllerUtils.missingField("question"));
-
-                if (answerCode == null)
-                    return badRequest(ControllerUtils.missingField("answer"));
 
                 // Update the scores:
                 if (!productService.updateScores(questionCode, answerCode, productScores))
@@ -183,6 +187,15 @@ public class QuestionController extends Controller
         if (categoryService.findByCode(category) == null)
             return badRequest(ControllerUtils.generalError("INVALID_CATEGORY", "Category not found!"));
 
+        for (JsonNode questionAnswer : answers)
+        {
+            if (questionAnswer.get("question") == null)
+                return badRequest(ControllerUtils.missingField("question"));
+
+            if (questionAnswer.get("answer") == null)
+                return badRequest(ControllerUtils.missingField("answer"));
+        }
+
         // *******************************************************************
         // ********************* Request Processing **************************
 
@@ -195,12 +208,6 @@ public class QuestionController extends Controller
         {
             String questionCode = questionAnswer.get("question").asText();
             String answerCode = questionAnswer.get("answer").asText();
-
-            if (questionCode == null)
-                return badRequest(ControllerUtils.missingField("question"));
-
-            if (answerCode == null)
-                return badRequest(ControllerUtils.missingField("answer"));
 
             Float varianceBeforeUpdate = QuestionPicker.calculateScoreVariance(productScores);
 
@@ -297,7 +304,7 @@ public class QuestionController extends Controller
         {
             JsonNode questionNode = itQuestion.next();
 
-            if (questionNode.findPath("text") == null)
+            if (questionNode.get("text") == null)
                 return badRequest(ControllerUtils.missingField("question text"));
 
             String questionText = questionNode.findPath("text").asText();
@@ -309,7 +316,7 @@ public class QuestionController extends Controller
             question.setCategory(category);
 
             //parse answers
-            JsonNode answersNode = questionNode.findPath("answers");
+            JsonNode answersNode = questionNode.get("answers");
 
             if (answersNode == null)
                 return badRequest(ControllerUtils.missingField("answers"));
@@ -325,7 +332,7 @@ public class QuestionController extends Controller
             {
                 JsonNode answerNode = itAnswer.next();
 
-                if (questionNode.findPath("text") == null)
+                if (answerNode.get("text") == null)
                     return badRequest(ControllerUtils.missingField("answer text"));
 
                 String answerText = answerNode.findValue("text").asText();
@@ -333,7 +340,7 @@ public class QuestionController extends Controller
                 //create answer object
                 Answer answer = new Answer(answerText);
 
-                JsonNode attributesNode = answerNode.findPath("attributes");
+                JsonNode attributesNode = answerNode.get("attributes");
 
                 if (attributesNode == null)
                     return badRequest(ControllerUtils.missingField("attributes"));
@@ -377,7 +384,7 @@ public class QuestionController extends Controller
 
                     //validate attribute operator relation
                     if (attr.getType().equals(Attribute.Type.CATEGORICAL) && !AnswerAttribute.Operators.isValidForCategorical(attributeOperator))
-                        return badRequest(ControllerUtils.generalError("INVALID_ATTRIBUTE_OPERATOR_RELATION", "The operator(" + attributeOperator + ") is not valid with the attribute " + attributeName));
+                        return badRequest(ControllerUtils.generalError("INVALID_ATTRIBUTE_OPERATOR_RELATION", "The operator '" + attributeOperator + "' is not valid with the attribute '" + attributeName + "'"));
 
                     //validate attribute
                     if (attr.getType().equals(Attribute.Type.NUMERIC))

@@ -122,7 +122,7 @@ public class QuestionPicker
         return (float) (metricResult + 0.00001); // Add just bit to never have an heuristic with value zero
     }
 
-    public static Float getFrequency(Question question, Answer answer)
+    private static Float getFrequency(Question question, Answer answer)
     {
         List<Answer> answers = question.getAnswers();
 
