@@ -316,7 +316,7 @@ public class QuestionController extends Controller
             question.setCategory(category);
 
             //parse answers
-            JsonNode answersNode = questionNode.findPath("answers");
+            JsonNode answersNode = questionNode.get("answers");
 
             if (answersNode == null)
                 return badRequest(ControllerUtils.missingField("answers"));
@@ -340,7 +340,7 @@ public class QuestionController extends Controller
                 //create answer object
                 Answer answer = new Answer(answerText);
 
-                JsonNode attributesNode = answerNode.findPath("attributes");
+                JsonNode attributesNode = answerNode.get("attributes");
 
                 if (attributesNode == null)
                     return badRequest(ControllerUtils.missingField("attributes"));
