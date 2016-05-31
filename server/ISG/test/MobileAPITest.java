@@ -232,12 +232,6 @@ public class MobileAPITest extends APITest {
 
         assert response != null;
         assertEquals(BAD_REQUEST, response.getStatus());
-        assertEquals(readJsonFromFile("sendFeedback/InvalidFields/responseInvalidSequence.json"), response.asJson());
-
-        response = request("api/sendFeedback", POST, readJsonFromFile("sendFeedback/InvalidFields/bodyInvalidAnswer.json"), null);
-
-        assert response != null;
-        assertEquals(BAD_REQUEST, response.getStatus());
         assertEquals(readJsonFromFile("sendFeedback/InvalidFields/responseInvalidQuestionAnswer.json"), response.asJson());
 
         response = request("api/sendFeedback", POST, readJsonFromFile("sendFeedback/InvalidFields/bodyInvalidQuestion.json"), null);
@@ -245,6 +239,12 @@ public class MobileAPITest extends APITest {
         assert response != null;
         assertEquals(BAD_REQUEST, response.getStatus());
         assertEquals(readJsonFromFile("sendFeedback/InvalidFields/responseInvalidQuestionAnswer.json"), response.asJson());
+
+        assert response != null;
+        assertEquals(BAD_REQUEST, response.getStatus());
+        assertEquals(readJsonFromFile("sendFeedback/InvalidFields/responseInvalidSequence.json"), response.asJson());
+
+        response = request("api/sendFeedback", POST, readJsonFromFile("sendFeedback/InvalidFields/bodyInvalidAnswer.json"), null);
     }
 
     @Test

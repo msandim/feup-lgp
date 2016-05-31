@@ -300,6 +300,20 @@ public class BackOfficeAPITest extends APITest {
         assertEquals(BAD_REQUEST, response.getStatus());
         assertEquals(readJsonFromFile("addQuestions/MissingFields/responseMissingQuestions.json"), response.asJson());
 
+        //Missing field Answers Text
+        response = request("api/addQuestions", POST, readJsonFromFile("addQuestions/MissingFields/bodyMissingAnswersText.json"), null);
+
+        assert response != null;
+        assertEquals(BAD_REQUEST, response.getStatus());
+        assertEquals(readJsonFromFile("addQuestions/MissingFields/responseMissingText.json"), response.asJson());
+
+        //Missing field Questions Text
+        response = request("api/addQuestions", POST, readJsonFromFile("addQuestions/MissingFields/bodyMissingQuestionsText.json"), null);
+
+        assert response != null;
+        assertEquals(BAD_REQUEST, response.getStatus());
+        assertEquals(readJsonFromFile("addQuestions/MissingFields/responseMissingText.json"), response.asJson());
+
         //Missing field Answers //FIXME response is different than expected. Its detecting empty array of the missing field and not that its a missing field
         response = request("api/addQuestions", POST, readJsonFromFile("addQuestions/MissingFields/bodyMissingAnswers.json"), null);
 
