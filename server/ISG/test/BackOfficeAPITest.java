@@ -1,5 +1,3 @@
-import com.sun.jna.platform.FileUtils;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import com.fasterxml.jackson.databind.JsonNode;
@@ -10,10 +8,9 @@ import play.libs.ws.WSResponse;
 import play.mvc.Http;
 import play.mvc.Result;
 
-import java.io.*;
+import java.io.File;
 import java.util.Collections;
 import java.util.List;
-import java.util.Scanner;
 
 import static org.junit.Assert.*;
 import static play.test.Helpers.*;
@@ -516,27 +513,51 @@ public class BackOfficeAPITest extends APITest {
     //==============================================================//
     //==============================================================//
 
-    //TODO
     @Test
-    @Ignore
     public void testGetSequencesByCategory() {
         populateDatabase();
 
-        response = request("api/sequencesByCategory", GET, null, Json.newObject().put("code", "tvs"));
+        request("api/sendFeedback", POST, readJsonFromFile("sendFeedback/body.json"), null);
+
+        response = request("api/sequencesByCategory", GET, null, readJsonFromFile("getSequencesByCategory/parameters.json"));
 
         assert response != null;
-
-        List<String> text = response.asJson().findValuesAsText("code");
-
         assertEquals(OK, response.getStatus());
-        System.out.println(response.getBody());
-        assertNotEquals(text.indexOf("q1"), -1);
+        assertTrue(response.asJson().isArray());
+
+        JsonNode jsonResponse = response.asJson().get(0);
+
+        assertTrue(jsonResponse.has("feedback"));
+        assertTrue(jsonResponse.has("questions"));
+        assertTrue(jsonResponse.get("questions").elements().hasNext());
+
+        JsonNode questions = jsonResponse.get("questions").get(0);
+        assertTrue(questions.has("selected_answer"));
+        assertTrue(questions.get("selected_answer").has("code"));
+        assertTrue(questions.get("selected_answer").has("text"));
+        assertTrue(questions.has("question"));
+
+        JsonNode question = questions.get("question");
+        assertTrue(question.has("code"));
+        assertTrue(question.has("text"));
+        assertTrue(question.has("answers"));
+        assertTrue(question.get("answers").isArray());
+        assertTrue(question.get("answers").elements().hasNext());
+        assertTrue(question.get("answers").get(0).has("code"));
+        assertTrue(question.get("answers").get(0).has("text"));
     }
 
     @Test
-    @Ignore
     public void testGetSequencesByCategoryInvalidCategory() {
+        populateDatabase();
 
+        request("api/sendFeedback", POST, readJsonFromFile("sendFeedback/body.json"), null);
+
+        response = request("api/sequencesByCategory", GET, null, readJsonFromFile("getSequencesByCategory/parametersInvalidCategory.json"));
+
+        assert response != null;
+        assertEquals(BAD_REQUEST, response.getStatus());
+        assertEquals(readJsonFromFile("getSequencesByCategory/responseInvalidCategory.json"), response.asJson());
     }
 
     //==============================================================//

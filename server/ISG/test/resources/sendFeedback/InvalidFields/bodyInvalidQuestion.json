@@ -1,4 +1,6 @@
 {
+  "category":"tvs",
+  "feedback":1,
   "answers":[
     {
       "question":"q1",
@@ -7,6 +9,10 @@
     {
       "question":"q2",
       "answer":"1"
+    },
+    {
+      "question":"INVALID_QUESTION",
+      "answer":"2"
     }
   ]
 }

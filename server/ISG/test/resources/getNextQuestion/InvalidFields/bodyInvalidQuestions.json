@@ -2,16 +2,12 @@
   "category": "tvs",
   "answers": [
     {
-      "question": "1",
+      "question": "q1",
       "answer": "2"
     },
     {
-      "question": "4",
-      "answer": "1"
-    },
-    {
       "question": "INVALID_QUESTION",
-      "answer": "3"
+      "answer": "1"
     }
   ]
 }

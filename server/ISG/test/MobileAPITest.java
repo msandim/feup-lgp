@@ -123,21 +123,60 @@ public class MobileAPITest extends APITest {
         response = request("api/getNextQuestion", POST, readJsonFromFile("getNextQuestion/bodyNoQuestions.json"), null);
 
         assert response != null;
-
         assertEquals(BAD_REQUEST, response.getStatus());
         assertEquals(readJsonFromFile("getNextQuestion/responseNoQuestions.json"), response.asJson());
     }
 
     @Test
-    @Ignore
     public void testGetNextQuestionInvalidFields() {
+        populateDatabase();
 
+        response = request("api/getNextQuestion", POST, readJsonFromFile("getNextQuestion/InvalidFields/bodyInvalidAnswers.json"), null);
+
+        assert response != null;
+        assertEquals(BAD_REQUEST, response.getStatus());
+        assertEquals(readJsonFromFile("getNextQuestion/InvalidFields/responseInvalidQuestionsAnswers.json"), response.asJson());
+
+        response = request("api/getNextQuestion", POST, readJsonFromFile("getNextQuestion/InvalidFields/bodyInvalidQuestions.json"), null);
+
+        assert response != null;
+        assertEquals(BAD_REQUEST, response.getStatus());
+        assertEquals(readJsonFromFile("getNextQuestion/InvalidFields/responseInvalidQuestionsAnswers.json"), response.asJson());
+
+        response = request("api/getNextQuestion", POST, readJsonFromFile("getNextQuestion/InvalidFields/bodyInvalidCategory.json"), null);
+
+        assert response != null;
+        assertEquals(BAD_REQUEST, response.getStatus());
+        assertEquals(readJsonFromFile("getNextQuestion/InvalidFields/responseInvalidCategory.json"), response.asJson());
     }
 
     @Test
-    @Ignore
     public void testGetNextQuestionMissingFields() {
+        populateDatabase();
 
+        response = request("api/getNextQuestion", POST, readJsonFromFile("getNextQuestion/MissingFields/bodyMissingFieldCategory.json"), null);
+
+        assert response != null;
+        assertEquals(BAD_REQUEST, response.getStatus());
+        assertEquals(readJsonFromFile("getNextQuestion/MissingFields/responseMissingFieldCategory.json"), response.asJson());
+
+        response = request("api/getNextQuestion", POST, readJsonFromFile("getNextQuestion/MissingFields/bodyMissingFieldAnswers.json"), null);
+
+        assert response != null;
+        assertEquals(BAD_REQUEST, response.getStatus());
+        assertEquals(readJsonFromFile("getNextQuestion/MissingFields/responseMissingFieldAnswers.json"), response.asJson());
+
+        response = request("api/getNextQuestion", POST, readJsonFromFile("getNextQuestion/MissingFields/bodyMissingFieldQuestion.json"), null);
+
+        assert response != null;
+        assertEquals(BAD_REQUEST, response.getStatus());
+        assertEquals(readJsonFromFile("getNextQuestion/MissingFields/responseMissingFieldQuestion.json"), response.asJson());
+
+        response = request("api/getNextQuestion", POST, readJsonFromFile("getNextQuestion/MissingFields/bodyMissingFieldAnswer.json"), null);
+
+        assert response != null;
+        assertEquals(BAD_REQUEST, response.getStatus());
+        assertEquals(readJsonFromFile("getNextQuestion/MissingFields/responseMissingFieldAnswer.json"), response.asJson());
     }
 
     //==============================================================//
@@ -149,28 +188,97 @@ public class MobileAPITest extends APITest {
     //=========================Normal===============================//
 
     @Test
-    @Ignore
     public void testSendFeedback() {
+        populateDatabase();
 
+        response = request("api/sendFeedback", POST, readJsonFromFile("sendFeedback/body.json"), null);
+
+        assert response != null;
+        assertEquals(OK, response.getStatus());
+        assertEquals(readJsonFromFile("sendFeedback/response.json"), response.asJson());
     }
 
     //=========================Errors===============================//
 
-    @Test
-    @Ignore
-    public void testSendFeedbackInvalidCategory() {
 
+    @Test
+    public void testSendFeedbackEmptyAnswerList() {
+        populateDatabase();
+
+        response = request("api/sendFeedback", POST, readJsonFromFile("sendFeedback/bodyEmptyAnswerList.json"), null);
+
+        assert response != null;
+        assertEquals(BAD_REQUEST, response.getStatus());
+        assertEquals(readJsonFromFile("sendFeedback/responseEmptyAnswerList.json"), response.asJson());
     }
 
     @Test
-    @Ignore
-    public void testSendFeedbackBadAnswers() {
+    public void testSendFeedbackInvalidFields() {
+        populateDatabase();
 
+        response = request("api/sendFeedback", POST, readJsonFromFile("sendFeedback/InvalidFields/bodyInvalidCategory.json"), null);
+
+        assert response != null;
+        assertEquals(BAD_REQUEST, response.getStatus());
+        assertEquals(readJsonFromFile("sendFeedback/InvalidFields/responseInvalidCategory.json"), response.asJson());
+
+        response = request("api/sendFeedback", POST, readJsonFromFile("sendFeedback/InvalidFields/bodyInvalidFeedback.json"), null);
+
+        assert response != null;
+        assertEquals(BAD_REQUEST, response.getStatus());
+        assertEquals(readJsonFromFile("sendFeedback/InvalidFields/responseInvalidFeedback.json"), response.asJson());
+
+        response = request("api/sendFeedback", POST, readJsonFromFile("sendFeedback/InvalidFields/bodyInvalidSequence.json"), null);
+
+        assert response != null;
+        assertEquals(BAD_REQUEST, response.getStatus());
+        assertEquals(readJsonFromFile("sendFeedback/InvalidFields/responseInvalidSequence.json"), response.asJson());
+
+        response = request("api/sendFeedback", POST, readJsonFromFile("sendFeedback/InvalidFields/bodyInvalidAnswer.json"), null);
+
+        assert response != null;
+        assertEquals(BAD_REQUEST, response.getStatus());
+        assertEquals(readJsonFromFile("sendFeedback/InvalidFields/responseInvalidQuestionAnswer.json"), response.asJson());
+
+        response = request("api/sendFeedback", POST, readJsonFromFile("sendFeedback/InvalidFields/bodyInvalidQuestion.json"), null);
+
+        assert response != null;
+        assertEquals(BAD_REQUEST, response.getStatus());
+        assertEquals(readJsonFromFile("sendFeedback/InvalidFields/responseInvalidQuestionAnswer.json"), response.asJson());
     }
 
     @Test
-    @Ignore
-    public void testSendFeedbackBadFeedback() {
+    public void testSendFeedbackMissingFields() {
+        populateDatabase();
 
+        response = request("api/sendFeedback", POST, readJsonFromFile("sendFeedback/MissingFields/bodyMissingCategory.json"), null);
+
+        assert response != null;
+        assertEquals(BAD_REQUEST, response.getStatus());
+        assertEquals(readJsonFromFile("sendFeedback/MissingFields/responseMissingCategory.json"), response.asJson());
+
+        response = request("api/sendFeedback", POST, readJsonFromFile("sendFeedback/MissingFields/bodyMissingFeedback.json"), null);
+
+        assert response != null;
+        assertEquals(BAD_REQUEST, response.getStatus());
+        assertEquals(readJsonFromFile("sendFeedback/MissingFields/responseMissingFeedback.json"), response.asJson());
+
+        response = request("api/sendFeedback", POST, readJsonFromFile("sendFeedback/MissingFields/bodyMissingAnswers.json"), null);
+
+        assert response != null;
+        assertEquals(BAD_REQUEST, response.getStatus());
+        assertEquals(readJsonFromFile("sendFeedback/MissingFields/responseMissingAnswers.json"), response.asJson());
+
+        response = request("api/sendFeedback", POST, readJsonFromFile("sendFeedback/MissingFields/bodyMissingAnswer.json"), null);
+
+        assert response != null;
+        assertEquals(BAD_REQUEST, response.getStatus());
+        assertEquals(readJsonFromFile("sendFeedback/MissingFields/responseMissingAnswer.json"), response.asJson());
+
+        response = request("api/sendFeedback", POST, readJsonFromFile("sendFeedback/MissingFields/bodyMissingQuestion.json"), null);
+
+        assert response != null;
+        assertEquals(BAD_REQUEST, response.getStatus());
+        assertEquals(readJsonFromFile("sendFeedback/MissingFields/responseMissingQuestion.json"), response.asJson());
     }
 }

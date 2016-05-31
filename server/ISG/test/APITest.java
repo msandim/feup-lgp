@@ -152,7 +152,7 @@ public class APITest extends WithServer {
     }
 
     void populateDatabase(){
-        File file = new File("other/populateDB.cql");
+        File file = new File("populateDB.cql");
         try (BufferedReader br = new BufferedReader(new FileReader(file))) {
             for (String line; (line = br.readLine()) != null; ) {
                 Neo4jSessionFactory
