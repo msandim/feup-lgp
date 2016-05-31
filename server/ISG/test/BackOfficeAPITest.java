@@ -50,7 +50,7 @@ public class BackOfficeAPITest extends APITest {
     }
 
     @Test
-    public void testAddCategoryBadName() {
+    public void testAddCategoryInvalidName() {
         //Adding a category. Should return empty JSON object
         response = request("api/addCategory", POST, readJsonFromFile("addCategory/parameters.json"), null);
 
@@ -63,7 +63,15 @@ public class BackOfficeAPITest extends APITest {
 
         assert response != null;
         assertEquals(BAD_REQUEST, response.getStatus());
-        assertEquals(readJsonFromFile("addCategory/responseBadName.json"), response.asJson());
+        assertEquals(readJsonFromFile("addCategory/responseInvalidName.json"), response.asJson());
+
+        //Checking if the category was not added
+        response = request("api/allCategories", GET, null, null);
+
+        assert response != null;
+        assertEquals(OK, response.getStatus());
+        System.out.println(response.getBody());
+        assertEquals(1, response.asJson().findValues("code").size());
     }
 
     @Test
@@ -79,6 +87,13 @@ public class BackOfficeAPITest extends APITest {
         assert response != null;
         assertEquals(BAD_REQUEST, response.getStatus());
         assertEquals(readJsonFromFile("addCategory/responseMissingFieldName.json"), response.asJson());
+
+        //Checking if the category was not added
+        response = request("api/allCategories", GET, null, null);
+
+        assert response != null;
+        assertEquals(OK, response.getStatus());
+        assertEquals(Json.newArray(), response.asJson());
     }
 
     //========================Removing==============================//
@@ -125,7 +140,7 @@ public class BackOfficeAPITest extends APITest {
         assertNotEquals(Json.newArray(), response.asJson());
     }
 
-    //==========================All=================================//
+    //========================GetAll================================//
 
     @Test
     public void testGetAllCategories() {
@@ -193,7 +208,7 @@ public class BackOfficeAPITest extends APITest {
 
         assert response != null;
         assertEquals(OK, response.getStatus());
-        assertEquals("[]", response.getBody());
+        assertEquals(Json.newArray(), response.asJson());
     }
 
     @Test
@@ -226,7 +241,7 @@ public class BackOfficeAPITest extends APITest {
 
         assert response != null;
         assertEquals(OK, response.getStatus());
-        assertEquals("[]", response.getBody());
+        assertEquals(Json.newArray(), response.asJson());
     }
 
     @Test
@@ -276,7 +291,7 @@ public class BackOfficeAPITest extends APITest {
 
         assert response != null;
         assertEquals(OK, response.getStatus());
-        assertEquals("[]", response.getBody());
+        assertEquals(Json.newArray(), response.asJson());
     }
 
     @Test
@@ -361,7 +376,7 @@ public class BackOfficeAPITest extends APITest {
 
         assert response != null;
         assertEquals(OK, response.getStatus());
-        assertEquals("[]", response.getBody());
+        assertEquals(Json.newArray(), response.asJson());
     }
 
     //========================Removing==============================//
@@ -391,6 +406,7 @@ public class BackOfficeAPITest extends APITest {
         assertEquals(OK, response.getStatus());
         assertEquals(readJsonFromFile("removeQuestions/response.json"), response.asJson());
 
+        //verifying if the questions were removed
         response = request("api/questionsByCategory", GET, null, Json.newObject().put("code", "tvs"));
 
         assert response != null;
@@ -412,12 +428,14 @@ public class BackOfficeAPITest extends APITest {
         assertEquals(OK, response.getStatus());
         assertEquals(readJsonFromFile("removeQuestions/response.json"), response.asJson());
 
+        //Removing questions with a missing field should return an error
         response = request("api/removeQuestions", DELETE, readJsonFromFile("removeQuestions/bodyMissingField.json"), null);
 
         assert response != null;
         assertEquals(BAD_REQUEST, response.getStatus());
         assertEquals(readJsonFromFile("removeQuestions/responseMissingField.json"), response.asJson());
 
+        //verifying if the questions were removed
         response = request("api/questionsByCategory", GET, null, Json.newObject().put("code", "tvs"));
 
         assert response != null;
@@ -439,12 +457,14 @@ public class BackOfficeAPITest extends APITest {
         assertEquals(OK, response.getStatus());
         assertEquals(readJsonFromFile("removeQuestions/response.json"), response.asJson());
 
+        //Removing questions with a invalid field should return an error
         response = request("api/removeQuestions", DELETE, readJsonFromFile("removeQuestions/bodyInvalidQuestion.json"), null);
 
         assert response != null;
         assertEquals(BAD_REQUEST, response.getStatus());
         assertEquals(readJsonFromFile("removeQuestions/responseInvalidQuestion.json"), response.asJson());
 
+        //verifying if the questions were removed
         response = request("api/questionsByCategory", GET, null, Json.newObject().put("code", "tvs"));
 
         assert response != null;
@@ -452,7 +472,7 @@ public class BackOfficeAPITest extends APITest {
         assertNotEquals(Json.newArray(), response.asJson());
     }
 
-    //==========================All=================================//
+    //========================GetAll================================//
 
     @Test
     public void testGetQuestionsByCategory() {
@@ -621,6 +641,14 @@ public class BackOfficeAPITest extends APITest {
         assert response != null;
         assertEquals(OK, response.getStatus());
         assertEquals(Json.newArray(), response.asJson());
+
+        //verifying if products were not added
+        response = request("api/productsByCategory", GET, null, readJsonFromFile("getProductsByCategory/parameters.json"));
+
+        assert response != null;
+        assertEquals(OK, response.getStatus());
+
+        assertEquals(0, response.asJson().findValuesAsText("ean").size());
     }
 
     @Test
@@ -638,6 +666,14 @@ public class BackOfficeAPITest extends APITest {
         assert response != null;
         assertEquals(OK, response.getStatus());
         assertEquals(Json.newArray(), response.asJson());
+
+        //verifying if products were not added
+        response = request("api/productsByCategory", GET, null, readJsonFromFile("getProductsByCategory/parameters.json"));
+
+        assert response != null;
+        assertEquals(OK, response.getStatus());
+
+        assertEquals(0, response.asJson().findValuesAsText("ean").size());
     }
 
     @Test
@@ -655,6 +691,14 @@ public class BackOfficeAPITest extends APITest {
         assert response != null;
         assertEquals(OK, response.getStatus());
         assertEquals(Json.newArray(), response.asJson());
+
+        //verifying if products were not added
+        response = request("api/productsByCategory", GET, null, readJsonFromFile("getProductsByCategory/parameters.json"));
+
+        assert response != null;
+        assertEquals(OK, response.getStatus());
+
+        assertEquals(0, response.asJson().findValuesAsText("ean").size());
     }
 
     @Test
@@ -672,11 +716,17 @@ public class BackOfficeAPITest extends APITest {
         assert response != null;
         assertEquals(OK, response.getStatus());
         assertEquals(Json.newArray(), response.asJson());
+
+        //verifying if products were not added
+        response = request("api/productsByCategory", GET, null, readJsonFromFile("getProductsByCategory/parameters.json"));
+
+        assert response != null;
+        assertEquals(OK, response.getStatus());
+
+        assertEquals(0, response.asJson().findValuesAsText("ean").size());
     }
 
     //========================Removing==============================//
-
-    //TODO verify if they are still in the database or not
 
     @Test
     public void testRemoveProducts() {
@@ -689,6 +739,14 @@ public class BackOfficeAPITest extends APITest {
         assert response != null;
         assertEquals(OK, response.getStatus());
         assertEquals(readJsonFromFile("removeProducts/response.json"), response.asJson());
+
+        //verifying if values were deleted
+        response = request("api/productsByCategory", GET, null, readJsonFromFile("getProductsByCategory/parameters.json"));
+
+        assert response != null;
+        assertEquals(OK, response.getStatus());
+
+        assertEquals(0, response.asJson().findValuesAsText("ean").size());
     }
 
     @Test
@@ -702,6 +760,14 @@ public class BackOfficeAPITest extends APITest {
         assert response != null;
         assertEquals(BAD_REQUEST, response.getStatus());
         assertEquals(readJsonFromFile("removeProducts/responseInvalidCategory.json"), response.asJson());
+
+        //verifying if values were not deleted
+        response = request("api/productsByCategory", GET, null, readJsonFromFile("getProductsByCategory/parameters.json"));
+
+        assert response != null;
+        assertEquals(OK, response.getStatus());
+
+        assertNotEquals(0, response.asJson().findValuesAsText("ean").size());
     }
 
     @Test
@@ -721,6 +787,14 @@ public class BackOfficeAPITest extends APITest {
         assert response != null;
         assertEquals(BAD_REQUEST, response.getStatus());
         assertEquals(readJsonFromFile("removeProducts/responseMissingFieldProducts.json"), response.asJson());
+
+        //verifying if values were not deleted
+        response = request("api/productsByCategory", GET, null, readJsonFromFile("getProductsByCategory/parameters.json"));
+
+        assert response != null;
+        assertEquals(OK, response.getStatus());
+
+        assertNotEquals(0, response.asJson().findValuesAsText("ean").size());
     }
 
     @Test
@@ -734,9 +808,17 @@ public class BackOfficeAPITest extends APITest {
         assert response != null;
         assertEquals(BAD_REQUEST, response.getStatus());
         assertEquals(readJsonFromFile("removeProducts/responseInvalidProducts.json"), response.asJson());
+
+        //verifying if values were not deleted
+        response = request("api/productsByCategory", GET, null, readJsonFromFile("getProductsByCategory/parameters.json"));
+
+        assert response != null;
+        assertEquals(OK, response.getStatus());
+
+        assertNotEquals(0, response.asJson().findValuesAsText("ean").size());
     }
 
-    //==========================All=================================//
+    //========================GetAll================================//
 
     @Test
     public void testGetProductsByCategory() {
@@ -795,15 +877,32 @@ public class BackOfficeAPITest extends APITest {
     //==============================================================//
 
     //TODO verify is values were changed by querying the database
-    //TODO verify if the change in numberOfProducts and numberOfQuestions affect the responses on getNextQuestion
 
     @Test
     public void testConfigAlgorithm() {
+        populateDatabase();
+
+        //Changing values of the algorithm. 'numberOfProducts' and 'numberOfQuestions' before this were 10 and 3, respectively
         response = request("api/configAlgorithm", POST, readJsonFromFile("configAlgorithm/body.json"), null);
 
         assert response != null;
         assertEquals(OK, response.getStatus());
         assertEquals(readJsonFromFile("configAlgorithm/response.json"), response.asJson());
+
+        //Verifying if the change in numberOfProducts and numberOfQuestions affect the response of getNextQuestion
+        Neo4jSessionFactory.getInstance().getNeo4jSession().query("CREATE (at1: Attribute {name: 'width (cm)', type: 'numeric'});", Collections.EMPTY_MAP);
+        Neo4jSessionFactory.getInstance().getNeo4jSession().query("CREATE (at2: Attribute {name: 'resolution', type: 'categorical'});", Collections.EMPTY_MAP);
+
+        request("api/addQuestions", POST, readJsonFromFile("addQuestions/body.json"), null);
+        response = request("api/getNextQuestion", POST, readJsonFromFile("configAlgorithm/bodyFollowingQuestion.json"), null);
+
+        assert response != null;
+        assertEquals(OK, response.getStatus());
+
+        JsonNode jsonResponse = response.asJson();
+
+        assertEquals(2,jsonResponse.get("answers").findValuesAsText("code").size());
+        assertEquals(2,jsonResponse.get("products").findValuesAsText("ean").size());
     }
 
     @Test
