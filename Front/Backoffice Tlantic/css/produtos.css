@@ -162,7 +162,7 @@ body {
     margin-left: auto;
     margin-right: auto;
     padding: 0;
-    border: 1px solid #888;
+    border: 1px solid #F05B46;
     width: 80%;
     box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19);
     -webkit-animation-name: animatetop;
@@ -199,15 +199,17 @@ body {
 
 .modal-header {
     padding: 2px 16px;
-    background-color: #ff3333;
+    background-color: #ED8277;
     color: black;
 }
 
-.modal-body {padding: 2px 16px;}
+.modal-body {
+  padding: 2px 16px;
+}
 
 .modal-footer {
     padding: 2px 16px;
-    background-color: #ff3333;
+    background-color: #ED8277;
     color: black;
 }
 
@@ -287,6 +289,7 @@ body {
   src: url('fonts\\Din_Regular\\ufonts.com_din-regular.ttf') format('truetype')
 
 }
+
 .aleo-font{
   font-family: "Aleo Regular";
   font-size: 24pt;
@@ -313,12 +316,6 @@ body {
   background-size: 30%;
 }
 
-.botao-red{
-  background-image: url('images\\botao-red.png');
-  background-repeat: no-repeat;
-  background-position: center;
-  background-size: cover;
-}
 
 *{
   color: #1A3D63;

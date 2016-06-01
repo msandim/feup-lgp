@@ -48,7 +48,7 @@ function autoFillIndexPage(){
 	var stringified;
 
 	$('.main').empty();
-	$('.main').append('<h1 class="h1-title">Escolha uma categoria</h1><div class="interface-square interface-size"></div>');
+	$('.main').append('<h1 class="h1-title index-title aleo-font">Escolha uma categoria</h1><div class="interface-square interface-size grad"></div>');
 	loadService("A carregar categorias...");
   $.ajax({
         url: configs.server+configs.getAllCategoriesService,
@@ -61,7 +61,7 @@ function autoFillIndexPage(){
 				categoryArray= response;
 				categoryArray.forEach(function(category){
 					var interfaceSquare = $('.interface-square');
-					interfaceSquare.append('<div class="col-sm-4"><div class="thumbnail thumbnail-pad"><button type="button" class="btn btn-block button-pad autoFillFirstQuestionPage" id="'+category['code']+'"><img src="'/*+category['image']*/+'" width ="200"><p class="text-center">'+category['name']+'</p></div></div>');
+					interfaceSquare.append('<div class="col-sm-4"><button type="button" class="btn btn-block button-pad autoFillFirstQuestionPage transparent no-border-radius square-button button-size" id="'+category['code']+'"><p class="text-center din-font-14">'+category['name'].toUpperCase()+'</p></button></div>');
 				});
 
 				$('.autoFillFirstQuestionPage').click(function(){
@@ -103,10 +103,10 @@ function autoFillFirstQuestionPage(){
 
   var main = $('.main');
   main.empty();
-  main.append('<h4 class="h4-above-title">Categoria: '+toNextPage['category']+'</h4><h1 class="h1-title">'+service['question']['text']+'</h1><div class="interface-square interface-size"></div><div class="buttons-row"><div class="row"><div class= "col-ms-2"><button type="button" class="btn btn-default backStep">Recuar</button><button type="button" class="btn btn-default pull-right skipQuestion">Avançar pergunta</button></div></div></div>');
+  main.append('<h4 class="h4-above-title din-font-12 title-color">CATEGORIA: '+toNextPage['category']+'</h4><h1 class="h1-title aleo-font title-color">'+service['question']['text']+'</h1><div class="interface-square interface-size grad"></div><div class="buttons-row"><div class="row"><div class= "col-ms-2"><button type="button" class="btn backStep no-border-radius din-font-14 bottom-button-background">Recuar</button><button type="button" class="btn pull-right skipQuestion no-border-radius din-font-14 bottom-button-background">Avançar pergunta</button></div></div></div>');
   service['answers'].forEach(function(answer){
     var interfaceSquare = $('.interface-square');
-    interfaceSquare.append('<div class="col-sm-4"><button type="button" class="btn btn-default buttons autoFillHubPage" style="display: block; width: 100%;">'+answer['text']+'</button></div>');
+    interfaceSquare.append('<div class="col-sm-4"><button type="button" class="btn buttons autoFillHubPage transparent no-border-radius square-button button-size din-font-14" style="display: block; width: 100%;">'+answer['text']+'</button></div>');
   });
 
   $('.autoFillHubPage').click(function(){
@@ -231,16 +231,27 @@ function autoFillFirstQuestionPage(){
 
 function autoFillHubPage(){
   $('.main').empty();
-  $('.main').append('<h4 class="h4-above-title" style="margin-left:0.5%;">Categoria: '+toNextPage['category']+'</h4><div class="row" style="margin-left:0.5%;"><h1 class="h1-title col-sm-8">Lista atual de produtos</h1><h1 class="h1-title col-sm-4" style="margin-left:-1%;">Histórico</h1></div><div class="row" style="margin-right:0.5%; margin-left:0.5%;"><div class="col-sm-7 interface-square interface-size product-table" style="padding-left: 20px;"></div><div class="col-sm-1"></div><div class="interface-square col-sm-4 interface-size history"></div></div><div class="buttons-row"><div class="row"><div class= "col-ms-2"><button type="button" class="btn btn-default pull-right autoFillQuestionPage">Próxima pergunta</button><button type="button" class="btn btn-default pull-right autoFillFeedbackPage" style="margin-right:10px;">Finalizar</button></div></div></div>');
+  $('.main').append('<h4 class="h4-above-title din-font-12 title-color" ">CATEGORIA: '+toNextPage['category']+'</h4><div class="row hub-rows"><h1 class="h1-title col-sm-8 aleo-font title-color">Lista atual de produtos</h1><h1 class="h1-title col-sm-4 aleo-font title-color">Histórico</h1></div><div class="row hub-rows"><div class="col-sm-7 interface-square interface-size product-table grad less-pad"></div><div class="col-sm-1"></div><div class="interface-square col-sm-4 interface-size history grad less-pad"></div></div><div class="buttons-row"><div class="row"><div class= "col-ms-2"><button type="button" class="btn pull-right autoFillQuestionPage no-border-radius din-font-14 bottom-button-background">Próxima pergunta</button><button type="button" class="btn pull-right autoFillFeedbackPage no-border-radius din-font-14 bottom-button-background" style="margin-right:10px;">Finalizar</button></div></div></div>');
+	console.log(service['products']);
   service['products'].forEach(function(product){
 		addProductAndCalculateScoreDifference(product);
 	});
 	scoreSort();
 	toNextPage['products'].forEach(function(product){
-    $('.product-table').append('<div class="row"> <div class="col-sm-2"><div class="thumbnail"><img src="img/tv1.jpg" height ="50"></div></div><div class="col-sm-6"><p class="center-div">'+product['name']+'</p></div><div class="col-sm-2"><p class="center-div">1399,00<span class="glyphicon glyphicon-eur"></span></p></div><div class="col-sm-2 text-right"><p class="center-div-off">'+product['scoreChange']+' <span class="glyphicon glyphicon-arrow-up"></span></p><p>Score:'+product['score']+'</p></div></div>');
+		var scoreChangeIcon = "glyphicon glyphicon-arrow-up";
+		if(product['scoreChange']<0){
+			scoreChangeIcon = "glyphicon glyphicon-arrow-down";
+		}
+    $('.product-table').append('<div class="row"> <div class="col-sm-3 center-div"><img src="img/tv1.jpg"></div><div class="col-sm-4"><p class="center-div hub-white din-font-14">'+product['name']+'</p></div><div class="col-sm-2"><p class="center-div hub-blue din-font-14">'+product['price']+'€</p></div><div class="col-sm-3 text-right score-border din-font-14"><p class="center-div-off hub-blue">'+product['scoreChange']+' <span class="'+scoreChangeIcon+'"></span></p><p class="hub-white">Score:'+product['score']+'</p></div></div>');
   });
+	var white=true;
   toNextPage['history'].forEach(function(combo){
-    $('.history').append('<div><p>P.: '+combo['question']['text']+'</p><p>R.: '+combo['answer']['text']+'</p></div>');
+		if(white){
+    	$('.history').append('<div class="hub-white din-font-14"><p>P.: '+combo['question']['text']+'</p><p>R.: '+combo['answer']['text']+'</p></div>');
+		}else{
+			$('.history').append('<div class="hub-blue din-font-14"><p>P.: '+combo['question']['text']+'</p><p>R.: '+combo['answer']['text']+'</p></div>');
+		}
+		white=!white;
   });
 
   $('.autoFillQuestionPage').click(function(){
@@ -262,10 +273,10 @@ function autoFillQuestionPage(){
 
   var main = $('.main');
   main.empty();
-  main.append('<h4 class="h4-above-title">Categoria: '+toNextPage['category']+'</h4><h1 class="h1-title">'+service['question']['text']+'</h1><div class="interface-square interface-size"></div><div class="buttons-row"><div class="row"><div class= "col-ms-2"><button type="button" class="btn btn-default pull-right skipQuestion">Avançar pergunta</button><button type="button" class="btn btn-default pull-right autoFillFeedbackPage" style="margin-right:10px;">Finalizar sem responder</button></div></div></div>');
+  main.append('<h4 class="h4-above-title din-font-12 title-color">CATEGORIA: '+toNextPage['category']+'</h4><h1 class="h1-title aleo-font title-color">'+service['question']['text']+'</h1><div class="interface-square interface-size grad"></div><div class="buttons-row"><div class="row"><div class= "col-ms-2"><button type="button" class="btn pull-right skipQuestion no-border-radius din-font-14 bottom-button-background">Avançar pergunta</button><button type="button" class="btn pull-right autoFillFeedbackPage no-border-radius din-font-14 bottom-button-background" style="margin-right:10px;">Finalizar sem responder</button></div></div></div>');
   service['answers'].forEach(function(answer){
     var interfaceSquare = $('.interface-square');
-    interfaceSquare.append('<div class="col-sm-4"><button type="button" class="btn btn-default buttons autoFillHubPage" style="display: block; width: 100%;">'+answer['text']+'</button></div>');
+    interfaceSquare.append('<div class="col-sm-4"><button type="button" class="btn buttons autoFillHubPage transparent no-border-radius square-button button-size din-font-14" style="display: block; width: 100%;">'+answer['text']+'</button></div>');
   });
 
   $('.autoFillHubPage').click(function(){
@@ -402,9 +413,9 @@ function autoFillFeedbackPage(){
 			"answer":combo['answer']['code']
 		});
 	});
-  $('.main').append('<h4 class="h4-above-title" style="margin-left:0.5%;">Categoria: '+toNextPage['category']+'</h4><h1 class="h1-title">Lista final de produtos</h1><div class="interface-square interface-size"></div><div class="buttons-row"><div class="row"><div class= "col-ms-2"><h4 class="pull-left">Esta sequência foi útil?</h4><button type="button" class="btn btn-default col-sm-2 pull-right no-button">Não</button><button type="button" class="btn btn-default col-sm-2 pull-right yes-button" style="margin-right:10px;">Sim</button></div></div></div>');
+  $('.main').append('<h4 class="h4-above-title din-font-12 title-color">CATEGORIA: '+toNextPage['category']+'</h4><h1 class="h1-title aleo-font title-color">Lista final de produtos</h1><div class="interface-square interface-size grad less-pad"></div><div class="buttons-row"><div class="row"><div class= "col-ms-2"><h4 class="pull-left aleo-font title-color">Esta sequência foi útil?</h4><button type="button" class="btn col-sm-2 pull-right no-button no-border-radius din-font-14 bottom-button-background">NÃO</button><button type="button" class="btn col-sm-2 pull-right yes-button no-border-radius din-font-14 bottom-button-background" style="margin-right:10px;">SIM</button></div></div></div>');
   service['products'].forEach(function(product){
-    $('.interface-square').append('<div class="row"> <div class="col-sm-2"><div class="thumbnail"><img src="img/tv1.jpg" height ="50"></div></div><div class="col-sm-6"><p class="center-div">'+product['name']+'</p></div><div class="col-sm-2"><p class="center-div">1399,00<span class="glyphicon glyphicon-eur"></span></p></div><div class="col-sm-2 text-right"><p class="center-div">Score:'+product['score']+'</p></div></div>');
+    $('.interface-square').append('<div class="row"> <div class="col-sm-3 image-padding"><img src="img/tv1.jpg"></div><div class="col-sm-4"><p class="center-div din-font-14 hub-white">'+product['name']+'</p></div><div class="col-sm-2"><p class="center-div din-font-14 hub-white">1399,00€</p></div><div class="col-sm-3 text-right total-border pull-right"><p class="center-div din-font-14 hub-white">TOTAL:'+product['score']+'</p></div></div>');
   });
 
   $('.yes-button').click(function(){
@@ -463,7 +474,7 @@ function finishAndRestart(){
 function addProductAndCalculateScoreDifference(product){
 	var exists=false;
 		for(var i=0; i<toNextPage['products'].length; i++){
-			if(toNextPage['products'][i]['EAN'] == product['EAN']){
+			if(toNextPage['products'][i]['ean'] == product['ean']){
 				toNextPage['products'][i]['scoreChange'] = Math.round( (product['score']-toNextPage['products'][i]['score']) * 10 ) / 10;
 				toNextPage['products'][i]['score'] = Math.round( (product['score']) * 10 ) / 10;
 				exists=true;
