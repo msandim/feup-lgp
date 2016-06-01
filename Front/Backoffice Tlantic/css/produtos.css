@@ -11,6 +11,8 @@ body {
     bottom: 0;
     width: 100%;
     padding-bottom: 20px;
+    padding-left: 70px;
+    padding-right: 80px;
 }
 
 .interface-overflow{
@@ -22,22 +24,22 @@ body {
 }
 
 .table-col-border{
-  border: 2px solid red;
+  border: 2px solid #F05B46;
   margin: -1px -1px -1px -1px;
 }
 
 .table-col-border-end{
-  border: 2px solid red;
+  border: 2px solid #F05B46;
   margin: -1px -1px -1px -1px;
 }
 
 .table-col-border-first{
-  border: 2px solid red;
+  border: 2px solid #F05B46;
   margin: 0px -1px -1px -1px;
 }
 
 .table-col-border-end-first{
-  border: 2px solid red;
+  border: 2px solid #F05B46;
   margin: 0px -1px -1px -1px;
 }
 
@@ -57,12 +59,16 @@ body {
 }
 
 .table-contain-h3{
-  background-color: #FF6666;
+  background-color: #ED8277;
 }
 
 .box-of-questions{
   max-height:200px;
   overflow:auto;
+}
+
+.box-of-products{
+  display: none;
 }
 
 .input-padding{
@@ -125,9 +131,12 @@ body {
 .down-button{
   font-size: 125%;
   margin-top: 25px;
-  background-color: white;
-  border: 2px solid red;
   padding:0;
+  background-image: url('images\\caixa bottom.png');
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+  height: 56px;
 }
 
 .no-padding{
@@ -138,17 +147,8 @@ body {
   display:none;
 }
 
-.box-of-answers{
-  display:none;
-}
-
-.box-of-characteristics{
-  display:none;
-}
-
 .nameProducts {
   font-size: 18px;
-  text-align: center;
   padding-top: 15px;
 }
 
@@ -173,7 +173,7 @@ body {
 
 /* Add Animation */
 @-webkit-keyframes animatetop {
-    from {top:-300px; opacity:0} 
+    from {top:-300px; opacity:0}
     to {top:0; opacity:1}
 }
 
@@ -232,29 +232,29 @@ body {
   animation-duration: 1s;
   animation-iteration-count: infinite;
   animation-direction: alternate;
-  border:2px solid red;
+  border:2px solid #F05B46;
   animation-iteration-count: 4;
 }
 
 @-webkit-keyframes color_change {
   from { background-color: white; }
-  to { background-color: red; }
+  to { background-color: #F05B46; }
 }
 @-moz-keyframes color_change {
   from { background-color: white; }
-  to { background-color: red; }
+  to { background-color: #F05B46; }
 }
 @-ms-keyframes color_change {
   from { background-color: white; }
-  to { background-color: red; }
+  to { background-color: #F05B46; }
 }
 @-o-keyframes color_change {
   from { background-color: white; }
-  to { background-color: red; }
+  to { background-color: #F05B46; }
 }
 @keyframes color_change {
   from { background-color: white; }
-  to { background-color: red; }
+  to { background-color: #F05B46; }
 }
 
 #InputButtonCatName {
@@ -271,3 +271,81 @@ body {
     color: white;
 }
 
+.margins {
+  margin-left: 50px;
+  margin-right: 50px;
+}
+
+@font-face {
+  font-family: 'Aleo Regular';
+  src: url('fonts\\Aleo_font_v1.2.2\\Webfont Kit\\Regular\\aleo-regular-webfont.ttf')  format('truetype'), /* Safari, Android, iOS */
+       url('fonts\\Aleo_font_v1.2.2\\Desktop OTF\\Aleo-Regular.ttf') format('truetype')
+}
+
+@font-face {
+  font-family: 'Din Regular';
+  src: url('fonts\\Din_Regular\\ufonts.com_din-regular.ttf') format('truetype')
+
+}
+.aleo-font{
+  font-family: "Aleo Regular";
+  font-size: 24pt;
+}
+
+.din-font-14{
+  font-family: "Din Regular";
+  font-size: 14pt;
+}
+
+.din-font-12{
+  font-family: "Din Regular";
+  font-size: 12pt;
+}
+
+.product-row{
+  margin-right: -11px;
+}
+
+.fechar-icon{
+  background-image: url('images\\x.png');
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 30%;
+}
+
+.botao-red{
+  background-image: url('images\\botao-red.png');
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+}
+
+*{
+  color: #1A3D63;
+  border-radius: 0 !important;
+}
+
+.x-size{
+  height:25px;
+}
+
+.arrow-nodge{
+  padding-left: 15px;
+  height:20px;
+}
+
+::-webkit-scrollbar
+{
+  width: 12px;  /* for vertical scrollbars */
+  height: 12px; /* for horizontal scrollbars */
+}
+
+::-webkit-scrollbar-track
+{
+  background: rgba(0, 0, 0, 0.1);
+}
+
+::-webkit-scrollbar-thumb
+{
+  background: rgba(26, 61, 99, 1);
+}
