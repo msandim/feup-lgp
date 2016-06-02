@@ -139,7 +139,7 @@ function autoAddCategory(){
               var boxGroup = $('#boxOfGoodies');
 
               //boxGroup.append('<div class="box"><div class="box-header"><div class="col-sm-5 product-padding table-col-border table-col-border-left table-col-border-top color-backgorund-category col-size"><h3>'+categoryName+'</h3></div><div class="col-sm-3 text-center table-col-border table-col-border-top contain-button col-size"><button type="button"class="btn btn-block product-button addProduct">ADICIONAR PRODUTOS</button> </div><div class="col-sm-3 text-center table-col-border table-col-border-top contain-button col-size"><button type="button" class="btn btn-block product-button expandProducts">LISTA DE PRODUTOS <span class="glyphicon glyphicon-menu-down"></span></button></div> <div class="col-sm-1 table-col-border table-col-border-top contain-button col-size"><button type="button" class="btn btn-block product-button removeCategory"><span class="glyphicon glyphicon-remove"></span></button></div></div><div class="inputFile" style="display:none"> <div ><label class="btn btn-primary col-sm-11 product-padding table-col-border table-col-border-left table-col-border-top color-backgorund-category col-size" for="my-file-selector"><input id="my-file-selector" name="file" type="file" style="display:none;"> <!--accept=".csv"--><h4>Escolher ficheiro</h4></label><button type="submit" form="form1" value="Submit" class="col-sm-1 table-col-border table-col-border-top contain-button col-size btn btn-danger addFile">Submeter</button></div></div><div class="box-body box-body-scroll"></div></div>');
-             boxGroup.append('<div class="box"><div class="row"><div class="col-sm-5 table-col-border-first table-col-size table-contain-h3"><h3 class="aleo-font">'+response[i][j]+'</h3></div><div class="col-sm-3 text-center table-col-border-first table-col-size table-contain-button"><button type="button"class="btn btn-block table-button addProduct din-font-14">ADICIONAR PRODUTOS</button> </div><div class="col-sm-3 text-center table-col-border-first table-col-size table-contain-button"><button type="button" class="btn btn-block table-button expandProducts din-font-14">LISTA DE PRODUTOS<img src="css\\images\\seta baixo.png" class="arrow-nodge"></button></div><div class="col-sm-1 table-col-border-first table-col-size table-contain-button"><button type="button" class="btn btn-block table-button removeCategory"><img src="css\\images\\x.png" class="x-size"></button></div> <div class="inputFile" style="display:none"> <div style="padding-right:6px"><label class="btn btn-primary col-xs-12 table-col-border table-col-border-left table-col-border-top color-backgorund-category col-size"><input class="my-file-selector" name="file" type="file" style="display:none;"> <!--accept=".csv"--><h4>Escolher ficheiro</h4></label></div></div><div class="box-of-products"><div class="container-fluid"></div></div></div><div>');
+             boxGroup.append('<div class="box"><div class="row"><div class="col-sm-5 table-col-border-first table-col-size table-contain-h3"><h3 class="aleo-font center-cat">'+response[i][j]+'</h3></div><div class="col-sm-3 text-center table-col-border-first table-col-size table-contain-button"><button type="button"class="btn btn-block table-button addProduct din-font-14">ADICIONAR PRODUTOS</button> </div><div class="col-sm-3 text-center table-col-border-first table-col-size table-contain-button"><button type="button" class="btn btn-block table-button expandProducts din-font-14">LISTA DE PRODUTOS<img src="css\\images\\seta baixo.png" class="arrow-nodge"></button></div><div class="col-sm-1 table-col-border-first table-col-size table-contain-button"><button type="button" class="btn btn-block table-button removeCategory"><img src="css\\images\\x.png" class="x-size"></button></div> <div class="inputFile" style="display:none"> <div style="padding-right:6px"><label class="btn btn-primary col-xs-12 table-col-border table-col-border-left table-col-border-top color-backgorund-category col-size"><input class="my-file-selector" name="file" type="file" style="display:none;"> <!--accept=".csv"--><h4>Escolher ficheiro</h4></label></div></div><div class="box-of-products"><div class="container-fluid"></div></div></div><div>');
               CategoryArray.push(response[i][j]);
 
               //Unbind all elements with the class and then rebbind to include the new element
@@ -417,7 +417,7 @@ function AddModal() {
        }
        //edit placeholder
       $('.inputCatName').val('');
-      $('.inputCatName').attr("placeholder", ">");
+      $('.inputCatName').attr("placeholder", "> Nome da Categoria");
       //disable button submit add category
       $('#InputButtonCatName').attr("disabled", true);
       modal.style.display = "none";
@@ -431,7 +431,7 @@ function AddModal() {
           }
           //edit placeholder
           $('.inputCatName').val('');
-          $('.inputCatName').attr("placeholder", ">");
+          $('.inputCatName').attr("placeholder", "> Nome da Categoria");
           //disable button submit add category
           $('#InputButtonCatName').attr("disabled", true);
           modal.style.display = "none";

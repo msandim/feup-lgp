@@ -11,8 +11,8 @@ body {
     bottom: 0;
     width: 100%;
     padding-bottom: 20px;
-    padding-left: 70px;
-    padding-right: 80px;
+    padding-left: 220px;
+    padding-right: 230px;
 }
 
 .interface-overflow{
@@ -153,6 +153,10 @@ body {
 }
 
 
+.modal{
+  background-color: rgb(0,0,0); /* Fallback color */
+  background-color: rgba(255,255,255,0.7); /* Black w/ opacity */
+}
 
 /* Modal Content */
 .modal-content {
@@ -186,8 +190,14 @@ body {
 .close {
     color: white;
     float: right;
-    font-size: 28px;
+    font-size: 58px;
     font-weight: bold;
+    background-color: white;
+    opacity: 1;
+    min-height: 67px;
+    min-width: 68px;
+    border-left: 1px solid #F05B46;
+    padding-left: 17.5px;
 }
 
 .close:hover,
@@ -198,9 +208,10 @@ body {
 }
 
 .modal-header {
-    padding: 2px 16px;
+    padding: 2px 0px 0px 16px;
     background-color: #ED8277;
     color: black;
+    border-bottom: 1px solid #F05B46;
 }
 
 .modal-body {
@@ -274,8 +285,8 @@ body {
 }
 
 .margins {
-  margin-left: 50px;
-  margin-right: 50px;
+  margin-left: 200px;
+  margin-right: 200px;
 }
 
 @font-face {
@@ -345,4 +356,19 @@ body {
 ::-webkit-scrollbar-thumb
 {
   background: rgba(26, 61, 99, 1);
+}
+
+.bottom-separation{
+  margin-left: -25px;
+  margin-right:25px;
+}
+
+.center-cat{
+  padding-top: 12px;
+  margin-top:0px;
+  margin-bottom: 0px;
+}
+
+.modal-header-color{
+  color: #1A3D63;
 }
