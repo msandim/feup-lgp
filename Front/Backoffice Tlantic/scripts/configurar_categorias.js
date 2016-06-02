@@ -9,6 +9,7 @@ var configs={
   addQuestions: "api/addQuestions", //“category”: categoria onde adicionar as perguntas./“questions”: Perguntas a serem adicionadas.  => POST 
   // Este recurso da API adiciona um conjunto de questões (acompanhadas das respectivas respostas, características que afetam e score respetivo).
   removeQuestion: "api/removeQuestions", // “questions”: Código das Perguntas a serem removidas.
+  removeCategoryApi : "api/removeCategory", //code = Código da categoria a remover    -> DELETE
 }
 
 //arrays
@@ -23,6 +24,7 @@ var AddAnswer = [];
 var AddCharacteristic = [];
 //remover arrays da db
 var removeQuestions = [];
+var removeCategoryArr = [];
 
 var categoryArray = [];
 
@@ -381,7 +383,6 @@ function addCharacteristic(){
   });
 }
 
-
 function autoAddCategory(){
   $(document).ready(function(){
 
@@ -441,7 +442,6 @@ function autoAddCategory(){
   });
 }
 
-
 function autoAddQuestions(categoryCode,lastChild){
   var self = this;
   
@@ -483,7 +483,6 @@ function autoAddQuestions(categoryCode,lastChild){
     
   });
 }
-
 
 function autoAddAnswers(answers,lastChild){
   var self = this;
@@ -531,19 +530,23 @@ function autoAddCharacteristics(characteristics,lastChild){
 function removeCategory() {
   var self = this;
   $('.removeCategory').click(function(){
-
-    var catElement = $(this).parent().parent().find("h3");
+    var codeName;
+    var catElement = $(this).parent().parent().find('div:first').find("h3");
     var catName = catElement.text();
-    for(var i=0; i<categoryArray.length; i++){
-      if(catName==categoryArray[i]['category']){
-        categoryArray.splice(i,1);
+    for(var i=0; i<CategoryArray.length; i++){
+      //console.log(catName + "   " +CategoryArray[i] ) ;
+      if(catName==CategoryArray[i]){
+        CategoryArray.splice(i,1);
         var aux = catItems.indexOf(catName);
         catItems.splice(aux,1);
+        codeName = CodeCategoryArray[i];
         break;
       }
     }
 
     $(this).closest('.box').remove();
+    //console.log(codeName + "   " + CategoryArray.length + "  " + catName);
+    removeCategoryArr.push(codeName);
   });
 }
 
@@ -712,11 +715,9 @@ $(document).ready(function() {
         }
 
           var body = [];
-         // var teste = {};
           var answers = [];
           var attributes = [];  
 
-          //teste.push({"text":AddQuestion[1]});
           for(var y=0; y < AddQuestion.length ; y++) {
             for(var z=0; z < AddAnswer.length; z++ ) {
               console.log("1 " + AddQuestion[y] + "  " + AddAnswer[z]);
@@ -734,7 +735,9 @@ $(document).ready(function() {
                   }
 
                 }
+
                 answers.push({"text": AddAnswer[z] , attributes});
+ 
               }
               
             }
@@ -775,15 +778,13 @@ $(document).ready(function() {
               }
             }
       }
-      var body2 = [];
-      body2.push({"questions": codesQuestions});
-       console.log(JSON.stringify(body2));
+    
       $.ajax({
               url: configs.server+configs.removeQuestion,
               type: 'DELETE',
               crossDomain: true,
               contentType: "application/json; charset=utf-8",
-              data: JSON.stringify({ questions: body2 }),
+              data: JSON.stringify({ "questions": codesQuestions }),
               success: function(result) {
                   // Do something with the result
                   removeCategoryArr.length = 0;
@@ -791,6 +792,19 @@ $(document).ready(function() {
                   console.log("Sucess Remove");
               }
         });
+
+      //REMOVER CATEGORIA
+        for(var c=0; c < removeCategoryArr.length; c++) {
+          $.ajax({
+              url: configs.server+configs.removeCategoryApi+'?code='+removeCategoryArr[c],
+              type: 'DELETE',
+              crossDomain: true,
+              success: function(result) {
+                  // Do something with the result
+                  removeCategoryArr.length = 0;
+              }
+          });
+        }
 
     });
 });
