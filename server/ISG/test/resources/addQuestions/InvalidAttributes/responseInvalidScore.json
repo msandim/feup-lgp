@@ -1,0 +1,4 @@
+{
+  "error":"INVALID_SCORE",
+  "msg":"Score must be parsable to float"
+}

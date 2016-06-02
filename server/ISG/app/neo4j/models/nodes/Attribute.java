@@ -40,10 +40,14 @@ public class Attribute extends Entity
 
     public Attribute() {}
 
-    public Attribute(String name)
+    public Attribute(String name, String type)
     {
         this.name=name;
+
+        if (Type.isValid(type))
+            this.type = type;
     }
+
     public void setName(String name) {
         this.name = name;
     }
@@ -59,15 +63,11 @@ public class Attribute extends Entity
     public void setProducts(List<ProductAttribute> products) {
         this.products = products;
     }
+
+    @JsonIgnore
     public List<AnswerAttribute> getAnswerAttributes()
     {
         return this.answers;
-    }
-
-    public void setType(String type) {
-        if (Type.isValid(type)) {
-            this.type = type;
-        }
     }
 
     public String getType()

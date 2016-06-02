@@ -18,13 +18,13 @@ public class Category extends Entity
     private String name;
     private String code;
 
-    @Relationship(type = "HAS_PRODUCTS")
-    @JsonIgnore
-    private List<Product> products = new ArrayList<>();
+    //@Relationship(type = "HAS_PRODUCTS")
+    //@JsonIgnore
+    //private List<Product> products = new ArrayList<>();
 
-    @Relationship(type = "HAS_QUESTIONS")
-    @JsonIgnore
-    private List<Question> questions = new ArrayList<>();
+    //@Relationship(type = "HAS_QUESTIONS")
+    //@JsonIgnore
+    //private List<Question> questions = new ArrayList<>();
 
     public Category() {}
 

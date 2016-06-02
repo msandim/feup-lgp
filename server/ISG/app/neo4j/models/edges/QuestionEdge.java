@@ -55,9 +55,18 @@ public class QuestionEdge extends Entity
         return varianceGainMean;
     }
 
+    public void setVarianceGainMean(Float varianceGainMean) {
+        this.varianceGainMean = varianceGainMean;
+    }
+
     // Source by: http://math.stackexchange.com/questions/106700/incremental-averageing
-    public void incMeanVariance(Float newVarianceValue)
+    public void incMeanVariance(Float varianceAfterUpdate, Float varianceBeforeUpdate)
     {
+        Float newVarianceValue = (float) 0.0;
+
+        if (varianceBeforeUpdate != 0.0)
+            newVarianceValue = varianceAfterUpdate / varianceBeforeUpdate;
+
         varianceGainMean = varianceGainMean + ((newVarianceValue - varianceGainMean) / numberOfTimesChosen);
     }
 

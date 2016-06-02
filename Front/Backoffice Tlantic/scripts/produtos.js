@@ -1,72 +1,23 @@
 //GLOBALS
 
-/*$.getJSON("/some/url", function(data) {
-    // Now use this data to update your view models,
-    // and Knockout will update your UI automatically
-})*/
-
-//Trocar por serviço
-  var ProductsArray =
-   [
-     {
-       "category":"Televisão",
-        "products":[
-
-            {"name":"TV LED Smart TV3D 42'' LG 42LF652V 1"},
-            {"name":"TV LED Smart TV3D 42'' LG 43LF652V 2"},
-            {"name":"TV LED Smart TV3D 42'' LG 44LF652V 3"},
-            {"name":"TV LED Smart TV3D 42'' LG 45LF652V 4"},
-            {"name":"TV LED Smart TV3D 42'' LG 42LF652V 5"},
-            {"name":"TV LED Smart TV3D 42'' LG 43LF652V 6"},
-            {"name":"TV LED Smart TV3D 42'' LG 44LF652V 7"},
-            {"name":"TV LED Smart TV3D 42'' LG 45LF652V 8"},
-            {"name":"TV LED Smart TV3D 42'' LG 42LF652V 9"},
-            {"name":"TV LED Smart TV3D 42'' LG 43LF652V 10"},
-            {"name":"TV LED Smart TV3D 42'' LG 44LF652V 11"},
-            {"name":"TV LED Smart TV3D 42'' LG 45LF652V 12"}
-
-        ]
-      },
-      {
-       "category":"Computador",
-        "products":[
-
-            {"name":"TV LED Smart TV3D 42'' LG 52LF652V 13"},
-            {"name":"TV LED Smart TV3D 42'' LG 53LF652V 14"},
-            {"name":"TV LED Smart TV3D 42'' LG 54LF652V 15"},
-            {"name":"TV LED Smart TV3D 42'' LG 55LF652V 16"}
-
-        ]
-      }
-    ];
-
-   Products=ko.observableArray();
-
-function filter(){
-
-  var ViewModel = function() {
-    var self = this;
-
-      self.filter = ko.observable('');
-
-      /*self.items = ko.observableArray(["Televisão", "Computador", "Micro-ondas", "Frigorífico", "Telemóvel", "Colunas", "Rádio",
-        "Televisão", "Computador", "Frigorífico", "Telemóvel", "Colunas", "Rádio", "Televisão", "Computador", "Micro-ondas", "Frigorífico",
-         "Telemóvel", "Colunas", "Rádio", "Televisão", "Computador", "Frigorífico", "Telemóvel", "Colunas", "Rádio"]);
-
-      self.items.sort();*/
-
-      self.filteredItems = ko.computed(function() {
-      var filter = self.filter().toLowerCase();
-        if(!filter) { return Products(); }
-        return Products().filter(function(i) {
-          return i.toLowerCase().indexOf(filter) > -1;
-        });
-      });
-    };
-
-    ko.applyBindings(new ViewModel());
-
+//Servidor e serviços
+var configs={
+  server:"http://intelligentsalesguide.me:9000/",
+  getAllCategories:"api/allCategories",
+  productsByCategory: "api/productsByCategory?code=",
+  addCategoryApi :"api/addCategory", //?name=x&code=   -> POST
+  removeCategoryApi : "api/removeCategory", //code = Código da categoria a remover    -> DELETE
+  addProducts : "api/addProducts", //code  E  products (ficheiro csv)  -> POST
+  deleteProducts : "api/removeProducts" //category (codigo da cat)  products (array dos produtos a serem removidos)
 }
+
+//arrays
+var CategoryArray = [];
+var CodeCategoryArray = [];
+var ProductsArray= [];
+var ProductEarArray = [];
+var removeCategoryArr = [];
+var removeProductsArr = [];
 
 function expandProducts() {
   var self = this;
@@ -80,39 +31,14 @@ function expandProducts() {
     }
 
     var span = $(this).find(">:first-child");
-    var spanClass = span.attr("class");
-    if(spanClass == "glyphicon glyphicon-menu-up"){
-      span.attr("class","glyphicon glyphicon-menu-down");
+    var spanClass = span.attr("src");
+    console.log(spanClass);
+    if(spanClass == "css\\images\\seta cima.png"){
+      span.attr("src","css\\images\\seta baixo.png");
     }else{
-      span.attr("class","glyphicon glyphicon-menu-up");
+      span.attr("src","css\\images\\seta cima.png");
     }
   });
-}
-
-
-function addFile() {
-   //add produtos a uma categoria
-  $('.btn-danger').click( function(){
-      $(this).parent().parent().hide('fast');
-
-  var fatherInputFile = $(this).parent().parent().parent();
-  var nameCategory = fatherInputFile.find(">:first-child").find('h3').text();
-
-  var filename = $('.my-file-selector').val().split('\\').pop();
-  var myFile = $('.my-file-selector').prop('files');
-
-  //console.log("OLA " + fatherInputFile.attr('class') + " " + filename +"  " + nameCategory);
-
-  $.ajax({
-    url: '/api/addc/',
-    data: {name: nameCategory, products: myFile},
-    type: 'POST',
-    success: function(data){
-      alert(data);
-    }
-  });
-
-   });
 }
 
 function addCategory() {
@@ -120,7 +46,9 @@ function addCategory() {
   $('.addCategory').click(function(){
 
     var categoryName = $('.inputCatName').val();
-    var CategoryExists = [];
+    var categoryCode = $('.inputCatCode').val();
+
+   /* var CategoryExists = [];
     var nameCategory = false;
 
     for (var i = 0; i < ProductsArray.length; i++) {
@@ -149,34 +77,37 @@ function addCategory() {
           nameCategory=true;
         }
       }
-    }
+    }*/
+
+
+    $.ajax({
+        url: configs.server+configs.addCategoryApi,
+        contentType: "application/json; charset=utf-8",
+        data: JSON.stringify({name: categoryName , code: categoryCode}),
+        type: "POST",
+        crossDomain: true,
+    })
+
+    //add array
+    CategoryArray.push(categoryName);
+    CodeCategoryArray.push(categoryCode);
 
     var boxGroup = $('#boxOfGoodies');
 
     categoryName = capitalizeFirstLetter(categoryName);
-    //boxGroup.append('<div class="box"><div class="box-header"><div class="col-sm-5 product-padding table-col-border table-col-border-left table-col-border-top color-backgorund-category col-size"><h3>'+categoryName+'</h3></div><div class="col-sm-3 text-center table-col-border table-col-border-top contain-button col-size"><button type="button"class="btn btn-block product-button addProduct">Adicionar Produtos</button> </div><div class="col-sm-3 text-center table-col-border table-col-border-top contain-button col-size"><button type="button" class="btn btn-block product-button expandProducts">Lista de Produtos <span class="glyphicon glyphicon-menu-down"></span></button></div> <div class="col-sm-1 table-col-border table-col-border-top contain-button col-size"><button type="button" class="btn btn-block product-button removeCategory"><span class="glyphicon glyphicon-remove"></span></button></div></div><div class="inputFile" style="display:none"> <div ><label class="btn btn-primary col-sm-11 product-padding table-col-border table-col-border-left table-col-border-top color-backgorund-category col-size" for="my-file-selector"><input id="my-file-selector" name="file" type="file" style="display:none;"> <!--accept=".csv"--><h4>Escolher ficheiro</h4></label><button type="submit" form="form1" value="Submit" class="col-sm-1 table-col-border table-col-border-top contain-button col-size btn btn-danger addFile">Submeter</button></div></div><div class="box-body box-body-scroll"></div></div>');
-    boxGroup.append('<div class="box"><div class="row"><div class="col-sm-5 table-col-border-first table-col-size table-contain-h3"><h3>'+categoryName+'</h3></div><div class="col-sm-3 text-center table-col-border-first table-col-size table-contain-button"><button type="button"class="btn btn-block table-button addProduct">Adicionar Produtos</button> </div><div class="col-sm-3 text-center table-col-border-first table-col-size table-contain-button"><button type="button" class="btn btn-block table-button expandProducts">Lista de Produtos <span class="glyphicon glyphicon-menu-down"></span></button></div><div class="col-sm-1 table-col-border-first table-col-size table-contain-button"><button type="button" class="btn btn-block table-button"><span class="glyphicon glyphicon-remove"></span></button></div> <div class="inputFile" style="display:none"> <div ><label class="btn btn-primary col-sm-12 product-padding table-col-border table-col-border-left table-col-border-top color-backgorund-category col-size" ><input class="my-file-selector" name="file" type="file" style="display:none;"> <!--accept=".csv"--><h4>Escolher ficheiro</h4></label></div></div><div class="box-of-products"><div class="container-fluid"></div></div></div><div>');
+    //boxGroup.append('<div class="box"><div class="box-header"><div class="col-sm-5 product-padding table-col-border table-col-border-left table-col-border-top color-backgorund-category col-size"><h3>'+categoryName+'</h3></div><div class="col-sm-3 text-center table-col-border table-col-border-top contain-button col-size"><button type="button"class="btn btn-block product-button addProduct">ADICIONAR PRODUTOS</button> </div><div class="col-sm-3 text-center table-col-border table-col-border-top contain-button col-size"><button type="button" class="btn btn-block product-button expandProducts">LISTA DE PRODUTOS <span class="glyphicon glyphicon-menu-down"></span></button></div> <div class="col-sm-1 table-col-border table-col-border-top contain-button col-size"><button type="button" class="btn btn-block product-button removeCategory"><span class="glyphicon glyphicon-remove"></span></button></div></div><div class="inputFile" style="display:none"> <div ><label class="btn btn-primary col-sm-11 product-padding table-col-border table-col-border-left table-col-border-top color-backgorund-category col-size" for="my-file-selector"><input id="my-file-selector" name="file" type="file" style="display:none;"> <!--accept=".csv"--><h4>Escolher ficheiro</h4></label><button type="submit" form="form1" value="Submit" class="col-sm-1 table-col-border table-col-border-top contain-button col-size btn btn-danger addFile">Submeter</button></div></div><div class="box-body box-body-scroll"></div></div>');
+    boxGroup.append('<div class="box"><div class="row"><div class="col-sm-5 table-col-border-first table-col-size table-contain-h3"><h3 class="aleo-font">'+categoryName+'</h3></div><div class="col-sm-3 text-center table-col-border-first table-col-size table-contain-button"><button type="button"class="btn btn-block table-button addProduct din-font-14">ADICIONAR PRODUTOS</button> </div><div class="col-sm-3 text-center table-col-border-first table-col-size table-contain-button"><button type="button" class="btn btn-block table-button expandProducts din-font-14">LISTA DE PRODUTOS <span class="glyphicon glyphicon-menu-down"></span></button></div><div class="col-sm-1 table-col-border-first table-col-size table-contain-button"><button type="button" class="btn btn-block table-button removeCategory"><img src="css\\images\\x.png" class="x-size"></button></div> <div class="inputFile" style="display:none;"> <div ><label class="btn btn-primary col-sm-11 table-col-border table-col-border-left table-col-border-top color-backgorund-category col-size" ><input class="my-file-selector" name="file" type="file" style="display:none;"> <!--accept=".csv"--><h4>Escolher ficheiro</h4></label></div></div><div class="box-of-products"><div class="container-fluid"></div></div></div><div>');
 
-    //Add new category to arrays
-    Products.push(categoryName);
-    Products.sort();
 
-    var toInsert={
-      "category": categoryName,
-      "products":[]
-    }
-    ProductsArray.push(toInsert);
 
     //Unbind all elements with the class and then rebbind to include the new element
       $(".expandProducts").unbind("click", expandProducts());
       $(".expandProducts").bind("click", expandProducts());
-      $(".btn-danger").unbind("click", addFile());
-      $(".btn-danger").bind("click", addFile());
       $(".removeCategory").unbind("click", removeCategory());
       $(".removeCategory").bind("click", removeCategory());
       $(document).unbind("ready");
-     $(document).bind("ready", function () { $(".my-file-selector").change(function(){var FileName = $(this).val().split('\\').pop(); $(this).parent().find('h4').text(FileName);});  $(document).on('click','.addProduct',function(){var boxParent = $( this ).parent().parent();var boxInputFile = boxParent.next(); if(boxInputFile.is(":visible")){$(boxInputFile).hide('fast'); }else{$(boxInputFile).show('medium');}var DefaultName = boxParent.parent().find('h4').text("Escolher ficheiro"); }); $(document).on('change', '.my-file-selector', function() {var FileName = $(this).val().split('\\').pop(); $(this).parent().find('h4').text(FileName); }); });
-      
+      $(document).bind("ready", function () { $(".my-file-selector").change(function(){var FileName = $(this).val().split('\\').pop(); $(this).parent().find('h4').text(FileName);});  $(document).on('click','.addProduct',function(){var boxParent = $( this ).parent().parent();var boxInputFile = boxParent.next(); if(boxInputFile.is(":visible")){$(boxInputFile).hide('fast'); }else{$(boxInputFile).show('medium');}var DefaultName = boxParent.parent().find('h4').text("Escolher ficheiro"); }); $(document).on('change', '.my-file-selector', function() {var FileName = $(this).val().split('\\').pop(); $(this).parent().find('h4').text(FileName); });   $(document).on('click', '.saveChanges', function() { for(var c=0; c < removeCategoryArr.length; c++) { $.ajax({ url: configs.server+configs.removeCategoryApi+'?code='+removeCategoryArr[c], type: 'DELETE', crossDomain: true, success: function(result) {} });}}); });
+
       //clear placeholder
       $('.inputCatName').val('');
       $('.inputCatName').attr("placeholder", ">");
@@ -189,31 +120,55 @@ function addCategory() {
 
 function autoAddCategory(){
   $(document).ready(function(){
-    ProductsArray.forEach(function(category){
-      var self = this;
-      var boxGroup = $('#boxOfGoodies');
+    $.ajax({
+        url: configs.server+configs.getAllCategories,
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        type: "GET",
+        crossDomain: true,
+      }).done(function(response){
+        loadFinished();
+        var i, j;
 
-      categoryName = capitalizeFirstLetter(category['category']);
-      //boxGroup.append('<div class="box"><div class="box-header"><div class="col-sm-5 product-padding table-col-border table-col-border-left table-col-border-top color-backgorund-category col-size"><h3>'+categoryName+'</h3></div><div class="col-sm-3 text-center table-col-border table-col-border-top contain-button col-size"><button type="button"class="btn btn-block product-button addProduct">Adicionar Produtos</button> </div><div class="col-sm-3 text-center table-col-border table-col-border-top contain-button col-size"><button type="button" class="btn btn-block product-button expandProducts">Lista de Produtos <span class="glyphicon glyphicon-menu-down"></span></button></div> <div class="col-sm-1 table-col-border table-col-border-top contain-button col-size"><button type="button" class="btn btn-block product-button removeCategory"><span class="glyphicon glyphicon-remove"></span></button></div></div><div class="inputFile" style="display:none"> <div ><label class="btn btn-primary col-sm-11 product-padding table-col-border table-col-border-left table-col-border-top color-backgorund-category col-size" for="my-file-selector"><input id="my-file-selector" name="file" type="file" style="display:none;"> <!--accept=".csv"--><h4>Escolher ficheiro</h4></label><button type="submit" form="form1" value="Submit" class="col-sm-1 table-col-border table-col-border-top contain-button col-size btn btn-danger addFile">Submeter</button></div></div><div class="box-body box-body-scroll"></div></div>');
-     boxGroup.append('<div class="box"><div class="row"><div class="col-sm-5 table-col-border-first table-col-size table-contain-h3"><h3>'+categoryName+'</h3></div><div class="col-sm-3 text-center table-col-border-first table-col-size table-contain-button"><button type="button"class="btn btn-block table-button addProduct">Adicionar Produtos</button> </div><div class="col-sm-3 text-center table-col-border-first table-col-size table-contain-button"><button type="button" class="btn btn-block table-button expandProducts">Lista de Produtos <span class="glyphicon glyphicon-menu-down"></span></button></div><div class="col-sm-1 table-col-border-first table-col-size table-contain-button"><button type="button" class="btn btn-block table-button"><span class="glyphicon glyphicon-remove"></span></button></div> <div class="inputFile" style="display:none"> <div ><label class="btn btn-primary col-sm-12 product-padding table-col-border table-col-border-left table-col-border-top color-backgorund-category col-size" ><input class="my-file-selector" name="file" type="file" style="display:none;"> <!--accept=".csv"--><h4>Escolher ficheiro</h4></label></div></div><div class="box-of-products"><div class="container-fluid"></div></div></div><div>');
+        for(i=0;i<response.length;i++)
+          for(j in response[i]) {
+            console.log("property name: " + j,"value: "+response[i][j]);
 
-      Products.push(categoryName);
-      Products.sort();
+            if(!j.localeCompare("name")) {
+              var self = this;
+              var boxGroup = $('#boxOfGoodies');
 
-      //Unbind all elements with the class and then rebbind to include the new element
-      $(".expandProducts").unbind("click", expandProducts());
-      $(".expandProducts").bind("click", expandProducts());
-      $(".btn-danger").unbind("click", addFile());
-      $(".btn-danger").bind("click", addFile());
-      $(".removeCategory").unbind("click", removeCategory());
-      $(".removeCategory").bind("click", removeCategory());
-      $(document).unbind("ready");
-      $(document).bind("ready", function () { $(".my-file-selector").change(function(){var FileName = $(this).val().split('\\').pop(); $(this).parent().find('h4').text(FileName);});  $(document).on('click','.addProduct',function(){var boxParent = $( this ).parent().parent();var boxInputFile = boxParent.next(); if(boxInputFile.is(":visible")){$(boxInputFile).hide('fast'); }else{$(boxInputFile).show('medium');}var DefaultName = boxParent.parent().find('h4').text("Escolher ficheiro"); }); $(document).on('change', '.my-file-selector', function() {var FileName = $(this).val().split('\\').pop(); $(this).parent().find('h4').text(FileName); }); });
-        
-       var lastChild = boxGroup.find(">:last-child");
-      //console.log("OLA " + lastChild.attr('class') );
-      autoAddProducts(categoryName, lastChild);
-    });
+              //boxGroup.append('<div class="box"><div class="box-header"><div class="col-sm-5 product-padding table-col-border table-col-border-left table-col-border-top color-backgorund-category col-size"><h3>'+categoryName+'</h3></div><div class="col-sm-3 text-center table-col-border table-col-border-top contain-button col-size"><button type="button"class="btn btn-block product-button addProduct">ADICIONAR PRODUTOS</button> </div><div class="col-sm-3 text-center table-col-border table-col-border-top contain-button col-size"><button type="button" class="btn btn-block product-button expandProducts">LISTA DE PRODUTOS <span class="glyphicon glyphicon-menu-down"></span></button></div> <div class="col-sm-1 table-col-border table-col-border-top contain-button col-size"><button type="button" class="btn btn-block product-button removeCategory"><span class="glyphicon glyphicon-remove"></span></button></div></div><div class="inputFile" style="display:none"> <div ><label class="btn btn-primary col-sm-11 product-padding table-col-border table-col-border-left table-col-border-top color-backgorund-category col-size" for="my-file-selector"><input id="my-file-selector" name="file" type="file" style="display:none;"> <!--accept=".csv"--><h4>Escolher ficheiro</h4></label><button type="submit" form="form1" value="Submit" class="col-sm-1 table-col-border table-col-border-top contain-button col-size btn btn-danger addFile">Submeter</button></div></div><div class="box-body box-body-scroll"></div></div>');
+             boxGroup.append('<div class="box"><div class="row"><div class="col-sm-5 table-col-border-first table-col-size table-contain-h3"><h3 class="aleo-font center-cat">'+response[i][j]+'</h3></div><div class="col-sm-3 text-center table-col-border-first table-col-size table-contain-button"><button type="button"class="btn btn-block table-button addProduct din-font-14">ADICIONAR PRODUTOS</button> </div><div class="col-sm-3 text-center table-col-border-first table-col-size table-contain-button"><button type="button" class="btn btn-block table-button expandProducts din-font-14">LISTA DE PRODUTOS<img src="css\\images\\seta baixo.png" class="arrow-nodge"></button></div><div class="col-sm-1 table-col-border-first table-col-size table-contain-button"><button type="button" class="btn btn-block table-button removeCategory"><img src="css\\images\\x.png" class="x-size"></button></div> <div class="inputFile" style="display:none"> <div style="padding-right:6px"><label class="btn btn-primary col-xs-12 table-col-border table-col-border-left table-col-border-top color-backgorund-category col-size"><input class="my-file-selector" name="file" type="file" style="display:none;"> <!--accept=".csv"--><h4>Escolher ficheiro</h4></label></div></div><div class="box-of-products"><div class="container-fluid"></div></div></div><div>');
+              CategoryArray.push(response[i][j]);
+
+              //Unbind all elements with the class and then rebbind to include the new element
+              $(".expandProducts").unbind("click", expandProducts());
+              $(".expandProducts").bind("click", expandProducts());
+              $(".removeCategory").unbind("click", removeCategory());
+              $(".removeCategory").bind("click", removeCategory());
+              $(document).unbind("ready");
+              $(document).bind("ready", function () { $(".my-file-selector").change(function(){var FileName = $(this).val().split('\\').pop(); $(this).parent().find('h4').text(FileName);});  $(document).on('click','.addProduct',function(){var boxParent = $( this ).parent().parent();var boxInputFile = boxParent.next(); if(boxInputFile.is(":visible")){$(boxInputFile).hide('fast'); }else{$(boxInputFile).show('medium');}var DefaultName = boxParent.parent().find('h4').text("Escolher ficheiro"); }); $(document).on('change', '.my-file-selector', function() {var FileName = $(this).val().split('\\').pop(); $(this).parent().find('h4').text(FileName); });   $(document).on('click', '.saveChanges', function() { for(var c=0; c < removeCategoryArr.length; c++) { $.ajax({ url: configs.server+configs.removeCategoryApi+'?code='+removeCategoryArr[c], type: 'DELETE', crossDomain: true, success: function(result) {} });}}); });
+
+               var lastChild = boxGroup.find(">:last-child");
+              //console.log("OLA " + lastChild.attr('class') );
+
+            }
+            else {
+               CodeCategoryArray.push(response[i][j]);
+              autoAddProducts(response[i][j], lastChild);
+            }
+
+          }
+
+        console.log(CodeCategoryArray);
+        console.log(CategoryArray);
+      }).fail(function(err){
+        loadFinished();
+        processError(err);
+      });
+
+
   });
 
 }
@@ -221,18 +176,42 @@ function autoAddCategory(){
 function autoAddProducts(categoryName,lastChild) {
   var self = this;
   var boxProducts = lastChild.find(".box-of-products").find(".container-fluid");
-  for (var i = 0; i < ProductsArray.length; i++) {
-    //console.log("OLA2 " + ProductsArray[i].category );
-    if(ProductsArray[i].category === categoryName){
-      for(var j = 0; j < ProductsArray[i].products.length; j++) {
-        //console.log("OLA3 " + ProductsArray[i].products[j].name );
-        product=capitalizeFirstLetter(ProductsArray[i].products[j].name);
-        boxProducts.append('<div class="row"><div class="col-sm-10 table-col-border-first table-col-size"> <h3>'+product+'</h3></div> <div class="col-sm-1 table-col-border-first table-col-size table-contain-button"><button type="button" class="btn btn-block table-button removeProduct"><span class="glyphicon glyphicon-remove"></span></button></div></div>');
-        $(".removeProduct").unbind("click", removeProduct());
-        $(".removeProduct").bind("click", removeProduct());
-      }
-    }
+  for (var i = 0; i < CodeCategoryArray.length; i++) {
+      //console.log(CodeCategoryArray[i] + " PRODUTOS " +  categoryName);
+      if(categoryName === CodeCategoryArray[i]){
+
+        $.ajax({
+                url: configs.server+configs.productsByCategory+CodeCategoryArray[i],
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                type: "GET",
+                crossDomain: true,
+              }).done(function(response){
+                loadFinished();
+                var i, j;
+
+                for(i=0;i<response.length;i++)
+                  for(j in response[i]) {
+                    if(!j.localeCompare("name")) {
+                     //console.log("property name: " + j,"value: "+response[i][j]);
+                     ProductsArray.push(response[i][j]);
+
+                    boxProducts.append('<div class="row product-row"><div class="col-sm-11 table-col-border-first table-col-size nameProducts din-font-14"> '+response[i][j]+' </div> <div class="col-sm-1 table-col-border-first table-col-size table-contain-button"><button type="button" class="btn btn-block table-button removeProduct"><img src="css\\images\\x.png" class="x-size"></button></div></div>');
+                    $(".removeProduct").unbind("click", removeProduct());
+                    $(".removeProduct").bind("click", removeProduct());
+                    }
+                    else if (!j.localeCompare("ean")) {
+                      //console.log(response[i][j]);
+                      ProductEarArray.push(response[i][j]);
+                    }
+                  }
+               }).fail(function(err){
+            loadFinished();
+            processError(err);
+          });
+        }
   }
+
 }
 
 
@@ -261,7 +240,7 @@ $(document).ready(function() {
        if(boxInputFile.is(":visible")){
         $(boxInputFile).hide('fast');
        }else{
-        $(boxInputFile).show('medium');
+        $(boxInputFile).show('fast');
         }
 
       var DefaultName = boxParent.parent().find('h4').text("Escolher ficheiro");
@@ -270,49 +249,147 @@ $(document).ready(function() {
      $(document).on('change', '.my-file-selector', function() {
       var FileName = $(this).val().split('\\').pop();
       $(this).parent().find('h4').text(FileName);
+     });
+
+      $(document).on('click', '.saveChanges', function() {
+        //REMOVER CATEGORIA
+        for(var c=0; c < removeCategoryArr.length; c++) {
+          $.ajax({
+              url: configs.server+configs.removeCategoryApi+'?code='+removeCategoryArr[c],
+              type: 'DELETE',
+              crossDomain: true,
+              success: function(result) {
+                  // Do something with the result
+                  removeCategoryArr.length = 0;
+              }
+          });
+        }
+
+        //remover produtos
+        for(var c=0; c < CodeCategoryArray.length; c++) {
+          var arrayproducts=[];
+
+            for(var i=0; i < removeProductsArr.length; i++) {
+              if(removeProductsArr[i][0] === CodeCategoryArray[c]) {
+                console.log("LOL " + removeProductsArr.length + "  " + ProductsArray.length);
+
+                  for(var x=0; x < ProductsArray.length; x++) {
+
+                    var nomePro = removeProductsArr[i][1].trim();
+                    var nomeProd = ProductsArray[x].trim();
+                    //console.log("PEA " + nomePro+ " E " + nomeProd);
+                    if(nomePro === nomeProd) {
+                      //console.log("AQUIIII");
+                      arrayproducts.push(ProductEarArray[x]);
+                    }
+
+                  }
+
+              }
+            }
+
+
+            //console.log("FINAL " +  CodeCategoryArray[c] + " EEE " + arrayproducts + "  EARNS  " + ProductEarArray.length);
+            if(arrayproducts.length != 0) {
+               $.ajax({
+                url: configs.server+configs.deleteProducts,
+                type: 'DELETE',
+                data: JSON.stringify({category: CodeCategoryArray[c], products: arrayproducts}),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                crossDomain: true,
+                success: function(result) {
+                    // Do something with the result
+                    removeProductsArr.length = 0;
+                }
+               });
+           }
+        }
+
+        // adicionar produtos
+        $(".my-file-selector").each(function() {
+            var self = $(this);
+            var filename = self.val().split('\\').pop();
+            var myFile = self.prop('files');
+
+            if(filename.length !== 0) {
+              var fatherInputFile = self.parent().parent().parent().parent();
+              var nameCategory = fatherInputFile.find(">:first-child").find('h3').text();
+
+              var index;
+              for (var i = 0; i < CategoryArray.length; i++) {
+                if(nameCategory === CategoryArray[i]) {
+                  index = i;
+                  break;
+                }
+              }
+
+              var code = CodeCategoryArray[index];
+              var check = {code: code, csv: myFile[0]};
+              var test1 = new FormData();
+              test1.append("code", code);
+              test1.append("csv", myFile[0]);
+
+
+              $.ajax({
+                  url:  configs.server+configs.addProducts,
+                  type: 'POST',
+                  data: test1,
+                  contentType: false,
+                  processData: false,
+                  success: function (data) {
+                       console.log("SUCESSO   ADD PRODUCTS");
+                  },
+              });
+
+              console.log(filename + " E " +nameCategory + " C " + code);
+            }
+        });
+
     });
 
 });
 
 
 function removeProduct() {
-  var self = this;
-  $('.removeProduct').click(function(){
+
+  $('.removeProduct').on('click', function(){
 
     var currentRow = $(this).closest(".row");
     var nameCategory = currentRow.parent().closest(".row").find(">:first-child").find("h3").text();
-    var product = currentRow.find('h3').text();
+    var product = currentRow.find('.nameProducts').text();
     //console.log("Cate " + nameCategory.find('h3:first').html() + " PROD " + product);
 
-      /*$.ajax({
-        url: '/api/removep/',
-        data: {category: nameCategory, products: product},
-        type: 'POST',
-        success: function(data){
-          alert(data);
-        }
-        });*/
+    var index;
+    for (var i = 0; i < CategoryArray.length; i++) {
+      if(nameCategory === CategoryArray[i]) {
+        index = i;
+        break;
+      }
+    }
 
-      currentRow.remove();
+    removeProductsArr.push([CodeCategoryArray[index] , product]);
+    console.log(removeProductsArr);
+
+    currentRow.remove();
   });
 }
 
 function removeCategory() {
    var self = this;
-  $('.removeCategory').click(function(){
+  $('.removeCategory').on('click', function(){
 
      var currentBox = $(this).closest(".box");
      var categoryName = currentBox.find(">:first-child").find(">:first-child").find('h3').text();
-     console.log(categoryName);
-
-     /*$.ajax({
-      url: 'api/removec/',
-      data: categoryName,
-      type: 'POST',
-      success: function(data){
-        alert(data);
+     var index;
+      for (var i = 0; i < CategoryArray.length; i++) {
+        if(categoryName === CategoryArray[i]) {
+          index = i;
+          break;
+        }
       }
-    });*/
+    removeCategoryArr.push(CodeCategoryArray[index]);
+    // console.log(CodeCategoryArray[index]);
 
      currentBox.remove();
   });
@@ -340,7 +417,7 @@ function AddModal() {
        }
        //edit placeholder
       $('.inputCatName').val('');
-      $('.inputCatName').attr("placeholder", ">");
+      $('.inputCatName').attr("placeholder", "> Nome da Categoria");
       //disable button submit add category
       $('#InputButtonCatName').attr("disabled", true);
       modal.style.display = "none";
@@ -354,7 +431,7 @@ function AddModal() {
           }
           //edit placeholder
           $('.inputCatName').val('');
-          $('.inputCatName').attr("placeholder", ">");
+          $('.inputCatName').attr("placeholder", "> Nome da Categoria");
           //disable button submit add category
           $('#InputButtonCatName').attr("disabled", true);
           modal.style.display = "none";
@@ -371,4 +448,17 @@ function AddModal() {
 //UTILS
 function capitalizeFirstLetter(string) {
     return string.charAt(0).toUpperCase() + string.slice(1);
+}
+
+
+function loadFinished(){
+  $('#loady').remove();
+  $("body").find("*").removeAttr("disabled");
+  $('.interface-square').children().show();
+}
+
+function processError(err){
+  var msg = err;
+  msg = JSON.parse(msg['responseText']);
+  alert(msg['msg']);
 }

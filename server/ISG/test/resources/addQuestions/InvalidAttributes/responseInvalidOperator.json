@@ -1,0 +1,4 @@
+{
+  "error":"INVALID_OPERATOR",
+  "msg":"Operators must be equal to one of these: < <= > >= = !="
+}

@@ -1,0 +1,61 @@
+{
+  "category": "pcs",
+  "questions": [
+    {
+      "text": "QUESTION_4",
+      "answers": [
+        {
+          "text": "QUESTION_4_1",
+          "attributes": [
+            {
+              "name": "width (cm)",
+              "operator": "<",
+              "value": "400",
+              "score": 0.5
+            },
+            {
+              "name": "resolution",
+              "operator": "=",
+              "value": "720p",
+              "score": 0.1
+            }
+          ]
+        },
+        {
+          "text": "QUESTION_4_2",
+          "attributes": [
+            {
+              "name": "width (cm)",
+              "operator": ">",
+              "value": "200",
+              "score": 0.5
+            },
+            {
+              "name": "resolution",
+              "operator": "=",
+              "value": "1080p",
+              "score": 0.1
+            }
+          ]
+        },
+        {
+          "text": "QUESTION_4_3",
+          "attributes": [
+            {
+              "name": "width (cm)",
+              "operator": "<",
+              "value": "100",
+              "score": 0.5
+            },
+            {
+              "name": "resolution",
+              "operator": "=",
+              "value": "2K",
+              "score": 0.1
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,364 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+* {
+    -webkit-tap-highlight-color: rgba(0,0,0,0); /* make transparent link selection, adjust last value opacity 0 to 1.0 */
+}
+
+body {
+    -webkit-touch-callout: none;                /* prevent callout to copy image, etc when tap to hold */
+    -webkit-text-size-adjust: none;             /* prevent webkit from resizing text to fit */
+    -webkit-user-select: none;                  /* prevent copy paste, to allow, change 'none' to 'text' */
+    /*background-color:#E4E4E4;
+    background-image:linear-gradient(top, #A7A7A7 0%, #E4E4E4 51%);
+    background-image:-webkit-linear-gradient(top, #A7A7A7 0%, #E4E4E4 51%);
+    background-image:-ms-linear-gradient(top, #A7A7A7 0%, #E4E4E4 51%);
+    background-image:-webkit-gradient(
+        linear,
+        left top,
+        left bottom,
+        color-stop(0, #A7A7A7),
+        color-stop(0.51, #E4E4E4)
+    );
+    background-attachment:fixed;
+    font-family:'HelveticaNeue-Light', 'HelveticaNeue', Helvetica, Arial, sans-serif;
+    font-size:12px;
+    height:100%;
+    margin:0px;
+    padding:0px;
+    text-transform:uppercase;
+    width:100%;*/
+}
+
+/* Portrait layout (default) */
+.app {
+    background:url(../img/logo.png) no-repeat center top; /* 170px x 200px */
+    position:absolute;             /* position in the center of the screen */
+    left:50%;
+    top:50%;
+    height:50px;                   /* text area height */
+    width:225px;                   /* text area width */
+    text-align:center;
+    padding:180px 0px 0px 0px;     /* image height is 200px (bottom 20px are overlapped with text) */
+    margin:-115px 0px 0px -112px;  /* offset vertical: half of image height and text area height */
+                                   /* offset horizontal: half of text area width */
+}
+
+/* Landscape layout (with min-width) */
+@media screen and (min-aspect-ratio: 1/1) and (min-width:400px) {
+    .app {
+        background-position:left center;
+        padding:75px 0px 75px 170px;  /* padding-top + padding-bottom + text area = image height */
+        margin:-90px 0px 0px -198px;  /* offset vertical: half of image height */
+                                      /* offset horizontal: half of image width and text area width */
+    }
+}
+
+/*h1 {
+    font-size:24px;
+    font-weight:normal;
+    margin:0px;
+    overflow:visible;
+    padding:0px;
+    text-align:center;
+}*/
+
+.event {
+    border-radius:4px;
+    -webkit-border-radius:4px;
+    color:#FFFFFF;
+    font-size:12px;
+    margin:0px 30px;
+    padding:2px 0px;
+}
+
+.event.listening {
+    background-color:#333333;
+    display:block;
+}
+
+.event.received {
+    background-color:#4B946A;
+    display:none;
+}
+
+@keyframes fade {
+    from { opacity: 1.0; }
+    50% { opacity: 0.4; }
+    to { opacity: 1.0; }
+}
+
+@-webkit-keyframes fade {
+    from { opacity: 1.0; }
+    50% { opacity: 0.4; }
+    to { opacity: 1.0; }
+}
+
+.blink {
+    animation:fade 3000ms infinite;
+    -webkit-animation:fade 3000ms infinite;
+}
+
+
+/*ADDED CSS*/
+
+.main {
+  padding: 20px;
+  margin-left: 50px;
+  margin-right: 50px;
+}
+
+.interface-square {
+  border: 3px solid #F05B46;
+  padding-top: 20px;
+  padding-left: 20px;
+  padding-right: 20px;
+}
+
+.h1-title{
+  padding: 0px;
+  margin-top: 0px;
+  margin-left: 0px;
+  margin-right: 0px;
+}
+
+.h4-above-title {
+  margin: 0px;
+  padding: 0px;
+}
+
+.interface-square .buttons {
+  margin-bottom: 20px;
+}
+
+.buttons-row {
+  padding-top: 20px;
+  padding-left: 20px;
+  padding-right: 20px;
+}
+
+.history_p{
+  color:#ff6666;
+}
+
+.center-div{
+  padding-top: 25px;
+}
+
+.center-div-off{
+  padding-top: 12.5px;
+}
+
+html, body{
+  height:100%;
+  width:100%;
+  overflow:hidden;
+}
+
+.interface-size{
+  height:400px;
+  overflow-y: auto;
+  padding-top: 50px;
+  padding-bottom: 50px;
+}
+
+.button-pad{
+  padding: 0;
+  border: 2px solid white;
+}
+
+.thumbnail-size{
+  height: 200px;
+}
+
+.thumbnail-pad{
+  padding:0;
+}
+
+.center-row{
+  vertical-align: center;
+}
+
+#loady {
+  position: relative;
+  top: 50%;
+}
+
+#loadyText{
+  text-align: center;
+}
+/* Center the loader */
+#loader {
+  position: relative;
+  left: 50%;
+  z-index: 2;
+  width: 150px;
+  height: 150px;
+  margin: -75px 0 0 -75px;
+  border: 16px solid #f3f3f3;
+  border-radius: 50%;
+  border-top: 16px solid #3498db;
+  width: 120px;
+  height: 120px;
+  -webkit-animation: spin 2s linear infinite;
+  animation: spin 2s linear infinite;
+}
+
+@-webkit-keyframes spin {
+  0% { -webkit-transform: rotate(0deg); }
+  100% { -webkit-transform: rotate(360deg); }
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.grad {
+    background: #ED8277; /* For browsers that do not support gradients */
+    background: -webkit-linear-gradient(#ED8277, #F05B46); /* For Safari 5.1 to 6.0 */
+    background: -o-linear-gradient(#ED8277, #F05B46); /* For Opera 11.1 to 12.0 */
+    background: -moz-linear-gradient(#ED8277, #F05B46); /* For Firefox 3.6 to 15 */
+    background: linear-gradient(#ED8277, #F05B46); /* Standard syntax */
+}
+
+.transparent{
+  background-color: transparent;
+}
+
+.index-title{
+  height: 53px;
+  padding-top:18px;
+  color: #1A3D63;
+}
+
+::-webkit-scrollbar
+{
+  width: 12px;  /* for vertical scrollbars */
+  height: 12px; /* for horizontal scrollbars */
+}
+
+::-webkit-scrollbar-track
+{
+  background: rgba(230, 231, 232, 1);
+}
+
+::-webkit-scrollbar-thumb
+{
+  background: rgba(26, 61, 99, 1);
+}
+
+@font-face {
+  font-family: 'Aleo Regular';
+  src: url('fonts\\Aleo_font_v1.2.2\\Webfont Kit\\Regular\\aleo-regular-webfont.ttf')  format('truetype'), /* Safari, Android, iOS */
+       url('fonts\\Aleo_font_v1.2.2\\Desktop OTF\\Aleo-Regular.ttf') format('truetype')
+}
+
+@font-face {
+  font-family: 'Din Regular';
+  src: url('fonts\\Din_Regular\\ufonts.com_din-regular.ttf') format('truetype')
+}
+
+.aleo-font{
+  font-family: "Aleo Regular";
+  font-size: 24pt;
+}
+
+.din-font-14{
+  font-family: "Din Regular";
+  font-size: 14pt;
+}
+
+.din-font-12{
+  font-family: "Din Regular";
+  font-size: 12pt;
+}
+
+.no-border-radius{
+  border-radius: 0 !important;
+  -webkit-appearance: none;
+}
+
+.square-button{
+  color: white;
+  border: 3px solid white;
+}
+
+.title-color{
+  color: #1A3D63;
+}
+
+.button-size{
+  height: 80px;
+}
+
+.bottom-button-background{
+  background-image: url('images\\caixa.png');
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+}
+
+.less-pad{
+  padding-top: 20px;
+  padding-bottom: 20px;
+}
+
+.hub-white{
+  color:white;
+}
+
+.hub-blue{
+  color: #1A3D63;
+}
+
+.score-border{
+  border: 2px solid white;
+  min-width:51px;
+  max-width: 105px;
+  margin-bottom: 10px;
+}
+
+.total-border{
+  border: 2px solid white;
+  min-width:105px;
+  max-width: 105px;
+}
+
+.image-padding{
+  padding-top:0px;
+  padding-left:15px;
+  padding-right:0px;
+  padding-bottom: 15px;
+}
+
+.no-padding{
+  padding-top:0px;
+  padding-left:0px;
+  padding-right:0px;
+  padding-bottom: 0px;
+}
+
+.hub-rows{
+  margin-left:0px;
+}
+
+img{
+   max-width: 100%;
+   max-height: 100%;
+ }

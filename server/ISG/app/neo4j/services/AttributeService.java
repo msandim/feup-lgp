@@ -29,4 +29,11 @@ public class AttributeService extends GenericService<Attribute>
         else
             return null;
     }
+
+    public void deleteNotConnectedAttributes()
+    {
+        // Delete attributes that are not connected now:
+        String purgeAttributesQuery= new StringBuilder("MATCH (at:Attribute) OPTIONAL MATCH (at)--(p:Product) WHERE p IS NULL detach delete at").toString();
+        Neo4jSessionFactory.getInstance().getNeo4jSession().query(purgeAttributesQuery, Collections.EMPTY_MAP);
+    }
 }

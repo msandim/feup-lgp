@@ -1,7 +1,8 @@
 package controllers;
 
-import algorithm.AlgorithmLogic;
+import algorithm.QuestionPicker;
 import algorithm.SequenceBuilder;
+import algorithm.TopKProductPicker;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -15,7 +16,6 @@ import play.mvc.Controller;
 import play.mvc.Result;
 import utils.ControllerUtils;
 import utils.MapUtils;
-import utils.Statistics;
 
 import javax.inject.Singleton;
 import java.util.*;
@@ -25,7 +25,8 @@ import java.util.List;
 import java.util.Map;
 
 @Singleton
-public class QuestionController extends Controller {
+public class QuestionController extends Controller
+{
 
     @BodyParser.Of(BodyParser.Json.class)
     public Result getNextQuestion()
@@ -52,10 +53,21 @@ public class QuestionController extends Controller {
 
         ProductService productService = new ProductService();
         CategoryService categoryService = new CategoryService();
+        AlgorithmParametersService parametersService = new AlgorithmParametersService();
 
         // **Semantic Error handling **:
         if (categoryService.findByCode(category) == null)
-            return badRequest(ControllerUtils.generalError("INVALID_CATEGORY","Category not found!"));
+            return badRequest(ControllerUtils.generalError("INVALID_CATEGORY", "Category not found!"));
+
+        // See if the field question and answer exist for each pair question-answer:
+        for (JsonNode questionAnswer : answers)
+        {
+            if (questionAnswer.get("question") == null)
+                return badRequest(ControllerUtils.missingField("question"));
+
+            if (questionAnswer.get("answer") == null)
+                return badRequest(ControllerUtils.missingField("answer"));
+        }
 
 
         // *******************************************************************
@@ -73,16 +85,10 @@ public class QuestionController extends Controller {
         {
             Map<Product, Float> productScores = productService.initializeProductScores(category);
 
-            for(JsonNode questionAnswer: answers)
+            for (JsonNode questionAnswer : answers)
             {
                 String questionCode = questionAnswer.get("question").asText();
                 String answerCode = questionAnswer.get("answer").asText();
-
-                if (questionCode == null)
-                    return badRequest(ControllerUtils.missingField("question"));
-
-                if (answerCode == null)
-                    return badRequest(ControllerUtils.missingField("answer"));
 
                 // Update the scores:
                 if (!productService.updateScores(questionCode, answerCode, productScores))
@@ -94,15 +100,17 @@ public class QuestionController extends Controller {
             }
 
             // Retrieve the top X products with higher score:
-            orderedProductScores = MapUtils.orderByValueDecreasing(productScores);
+            //orderedProductScores = MapUtils.orderByValueDecreasing(productScores);
+            orderedProductScores = TopKProductPicker.getTopProducts(productScores);
 
-            // Return the next question:
-            nextQuestion = AlgorithmLogic.getNextQuestion(category, answeredQuestionCodes);
+            // Return the next question if we want more questions:
+            if (answeredQuestionCodes.size() < parametersService.getAlgorithmParameters().getNumberOfQuestions())
+                nextQuestion = QuestionPicker.getNextQuestion(category, answeredQuestionCodes);
         }
         // If we're seeking the first question:
         else
         {
-            nextQuestion = AlgorithmLogic.getFirstQuestion(category);
+            nextQuestion = QuestionPicker.getFirstQuestion(category);
 
             // If we can't even retrieve 1 question, we must give an error:
             if (nextQuestion == null)
@@ -129,8 +137,9 @@ public class QuestionController extends Controller {
 
         ArrayNode products = result.putArray("products");
         orderedProductScores.forEach(x -> products.addObject()
-                .put("EAN", x.getKey().getEAN())
+                .put("ean", x.getKey().getEan())
                 .put("name", x.getKey().getName())
+                .put("price", x.getKey().getPrice())
                 .put("score", x.getValue()));
 
         return ok(result);
@@ -176,7 +185,16 @@ public class QuestionController extends Controller {
         AnswerService answerService = new AnswerService();
 
         if (categoryService.findByCode(category) == null)
-            return badRequest(ControllerUtils.generalError("INVALID_CATEGORY","Category not found!"));
+            return badRequest(ControllerUtils.generalError("INVALID_CATEGORY", "Category not found!"));
+
+        for (JsonNode questionAnswer : answers)
+        {
+            if (questionAnswer.get("question") == null)
+                return badRequest(ControllerUtils.missingField("question"));
+
+            if (questionAnswer.get("answer") == null)
+                return badRequest(ControllerUtils.missingField("answer"));
+        }
 
         // *******************************************************************
         // ********************* Request Processing **************************
@@ -186,27 +204,19 @@ public class QuestionController extends Controller {
         Map<Product, Float> productScores = productService.initializeProductScores(category);
 
         //for(JsonNode questionAnswer: answers)
-        for(JsonNode questionAnswer: answers)
+        for (JsonNode questionAnswer : answers)
         {
             String questionCode = questionAnswer.get("question").asText();
             String answerCode = questionAnswer.get("answer").asText();
 
-            if (questionCode == null)
-                return badRequest(ControllerUtils.missingField("question"));
-
-            if (answerCode == null)
-                return badRequest(ControllerUtils.missingField("answer"));
-
-            Float varianceBeforeUpdate = AlgorithmLogic.calculateScoreVariance(productScores);
+            Float varianceBeforeUpdate = QuestionPicker.calculateScoreVariance(productScores);
 
             // Update the scores:
             if (!productService.updateScores(questionCode, answerCode, productScores))
                 return badRequest(ControllerUtils.generalError("INVALID_QUESTION_ANSWER",
                         "One of the question ID or answer ID you supplied is not valid!"));
 
-            Float varianceAfterUpdate = AlgorithmLogic.calculateScoreVariance(productScores);
-
-            // BEGIN TRANSACTION
+            Float varianceAfterUpdate = QuestionPicker.calculateScoreVariance(productScores);
 
             Question currentQuestion = questionService.findByCode(questionCode);
             Answer currentAnswer = answerService.findByCode(questionCode, answerCode);
@@ -234,7 +244,7 @@ public class QuestionController extends Controller {
                             "The sequence you supplied is not valid!"));
 
                 questionEdge.incNumberOfTimesChosen();
-                questionEdge.incMeanVariance(varianceAfterUpdate / varianceBeforeUpdate);
+                questionEdge.incMeanVariance(varianceAfterUpdate, varianceBeforeUpdate);
 
                 if (feedback == 1)
                     questionEdge.incNumberOfTimesGoodFeedback();
@@ -245,26 +255,24 @@ public class QuestionController extends Controller {
 
             sequence.put(currentQuestion, currentAnswer);
             lastQuestion = currentQuestion;
-
-            // COMMIT
         }
 
         // Build Sequence:
-        SequenceBuilder.build(sequence);
+        SequenceBuilder.build(sequence, feedback);
 
         return ok(Json.newObject());
     }
 
 
     @BodyParser.Of(BodyParser.Json.class)
-    public Result createOrUpdateQuestion() {
-
+    public Result createQuestions()
+    {
         JsonNode jsonRequest = request().body().asJson();
 
         //detect missing or null values
-        if(jsonRequest.get("category") == null)
+        if (jsonRequest.get("category") == null)
             return badRequest(ControllerUtils.missingField("category"));
-        if(jsonRequest.get("questions") == null)
+        if (jsonRequest.get("questions") == null)
             return badRequest(ControllerUtils.missingField("questions"));
 
         // Service initialization
@@ -278,20 +286,26 @@ public class QuestionController extends Controller {
         Category category = categoryService.findByCode(categoryCode);
 
         if (category == null)
-            return badRequest(ControllerUtils.generalError("INVALID_CATEGORY","Category not found!"));
+            return badRequest(ControllerUtils.generalError("INVALID_CATEGORY", "Category not found!"));
 
         //parse questions
         JsonNode questionsNode = jsonRequest.findPath("questions");
         Iterator<JsonNode> itQuestion = questionsNode.elements();
 
         //if field is present but has no content
-        if(!itQuestion.hasNext())
-            return badRequest(ControllerUtils.generalError("NO_QUESTIONS","Questions empty!"));
+        if (!itQuestion.hasNext())
+            return badRequest(ControllerUtils.generalError("NO_QUESTIONS", "Questions empty!"));
+
+        List<Question> questionsAdded = new ArrayList<>();
+        List<Question> otherQuestions = questionService.findByCategoryCode(categoryCode, false); // Load all the questions
 
         //iterate through questions
-        while (itQuestion.hasNext()) {
-
+        while (itQuestion.hasNext())
+        {
             JsonNode questionNode = itQuestion.next();
+
+            if (questionNode.get("text") == null)
+                return badRequest(ControllerUtils.missingField("question text"));
 
             String questionText = questionNode.findPath("text").asText();
 
@@ -302,51 +316,54 @@ public class QuestionController extends Controller {
             question.setCategory(category);
 
             //parse answers
-            JsonNode answersNode = questionNode.findPath("answers");
+            JsonNode answersNode = questionNode.get("answers");
 
-            if(answersNode == null)
+            if (answersNode == null)
                 return badRequest(ControllerUtils.missingField("answers"));
 
             List<Answer> answers = new ArrayList<>();
             Iterator<JsonNode> itAnswer = answersNode.elements();
 
-            if(!itAnswer.hasNext())
-                return badRequest(ControllerUtils.generalError("NO_ANSWERS","Answers for the question not found!"));
+            if (!itAnswer.hasNext())
+                return badRequest(ControllerUtils.generalError("NO_ANSWERS", "Answers for the question not found!"));
 
             //iterate through answers
-            while (itAnswer.hasNext()) {
-
+            while (itAnswer.hasNext())
+            {
                 JsonNode answerNode = itAnswer.next();
+
+                if (answerNode.get("text") == null)
+                    return badRequest(ControllerUtils.missingField("answer text"));
 
                 String answerText = answerNode.findValue("text").asText();
 
                 //create answer object
                 Answer answer = new Answer(answerText);
 
-                JsonNode attributesNode = answerNode.findPath("attributes");
+                JsonNode attributesNode = answerNode.get("attributes");
 
-                if(attributesNode == null)
+                if (attributesNode == null)
                     return badRequest(ControllerUtils.missingField("attributes"));
 
                 List<AnswerAttribute> answerAttrs = new ArrayList<>();
                 Iterator<JsonNode> itAttributes = attributesNode.elements();
 
-                if(!itAttributes.hasNext())
-                    return badRequest(ControllerUtils.generalError("NO_ATTRIBUTES","Attributes for the answer not found!"));
+                if (!itAttributes.hasNext())
+                    return badRequest(ControllerUtils.generalError("NO_ATTRIBUTES", "Attributes for the answer not found!"));
 
                 //iterate through attributes
-                while (itAttributes.hasNext()) {
-
+                while (itAttributes.hasNext())
+                {
                     JsonNode attributeNode = itAttributes.next();
 
                     //detecting missing fields
-                    if(attributeNode.findValue("name") == null)
+                    if (attributeNode.findValue("name") == null)
                         return badRequest(ControllerUtils.missingField("attribute name"));
-                    if(attributeNode.findValue("operator") == null)
+                    if (attributeNode.findValue("operator") == null)
                         return badRequest(ControllerUtils.missingField("attribute operator"));
-                    if(attributeNode.findValue("value") == null)
+                    if (attributeNode.findValue("value") == null)
                         return badRequest(ControllerUtils.missingField("attribute value"));
-                    if(attributeNode.findValue("score") == null)
+                    if (attributeNode.findValue("score") == null)
                         return badRequest(ControllerUtils.missingField("attribute score"));
 
                     //verify if the attribute exists in the database
@@ -366,15 +383,18 @@ public class QuestionController extends Controller {
                     String attributeValue = attributeNode.findValue("value").asText();
 
                     //validate attribute operator relation
-                    if(attr.getType().equals(Attribute.Type.CATEGORICAL) && !AnswerAttribute.Operators.isValidForCategorical(attributeOperator))
-                        return badRequest(ControllerUtils.generalError("INVALID_ATTRIBUTE_OPERATOR_RELATION", "The operator(" + attributeOperator + ") is not valid with the attribute " + attributeName));
+                    if (attr.getType().equals(Attribute.Type.CATEGORICAL) && !AnswerAttribute.Operators.isValidForCategorical(attributeOperator))
+                        return badRequest(ControllerUtils.generalError("INVALID_ATTRIBUTE_OPERATOR_RELATION", "The operator '" + attributeOperator + "' is not valid with the attribute '" + attributeName + "'"));
 
                     //validate attribute
-                    if(attr.getType().equals(Attribute.Type.NUMERIC)) {
-                        try {
+                    if (attr.getType().equals(Attribute.Type.NUMERIC))
+                    {
+                        try
+                        {
                             float f = Float.parseFloat(attributeValue);
 
-                        } catch (NumberFormatException nfe) {
+                        } catch (NumberFormatException nfe)
+                        {
                             return badRequest(ControllerUtils.generalError("INVALID_VALUE", "Value must be parsable to float"));
                         }
                     }
@@ -382,12 +402,14 @@ public class QuestionController extends Controller {
                     String chScore = attributeNode.findValue("score").asText();
 
                     //verify if the score is a valid number
-                    try {
+                    try
+                    {
                         float f = Float.parseFloat(chScore);
                         AnswerAttribute answerAttr = new AnswerAttribute(answer, attr, attributeOperator, attributeValue, f);
                         answerAttrs.add(answerAttr);
 
-                    } catch (NumberFormatException nfe) {
+                    } catch (NumberFormatException nfe)
+                    {
                         return badRequest(ControllerUtils.generalError("INVALID_SCORE", "Score must be parsable to float"));
                     }
                 }
@@ -402,37 +424,37 @@ public class QuestionController extends Controller {
             //connecting answers to question
             question.setAnswers(answers);
 
-           //connecting same category questions
-            List<Question> sameCategoryQuestions = questionService.findByCategoryCode(categoryCode, false);
-            if(sameCategoryQuestions != null) {
-                for (Question q: sameCategoryQuestions) {
-                    if(!q.equals(question)) {
-                        QuestionEdge questionEdge = new QuestionEdge(question, q);
-                        questionEdgeService.createOrUpdate(questionEdge, 0);
-                        questionEdge = new QuestionEdge(q, question);
-                        questionEdgeService.createOrUpdate(questionEdge, 0);
-                    }
+            //adding answer to DB
+            questionsAdded.add(questionService.createOrUpdate(question, 2));
+        }
+
+        for(Question question: questionsAdded)
+        {
+            // Connect to existing questions:
+            for (Question q : otherQuestions)
+            {
+                if (!q.equals(question))
+                {
+                    QuestionEdge questionEdge = new QuestionEdge(question, q);
+                    questionEdgeService.createOrUpdate(questionEdge, 0);
+                    questionEdge = new QuestionEdge(q, question);
+                    questionEdgeService.createOrUpdate(questionEdge, 0);
                 }
             }
 
-            //adding answer to DB
-            questionService.createOrUpdate(question, 2);
+            // Connect to other added questions:
+            for (Question q : questionsAdded)
+            {
+                if (!q.equals(question))
+                {
+                    QuestionEdge questionEdge = new QuestionEdge(question, q);
+                    questionEdgeService.createOrUpdate(questionEdge, 0);
+                }
+            }
         }
 
         return ok(Json.newObject());
     }
-
-    /*
-    public Result retrieveAllQuestions()
-    {
-        // Retrieve all the questions in the system:
-        QuestionService service = new QuestionService();
-        List<Question> questions = new ArrayList<>();
-        service.findAll().forEach(questions::add);
-
-        return ok(Json.toJson(questions));
-    }
-    */
 
     public Result getQuestionsByCategory(String code)
     {
@@ -445,22 +467,34 @@ public class QuestionController extends Controller {
         return ok(Json.toJson(questionService.findByCategoryCode(code, false)));
     }
 
-    // TODO ver o que retorna se n existir a questao com este ID
-    /*
-    public Result retrieveQuestion(Long id)
+    @BodyParser.Of(BodyParser.Json.class)
+    public Result removeQuestions()
     {
-        QuestionService service = new QuestionService();
-        Question question = service.find(id);
+        JsonNode jsonRequest = request().body().asJson();
 
-        return ok(Json.toJson(question));
-    }
-    */
+        //detect missing or null values
+        if (jsonRequest.get("questions") == null)
+            return badRequest(ControllerUtils.missingField("questions"));
 
-    public Result deleteQuestion(Long id)
-    {
-        QuestionService service = new QuestionService();
-        service.delete(id);
-        return ok(Json.toJson(id));
+        // Service initialization
+        QuestionService questionService = new QuestionService();
+
+        JsonNode questionsNode = jsonRequest.findPath("questions");
+        Iterator<JsonNode> itQuestions = questionsNode.elements();
+
+        while (itQuestions.hasNext())
+        {
+            JsonNode node = itQuestions.next();
+            String questionCode = node.asText();
+            Question question = questionService.findByCode(questionCode);
+
+            if (question == null)
+                return badRequest(ControllerUtils.generalError("INVALID_QUESTION", "One or more questions specified for elimination do not exist!"));
+
+            questionService.deleteQuestion(question.getCode());
+        }
+
+        return ok(Json.newObject());
     }
 
 }

@@ -30,19 +30,19 @@ public class QuestionService extends GenericService<Question>
         if (includeProducts)
         {
             query = new StringBuilder(
-                    "MATCH (c:Category)-[:HAS_QUESTIONS]->(q:Question)-[h:HAS]->(a:Answer)-[i:INFLUENCES]->(at:Attribute)")
-                    .append("<-[v:VALUES]-(p:Product) WHERE c.code = '")
+                    "MATCH (c:Category)-[:HAS_QUESTIONS]->(q:Question)-[h:HAS]->(a:Answer) WHERE c.code = '")
                     .append(code)
-                    .append("' RETURN q,h,a,i,at,v,p")
+                    .append("' OPTIONAL MATCH (a)-[i:INFLUENCES*0..]->(at:Attribute)")
+                    .append(" OPTIONAL MATCH (at)<-[v:VALUES]-(p:Product) RETURN q,h,a,i,at,v,p")
                     .toString();
         }
         else
         {
             query = new StringBuilder(
-                    "MATCH (c:Category)-[:HAS_QUESTIONS]->(q:Question)-[h:HAS]->(a:Answer)-[i:INFLUENCES]->(at:Attribute)")
-                    .append("WHERE c.code = '")
+                    "MATCH (c:Category)-[:HAS_QUESTIONS]->(q:Question)-[h:HAS]->(a:Answer) WHERE c.code = '")
                     .append(code)
-                    .append("' RETURN q,h,a,i,at")
+                    .append("' OPTIONAL MATCH (a)-[i:INFLUENCES*0..]->(at:Attribute)")
+                    .append(" RETURN q,h,a,i,at")
                     .toString();
         }
 
@@ -64,5 +64,13 @@ public class QuestionService extends GenericService<Question>
             return iterator.next();
         else
             return null;
+    }
+
+    public void deleteQuestion(String code)
+    {
+        // Delete questions and associated questions:
+        String query = new StringBuilder("MATCH (q:Question{code:\'" + code + "\'}) OPTIONAL MATCH (q)-[]->(a:Answer) ")
+        .append("OPTIONAL MATCH (q)<-[:QUESTION]-(n1) OPTIONAL MATCH (n2)<-[:NEXT_NODE*1..]-(n1) OPTIONAL MATCH (n1)<-[:NEXT_NODE*1..]-(n3) detach delete q,a,n1,n2,n3").toString();
+        Neo4jSessionFactory.getInstance().getNeo4jSession().query(query, Collections.EMPTY_MAP);
     }
 }

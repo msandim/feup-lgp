@@ -1,33 +1,36 @@
 # Routes
 # This file defines all application routes (Higher priority routes first)
 # ~~~~
-
 # An example controller showing a sample home page
-GET     /                                       controllers.HomeController.index
+GET           /                                        controllers.HomeController.index
 
-POST    /api/addQuestions                       controllers.QuestionController.createOrUpdateQuestion
-POST    /api/getNextQuestion                    controllers.QuestionController.getNextQuestion
-POST    /api/sendFeedback                       controllers.QuestionController.sendFeedback
-GET     /api/questionsByCategory                controllers.QuestionController.getQuestionsByCategory(code: String)
+POST          /api/addQuestions                        controllers.QuestionController.createQuestions
+POST          /api/getNextQuestion                     controllers.QuestionController.getNextQuestion
+POST          /api/sendFeedback                        controllers.QuestionController.sendFeedback
+GET           /api/questionsByCategory                 controllers.QuestionController.getQuestionsByCategory(code: String)
+DELETE        /api/removeQuestions                     controllers.QuestionController.removeQuestions
 
-GET     /api/allCategories                      controllers.CategoryController.retrieveAllCategories
-POST    /api/addCategory                        controllers.CategoryController.createCategory(name: String, code: String)
-GET     /api/productsByCategory                 controllers.ProductController.getProductsByCategory(code: String)
-GET     /api/category                           controllers.CategoryController.retrieveCategory(id: Long)
-#POST    /api/addCategory                        controllers.CategoryController.createOrUpdateCategory
-GET     /api/deleteCategory/                    controllers.CategoryController.deleteCategory(id: Long)
+GET           /api/allCategories                       controllers.CategoryController.retrieveAllCategories
+POST          /api/addCategory                         controllers.CategoryController.createOrUpdateCategory
+DELETE        /api/removeCategory                      controllers.CategoryController.removeCategory(code: String)
 
-GET     /api/sequencesByCategory                controllers.SequenceController.getSequencesByCategory(code: String)
+GET           /api/sequencesByCategory                 controllers.SequenceController.getSequencesByCategory(code: String)
 
-POST    /api/addProducts                        controllers.ProductController.importFromCsv()
+POST          /api/addProducts                         controllers.ProductController.importFromCsv()
+GET           /api/productsByCategory                  controllers.ProductController.getProductsByCategory(code: String)
+DELETE        /api/removeProducts                      controllers.ProductController.removeProducts
+
+POST          /api/configAlgorithm                     controllers.AlgorithmConfigController.configAlgorithm()
 
 # Backoffice:
-GET     /backoffice/                            controllers.HomeController.index()
-GET     /backoffice/configurar_categorias       controllers.HomeController.configurarCategorias()
-GET     /backoffice/produtos                    controllers.HomeController.produtos()
+GET           /backoffice/                             controllers.HomeController.index()
+GET           /backoffice/configurar_categorias        controllers.HomeController.configurarCategorias()
+GET           /backoffice/produtos                     controllers.HomeController.produtos()
+
+GET           /frontend/                                controllers.HomeController.frontend()
 
 
-GET     /message                               controllers.AsyncController.message
+GET           /message                                 controllers.AsyncController.message
 
 # Map static resources from the /public folder to the /assets URL path
-GET     /assets/*file                          controllers.Assets.versioned(path="/public", file: Asset)
+GET           /assets/*file                            controllers.Assets.versioned(path="/public", file: Asset)
