@@ -27,7 +27,7 @@ GET           /backoffice/                             controllers.HomeControlle
 GET           /backoffice/configurar_categorias        controllers.HomeController.configurarCategorias()
 GET           /backoffice/produtos                     controllers.HomeController.produtos()
 
-GET           /frontend/                                controllers.HomeController.frontend()
+#GET           /frontend/                                controllers.HomeController.frontend()
 
 
 GET           /message                                 controllers.AsyncController.message
