@@ -32,7 +32,6 @@ function expandProducts() {
 
     var span = $(this).find(">:first-child");
     var spanClass = span.attr("src");
-    console.log(spanClass);
     if(spanClass == "css\\images\\seta cima.png"){
       span.attr("src","css\\images\\seta baixo.png");
     }else{
