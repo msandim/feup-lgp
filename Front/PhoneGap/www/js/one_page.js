@@ -103,7 +103,7 @@ function autoFillFirstQuestionPage(){
 
   var main = $('.main');
   main.empty();
-  main.append('<h4 class="h4-above-title din-font-12 title-color">CATEGORIA: '+toNextPage['category']+'</h4><h1 class="h1-title aleo-font title-color">'+service['question']['text']+'</h1><div class="interface-square interface-size grad"></div><div class="buttons-row"><div class="row"><div class= "col-ms-2"><button type="button" class="btn backStep no-border-radius din-font-14 bottom-button-background">Recuar</button><button type="button" class="btn pull-right skipQuestion no-border-radius din-font-14 bottom-button-background">Avançar pergunta</button></div></div></div>');
+  main.append('<h4 class="h4-above-title din-font-12 title-color">CATEGORIA: '+toNextPage['category']+'</h4><h1 class="h1-title aleo-font title-color">'+service['question']['text']+'</h1><div class="interface-square interface-size grad"></div><div class="buttons-row"><div class="row"><div class= "col-ms-2"><button type="button" class="btn backStep no-border-radius din-font-14 bottom-button-background">Recuar</button></div></div></div>');
   service['answers'].forEach(function(answer){
     var interfaceSquare = $('.interface-square');
     interfaceSquare.append('<div class="col-sm-4"><button type="button" class="btn buttons autoFillHubPage transparent no-border-radius square-button button-size din-font-14" style="display: block; width: 100%;">'+answer['text']+'</button></div>');
@@ -273,7 +273,7 @@ function autoFillQuestionPage(){
 
   var main = $('.main');
   main.empty();
-  main.append('<h4 class="h4-above-title din-font-12 title-color">CATEGORIA: '+toNextPage['category']+'</h4><h1 class="h1-title aleo-font title-color">'+service['question']['text']+'</h1><div class="interface-square interface-size grad"></div><div class="buttons-row"><div class="row"><div class= "col-ms-2"><button type="button" class="btn pull-right skipQuestion no-border-radius din-font-14 bottom-button-background">Avançar pergunta</button><button type="button" class="btn pull-right autoFillFeedbackPage no-border-radius din-font-14 bottom-button-background" style="margin-right:10px;">Finalizar sem responder</button></div></div></div>');
+  main.append('<h4 class="h4-above-title din-font-12 title-color">CATEGORIA: '+toNextPage['category']+'</h4><h1 class="h1-title aleo-font title-color">'+service['question']['text']+'</h1><div class="interface-square interface-size grad"></div><div class="buttons-row"><div class="row"><div class= "col-ms-2"><button type="button" class="btn pull-right autoFillFeedbackPage no-border-radius din-font-14 bottom-button-background" style="margin-right:10px;">Finalizar sem responder</button></div></div></div>');
   service['answers'].forEach(function(answer){
     var interfaceSquare = $('.interface-square');
     interfaceSquare.append('<div class="col-sm-4"><button type="button" class="btn buttons autoFillHubPage transparent no-border-radius square-button button-size din-font-14" style="display: block; width: 100%;">'+answer['text']+'</button></div>');
