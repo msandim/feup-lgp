@@ -103,6 +103,9 @@ public class ProductController extends Controller
                             if (attInfo.length == 1)
                                 return badRequest(ControllerUtils.generalError("MISSING_ATTRIBUTE_TYPE", "Attribute '" + attName + "' lacks his type ('categorical' or 'numeric')!"));
 
+                            if (attributeService.findByName(attName) != null)
+                                return badRequest(ControllerUtils.generalError("INVALID_ATTRIBUTE_NAME", "Attribute '" + attName + "' already exists in the database!"));
+
                             if (!attInfo[1].equals(Attribute.Type.CATEGORICAL) && !attInfo[1].equals(Attribute.Type.NUMERIC))
                                 return badRequest(ControllerUtils.generalError("INVALID_ATTRIBUTE_TYPE", "Attribute '" + attName + "' must have a valid type: ('categorical' or 'numeric')!"));
 
@@ -154,8 +157,6 @@ public class ProductController extends Controller
         } catch (IOException e)
         {
             e.printStackTrace();
-        } finally
-        {
         }
 
         return ok(Json.newObject());
