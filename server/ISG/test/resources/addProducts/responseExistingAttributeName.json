@@ -1,0 +1,4 @@
+{
+  "error":"INVALID_ATTRIBUTE_NAME",
+  "msg":"Attribute 'Categoria' already exists in the database!"
+}
