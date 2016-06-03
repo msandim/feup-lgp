@@ -1,12 +1,10 @@
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import neo4j.Neo4jSessionFactory;
-import org.junit.*;
+import org.junit.Test;
 import play.libs.Json;
 
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
 
 import static org.junit.Assert.*;
@@ -123,6 +121,7 @@ public class MobileAPITest extends APITest {
     public void testGetNextQuestionNoQuestions() {
         populateDatabase();
 
+        //Adding a category with nothing associated
         request("api/addCategory", POST, Json.newObject().put("code", "empty").put("name", "Empty Category"), null);
 
         response = request("api/getNextQuestion", POST, readJsonFromFile("getNextQuestion/bodyNoQuestions.json"), null);
@@ -136,18 +135,21 @@ public class MobileAPITest extends APITest {
     public void testGetNextQuestionInvalidFields() {
         populateDatabase();
 
+        //Getting the next question with invalid answers
         response = request("api/getNextQuestion", POST, readJsonFromFile("getNextQuestion/InvalidFields/bodyInvalidAnswers.json"), null);
 
         assert response != null;
         assertEquals(BAD_REQUEST, response.getStatus());
         assertEquals(readJsonFromFile("getNextQuestion/InvalidFields/responseInvalidQuestionsAnswers.json"), response.asJson());
 
+        //Getting the next question with invalid questions
         response = request("api/getNextQuestion", POST, readJsonFromFile("getNextQuestion/InvalidFields/bodyInvalidQuestions.json"), null);
 
         assert response != null;
         assertEquals(BAD_REQUEST, response.getStatus());
         assertEquals(readJsonFromFile("getNextQuestion/InvalidFields/responseInvalidQuestionsAnswers.json"), response.asJson());
 
+        //Getting the next question with invalid category
         response = request("api/getNextQuestion", POST, readJsonFromFile("getNextQuestion/InvalidFields/bodyInvalidCategory.json"), null);
 
         assert response != null;
@@ -159,24 +161,28 @@ public class MobileAPITest extends APITest {
     public void testGetNextQuestionMissingFields() {
         populateDatabase();
 
+        //Getting the next question with no category
         response = request("api/getNextQuestion", POST, readJsonFromFile("getNextQuestion/MissingFields/bodyMissingFieldCategory.json"), null);
 
         assert response != null;
         assertEquals(BAD_REQUEST, response.getStatus());
         assertEquals(readJsonFromFile("getNextQuestion/MissingFields/responseMissingFieldCategory.json"), response.asJson());
 
+        //Getting the next question with no answers
         response = request("api/getNextQuestion", POST, readJsonFromFile("getNextQuestion/MissingFields/bodyMissingFieldAnswers.json"), null);
 
         assert response != null;
         assertEquals(BAD_REQUEST, response.getStatus());
         assertEquals(readJsonFromFile("getNextQuestion/MissingFields/responseMissingFieldAnswers.json"), response.asJson());
 
+        //Getting the next question with no question
         response = request("api/getNextQuestion", POST, readJsonFromFile("getNextQuestion/MissingFields/bodyMissingFieldQuestion.json"), null);
 
         assert response != null;
         assertEquals(BAD_REQUEST, response.getStatus());
         assertEquals(readJsonFromFile("getNextQuestion/MissingFields/responseMissingFieldQuestion.json"), response.asJson());
 
+        //Getting the next question with no answer
         response = request("api/getNextQuestion", POST, readJsonFromFile("getNextQuestion/MissingFields/bodyMissingFieldAnswer.json"), null);
 
         assert response != null;
@@ -205,7 +211,6 @@ public class MobileAPITest extends APITest {
 
     //=========================Errors===============================//
 
-
     @Test
     public void testSendFeedbackEmptyAnswerList() {
         populateDatabase();
@@ -221,41 +226,48 @@ public class MobileAPITest extends APITest {
     public void testSendFeedbackInvalidFields() {
         populateDatabase();
 
+        //Sending feedback with invalid category
         response = request("api/sendFeedback", POST, readJsonFromFile("sendFeedback/InvalidFields/bodyInvalidCategory.json"), null);
 
         assert response != null;
         assertEquals(BAD_REQUEST, response.getStatus());
         assertEquals(readJsonFromFile("sendFeedback/InvalidFields/responseInvalidCategory.json"), response.asJson());
 
+        //Sending feedback with invalid feedback
         response = request("api/sendFeedback", POST, readJsonFromFile("sendFeedback/InvalidFields/bodyInvalidFeedback.json"), null);
 
         assert response != null;
         assertEquals(BAD_REQUEST, response.getStatus());
         assertEquals(readJsonFromFile("sendFeedback/InvalidFields/responseInvalidFeedback.json"), response.asJson());
 
+        //Sending feedback with invalid question
         response = request("api/sendFeedback", POST, readJsonFromFile("sendFeedback/InvalidFields/bodyInvalidQuestion.json"), null);
 
         assert response != null;
         assertEquals(BAD_REQUEST, response.getStatus());
         assertEquals(readJsonFromFile("sendFeedback/InvalidFields/responseInvalidQuestionAnswer.json"), response.asJson());
 
+        //Sending feedback with invalid answer
         response = request("api/sendFeedback", POST, readJsonFromFile("sendFeedback/InvalidFields/bodyInvalidAnswer.json"), null);
 
         assert response != null;
         assertEquals(BAD_REQUEST, response.getStatus());
         assertEquals(readJsonFromFile("sendFeedback/InvalidFields/responseInvalidQuestionAnswer.json"), response.asJson());
 
-        Neo4jSessionFactory.getInstance().getNeo4jSession().query("CREATE (at1: Attribute {name: 'width (cm)', type: 'numeric'});", Collections.EMPTY_MAP);
-        Neo4jSessionFactory.getInstance().getNeo4jSession().query("CREATE (at2: Attribute {name: 'resolution', type: 'categorical'});", Collections.EMPTY_MAP);
+        //Sending feedback with an invalid sequence
+        settingUpAttributes();
 
+        //Adding a new question for the sequence
         response = request("api/addQuestions", POST, readJsonFromFile("sendFeedback/InvalidFields/bodyAddingQuestionsForSequence.json"), null);
         assert response != null;
         assertEquals(OK, response.getStatus());
 
+        //Adding a new question for the new category
         response = request("api/questionsByCategory", GET, null, Json.newObject().put("code", "dws"));
         assert response != null;
         assertEquals(OK, response.getStatus());
 
+        //Getting the code of the questions
         List<String> codes = response.asJson().findValuesAsText("code");
 
         JsonNode body = readJsonFromFile("sendFeedback/InvalidFields/bodyInvalidSequence.json");
@@ -266,8 +278,7 @@ public class MobileAPITest extends APITest {
                         .put("answer", codes.get(1))
                 );
 
-        System.out.println(body);
-
+        //Sending feedback with questions belonging to another category
         response = request("api/sendFeedback", POST, body, null);
 
         assert response != null;
@@ -279,30 +290,35 @@ public class MobileAPITest extends APITest {
     public void testSendFeedbackMissingFields() {
         populateDatabase();
 
+        //Sending feedback with no category
         response = request("api/sendFeedback", POST, readJsonFromFile("sendFeedback/MissingFields/bodyMissingCategory.json"), null);
 
         assert response != null;
         assertEquals(BAD_REQUEST, response.getStatus());
         assertEquals(readJsonFromFile("sendFeedback/MissingFields/responseMissingCategory.json"), response.asJson());
 
+        //Sending feedback with no feedback
         response = request("api/sendFeedback", POST, readJsonFromFile("sendFeedback/MissingFields/bodyMissingFeedback.json"), null);
 
         assert response != null;
         assertEquals(BAD_REQUEST, response.getStatus());
         assertEquals(readJsonFromFile("sendFeedback/MissingFields/responseMissingFeedback.json"), response.asJson());
 
+        //Sending feedback with no answers
         response = request("api/sendFeedback", POST, readJsonFromFile("sendFeedback/MissingFields/bodyMissingAnswers.json"), null);
 
         assert response != null;
         assertEquals(BAD_REQUEST, response.getStatus());
         assertEquals(readJsonFromFile("sendFeedback/MissingFields/responseMissingAnswers.json"), response.asJson());
 
+        //Sending feedback with no answer
         response = request("api/sendFeedback", POST, readJsonFromFile("sendFeedback/MissingFields/bodyMissingAnswer.json"), null);
 
         assert response != null;
         assertEquals(BAD_REQUEST, response.getStatus());
         assertEquals(readJsonFromFile("sendFeedback/MissingFields/responseMissingAnswer.json"), response.asJson());
 
+        //Sending feedback with no question
         response = request("api/sendFeedback", POST, readJsonFromFile("sendFeedback/MissingFields/bodyMissingQuestion.json"), null);
 
         assert response != null;
