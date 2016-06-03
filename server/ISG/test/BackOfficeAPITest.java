@@ -1031,26 +1031,4 @@ public class BackOfficeAPITest extends APITest {
         assertEquals(BAD_REQUEST, response.getStatus());
         assertEquals(readJsonFromFile("configAlgorithm/MissingFields/responseMissingFieldNumberOfQuestions.json"), response.asJson());
     }
-
-    //==============================================================//
-    //==============================================================//
-    //=========================Other================================//
-    //==============================================================//
-    //==============================================================//
-
-    @Test
-    public void testRequest() {
-
-        Http.RequestBuilder request = new Http.RequestBuilder()
-                .method(GET)
-                .uri("/api/allCategories");
-
-        Result result = route(request);
-        assertEquals(OK, result.status());
-
-        WSResponse response = request("api/allCategories", GET, null, null);
-
-        assert response != null;
-        assertEquals(OK, response.getStatus());
-    }
 }
