@@ -2,7 +2,7 @@
 <html>
 <head>
   <meta charset="utf-8" />
-  <link rel="stylesheet" type="text/css" href="@routes.Assets.versioned("bootstrap/css/bootstrap.min.css")" />
+   <link rel="stylesheet" type="text/css" href="@routes.Assets.versioned("bootstrap/css/bootstrap.min.css")" />
   <link rel="stylesheet" type="text/css" href="@routes.Assets.versioned("css/configurar_categorias.css")" />
   <link rel="stylesheet" type="text/css" href="@routes.Assets.versioned("css/index.css")" />
 
@@ -15,7 +15,7 @@
   <title>Configurar categorias</title>
 </head>
 <body>
-  <div class="container-fluid">
+  <div class="container-fluid margins">
     <!--tabs -->
     <div>
       <ul class="nav nav-tabs">
@@ -25,13 +25,12 @@
     </div>
     <!--tabelas-->
     <div class ="row">
-      <h1 class="col-xs-10 slight-nodge-to-the-right">Categorias</h1>
-      <h1 class="col-xs-1">Pesquisa</h1>
+      <h1 class="col-xs-12 aleo-font text-color">Categorias</h1>
     </div>
 
     <div class="row">
       <!--col-xs-9-->
-      <div class="col-xs-9 pull-left interface-size interface-overflow slight-nodge-to-the-right">
+      <div class="col-xs-12 pull-left interface-size slight-nodge-to-the-right">
         <!--grupo de cat-->
         <div class="container-fluid" id="boxOfGoodies">
 
@@ -39,66 +38,38 @@
         <!--end grupo de cat-->
       </div>
       <!--end of col-xs-9-->
-      <!--col-xs-2-->
-      <div class="col-xs-2 pull-right">
-        <div class="box">
-          <div class="box-header">
-            <table class="table table-bordered right-table-margin">
-              <tbody>
-                <tr>
-                  <td>
-                    <div id="custom-search-input col-size">
-                      <div class="input-group col-sm-12">
-                        <input type="text" data-bind="textInput: filter" class="  search-query form-control" placeholder="Search"/>
-                        <span class="input-group-btn">
-                          <button class="btn btn-block" type="button">
-                            <span class=" glyphicon glyphicon-search"></span>
-                          </button>
-                        </span>
-                      </div>
-                    </div>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-            <div class="box-body interface-right-size interface-overflow">
 
-              <div >
-                <table class="table table-bordered">
-                  <tbody data-bind="foreach: filteredItems">
-                    <tr><td class="text-center no-padding"><button type="button" data-bind="text: $data" class="btn btn-block product-button"></button></td></tr>
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <!--end col-xs-2-->
       <div class="row">
-        <div class="col-xs-9 pull-left nodge-to-the-right">
-          <button type="button" class="btn btn-block down-button" id="saveChanges">Gravar Alterações</button>
-        </div>
-        <div class="col-xs-2 pull-right nodge-to-the-left">
-          <button id="myBtn" type="button" class="btn btn-block down-button AddModal">Adicionar Categoria</button>
+        <div class="navbar navbar-fixed-bottom">
+          <div class="col-xs-7"></div>
+          <div class="col-xs-2 nodge-to-the-left pull-right">
+
+            <button style="margin-bottom:4px;white-space: normal;" id="myBtn" type="button" class="btn btn-block down-button AddModal din-font-12">ADICIONAR CATEGORIA</button>
            <!-- The Modal -->
           <div id="myModal" class="modal">
 
             <!-- Modal content -->
             <div class="modal-content">
               <div class="modal-header">
-                <span class="close">×</span>
-                <h2>Adicione o Nome da Categoria: </h2>
+                <span class="close"><img src="@routes.Assets.versioned("css/images/x.png")" class="x-size"></span>
+                <h2 class="aleo-font text-color">Adicione o Nome da Categoria: </h2>
               </div>
                 <div class="modal-body">
-                  <input class="inputCatName" id="ValidateCat" type="text" placeholder=">" required>
+                  <input class="inputCatName din-font-12" id="ValidateCat" type="text" placeholder="> Nome da Categoria" required>
+                  <input class="inputCatCode din-font-12" id="ValidateCode" type="text" placeholder="> Code da Categoria" required>
                 </div>
                 <div class="modal-footer">
                   <button class="btn btn-default AddCategory" id="InputButtonCatName" disabled="disabled">Adicionar</button>
                 </div>
             </div>
           </div>
+          </div>
+          <div class="col-xs-2 nodge-to-the-right pull-right bottom-separation">
+            <button style="margin-bottom:4px;white-space: normal;" type="button" class="btn btn-block down-button saveChanges din-font-12">GRAVAR ALTERAÇÕES</button>
+          </div>
 
+           <div class="col-xs-1 nodge-to-the-left ghost-col">
+           </div>
         </div>
       </div>
     </div>
@@ -107,7 +78,6 @@
 
   <!-- Scripts-->
   <script type="text/javascript">
-   filter();
    AddModal();
    expandCategoria();
    expandQuestion();
