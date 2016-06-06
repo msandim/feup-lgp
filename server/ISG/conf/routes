@@ -23,9 +23,9 @@ DELETE        /api/removeProducts                      controllers.ProductContro
 POST          /api/configAlgorithm                     controllers.AlgorithmConfigController.configAlgorithm()
 
 # Backoffice:
-GET           /backoffice/                             controllers.HomeController.index()
-GET           /backoffice/configurar_categorias        controllers.HomeController.configurarCategorias()
-GET           /backoffice/produtos                     controllers.HomeController.produtos()
+GET           /backoffice                              controllers.HomeController.index()
+GET           /configurar_categorias                   controllers.HomeController.configurarCategorias()
+GET           /produtos                                controllers.HomeController.produtos()
 
 #GET           /frontend/                                controllers.HomeController.frontend()
 

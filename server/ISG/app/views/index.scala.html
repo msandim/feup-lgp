@@ -6,11 +6,12 @@
   <link rel="stylesheet" type="text/css" href="@routes.Assets.versioned("css/index.css")" />
   <title>Menu Inicial</title>
 </head>
-<body class="text-center">
-  <div class="main-div">
-    <h1>Menu Inicial</h1>
-    <button type="button" class="btn btn-block main-menu-button"><a href="@routes.HomeController.configurarCategorias()">Configurar Categorias/Perguntas/Respostas/Caraterísticas</a></button>
-    <button type="button" class="btn btn-block main-menu-button"><a href="@routes.HomeController.produtos()">Adicionar/Remover Produtos a Categorias</a></button>
+<body>
+     <div class="main-div text-center">
+    <h1 class="aleo-font text-color">Menu Inicial</h1>
+    <a style="width:600px" href="@routes.HomeController.configurarCategorias()" class="btn main-menu-button din-font text-color" type="button">CONFIGURAR CATEGORIAS/PERGUNTAS/RESPOSTAS/CARATERÍSTICAS</a><br>
+    <a style="width:600px;" href="@routes.HomeController.produtos()" class="btn main-menu-button din-font text-color" type="button">ADICIONAR/REMOVER PRODUTOS A CATEGORIAS</a>
+  </div>
   </div>
 </body>
 </html>
