@@ -28,7 +28,7 @@ var removeCategoryArr = [];
 
 var categoryArray = [];
 
- catItems=ko.observableArray();
+catItems=ko.observableArray();
 
 function expandCategoria() {
   var self = this;
@@ -131,6 +131,7 @@ function addCategory(){
       }
     }*/
 
+      loadService("A adicionar categoria...");
       $.ajax({
         url: configs.server+configs.addCategoryApi,
         contentType: "application/json; charset=utf-8",
@@ -139,9 +140,12 @@ function addCategory(){
         crossDomain: true,
           }).done(function(response){
             console.log("SUCESSO   ADD category");
+            loadFinished();
+            location.reload();
          }).fail(function(err){
             loadFinished();
             processError(err);
+            location.reload();
     })
 
     CategoryArray.push(categoryName);
@@ -204,7 +208,8 @@ function addQuestion(){
     //console.log(categoryText);
     //Add question to array
     AddToCategory.push(categoryText);
-    //AddQuestion.push(categoryText);
+    
+    AddQuestion.push(categoryText);
     AddQuestion.push(question);
 
     var toInsert = {
@@ -254,7 +259,7 @@ function addAnswer(){
     var boxAnswers = boxParent.find('.box-of-answers').find('>:first-child');
 
     answer=capitalizeFirstLetter(answer);
-    boxAnswers.append('<div class="box"><div class="row"><div class="col-xs-7 table-col-border table-col-size table-contain-button"><button type="button" class="btn btn-block table-button expandAnswer answer-background text-left aleo-font text-color"><img src="assets\\css\\images\\seta fechada.png" class="left-arrow-nodge">R.: '+answer+'</button></div><div class="col-xs-4 table-col-border table-col-size table-contain-button"><button type="button" href="#" class="btn btn-block table-button toggle-login answer-background din-font-14 text-color">ADICIONAR CARATERISTICA</button> <div style="display:none" class="login"><div id="triangle"></div><h1 class="din-font-14 text-color">Adicionar Carateristica</h1><input type="text" id="inputCharacteristic" class="value" placeholder="> Caracteristica" required/> <input type="text" id="inputOperator" class="value" placeholder="> Operador" required/><input type="text" id="inputValue" class="value" placeholder="> Valor" required/><input type="text" id="inputScore" class="value" placeholder="> Score" required/><input class="addCharacteristic" type="submit" value="ADICIONAR" /></div></div><div class="col-xs-1 table-col-border-end table-col-size table-contain-button"><button type="button" class="btn btn-block table-button removeAnswer answer-background"><img src="assets\\css\\images\\x.png" class="x-size"></button></div></div><div class="box-of-characteristics box-of-margins"><div class="container-fluid"></div></div></div>');
+    boxAnswers.append('<div class="box"><div class="row"><div class="col-xs-7 table-col-border table-col-size table-contain-button"><button type="button" class="btn btn-block table-button expandAnswer answer-background text-left aleo-font text-color"><img src="assets\\css\\images\\seta fechada.png" class="left-arrow-nodge">R.: '+answer+'</button></div><div class="col-xs-4 table-col-border table-col-size table-contain-button"><button type="button" href="#" class="btn btn-block table-button toggle-login answer-background din-font-14 text-color">ADICIONAR CARATERISTICA</button> <div style="display:none" class="login"><div id="triangle"></div><h1 class="din-font-14 text-color">Adicionar Carateristica</h1><input type="text" id="inputCharacteristic" class="value" placeholder="> Caracteristica" required/> <input type="text" id="inputOperator" class="value" placeholder="> Operador" required/><input type="text" id="inputValue" class="value" placeholder="> Valor" required/><input type="text" id="inputScore" class="value" placeholder="> Score" required/><input class="addCharacteristic" type="submit" value="ADICIONAR" /></div></div></div><div class="box-of-characteristics box-of-margins"><div class="container-fluid"></div></div></div>');
 
 
     var categoryText= $(this).closest('.box').find('h3').text();
@@ -337,7 +342,7 @@ function addCharacteristic(){
     var boxParent = $( this ).closest('.box');
     //console.log(boxParent.attr("class"));
     var boxCharacteristic = boxParent.find('.box-of-characteristics').find('>:first-child');
-    boxCharacteristic.append('<div class="box"><div class="row"><div class="col-xs-2 table-col-border table-col-size"><h4 class="din-font-14 text-color">Caraterística</h4></div><div class="col-xs-2 table-col-border table-col-size"><h4 class="din-font-14 text-color">Operador</h4></div><div class="col-xs-2 table-col-border table-col-size"><h4 class="din-font-14 text-color">Valor</h4></div><div class="col-xs-2 table-col-border table-col-size"><h4 class="din-font-14 text-color">Score</h4></div><div class="col-xs-1 table-col-border table-col-size table-contain-button"><button type="button" class="btn btn-block table-button removeCharacteristic"><img src="assets\\css\\images\\x.png" class="x-size"></button></div></div><div class="row"><div class="col-xs-2 table-col-border table-col-size input-padding"><input type="text" class="form-control" placeholder="'+name+'"></div><div class="col-xs-2 table-col-border table-col-size input-padding"><input type="text" class="form-control" placeholder="'+operator+'"></div><div class="col-sm-2 table-col-border table-col-size input-padding"><input type="text" class="form-control" placeholder="'+value+'"></div><div class="col-sm-2 table-col-border table-col-size input-padding"><input type="text" class="form-control" placeholder="'+score+'"></div></div></div>');
+    boxCharacteristic.append('<div class="box"> <div class="row"><div class="col-xs-2 table-col-border table-col-size"><h4 class="din-font-14 text-color">Caraterística</h4></div><div class="col-xs-2 table-col-border table-col-size"><h4 class="din-font-14 text-color">Operador</h4></div><div class="col-xs-2 table-col-border table-col-size"><h4 class="din-font-14 text-color">Valor</h4></div><div class="col-xs-2 table-col-border table-col-size"><h4 class="din-font-14 text-color">Score</h4></div></div><div class="row"><div class="col-xs-2 table-col-border table-col-size"><h4 class="din-font-14 text-color">'+name+'</h4></div><div class="col-xs-2 table-col-border table-col-size"><h4>'+operator+'</h4></div><div class="col-xs-2 table-col-border table-col-size"><h4 class="din-font-14 text-color">'+value+'</h4></div><div class="col-xs-2 table-col-border table-col-size"><h4 class="din-font-14 text-color">'+score+'</h4></div></div></div>');
 
 
     var categoryText = $(this).closest('.box-of-questions').parent().parent().find('h3').text();
@@ -501,7 +506,7 @@ function autoAddAnswers(answers,lastChild){
     var boxAnswers = lastChild.find(".box-of-answers").find(">:first-child");
 
     answer = capitalizeFirstLetter(singleAnswer['text']);
-    boxAnswers.append('<div class="box"><div class="row"><div class="col-xs-7 table-col-border table-col-size table-contain-button"><button type="button" class="btn btn-block table-button expandAnswer answer-background text-left aleo-font text-color"><img src="assets\\css\\images\\seta fechada.png" class="left-arrow-nodge">R.: '+answer+'</button></div><div class="col-xs-4 table-col-border table-col-size table-contain-button"><button type="button" href="#" class="btn btn-block table-button toggle-login answer-background din-font-14 text-color">ADICIONAR CARATERISTICA</button> <div style="display:none" class="login"><div id="triangle"></div><h1 class="din-font-14 text-color">Adicionar Carateristica</h1><input type="text" id="inputCharacteristic" class="value" placeholder="> Caracteristica" required/> <input type="text" id="inputOperator" class="value" placeholder="> Operador" required/><input type="text" id="inputValue" class="value" placeholder="> Valor" required/><input type="text" id="inputScore" class="value" placeholder="> Score" required/><input class="addCharacteristic" type="submit" value="ADICIONAR" /></div></div><div class="col-xs-1 table-col-border-end table-col-size table-contain-button"><button type="button" class="btn btn-block table-button removeAnswer answer-background"><img src="assets\\css\\images\\x.png" class="x-size"></button></div></div><div class="box-of-characteristics box-of-margins"><div class="container-fluid"></div></div></div>');
+    boxAnswers.append('<div class="box"><div class="row"><div class="col-xs-7 table-col-border table-col-size table-contain-button"><button type="button" class="btn btn-block table-button expandAnswer answer-background text-left aleo-font text-color"><img src="assets\\css\\images\\seta fechada.png" class="left-arrow-nodge">R.: '+answer+'</button></div><div class="col-xs-4 table-col-border table-col-size table-contain-button"><button type="button" href="#" class="btn btn-block table-button toggle-login answer-background din-font-14 text-color">ADICIONAR CARATERISTICA</button> <div style="display:none" class="login"><div id="triangle"></div><h1 class="din-font-14 text-color">Adicionar Carateristica</h1><input type="text" id="inputCharacteristic" class="value" placeholder="> Caracteristica" required/> <input type="text" id="inputOperator" class="value" placeholder="> Operador" required/><input type="text" id="inputValue" class="value" placeholder="> Valor" required/><input type="text" id="inputScore" class="value" placeholder="> Score" required/><input class="addCharacteristic" type="submit" value="ADICIONAR" /></div></div></div><div class="box-of-characteristics box-of-margins"><div class="container-fluid"></div></div></div>');
 
     //Unbind all elements with the class and then rebbind to include the new element
     var addCharacteristicElement = $(":root").find(".addCharacteristic");
@@ -527,7 +532,7 @@ function autoAddCharacteristics(characteristics,lastChild){
 
     var boxCharacteristic = lastChild.find(".box-of-characteristics").find(">:first-child");
 
-    boxCharacteristic.append('<div class="box"><div class="row"><div class="col-xs-2 table-col-border table-col-size"><h4 class="din-font-14 text-color">Caraterística</h4></div><div class="col-xs-2 table-col-border table-col-size"><h4 class="din-font-14 text-color">Operador</h4></div><div class="col-xs-2 table-col-border table-col-size"><h4 class="din-font-14 text-color">Valor</h4></div><div class="col-xs-2 table-col-border table-col-size"><h4 class="din-font-14 text-color">Score</h4></div><div class="col-xs-1 table-col-border table-col-size table-contain-button"><button type="button" class="btn btn-block table-button removeCharacteristic"><img src="assets\\css\\images\\x.png" class="x-size"></button></div></div><div class="row"><div class="col-xs-2 table-col-border table-col-size input-padding"><input type="text" class="form-control" placeholder="'+singleCharacteristic.attribute['name']+'"></div><div class="col-xs-2 table-col-border table-col-size input-padding"><input type="text" class="form-control" placeholder="'+singleCharacteristic['operator']+'"></div><div class="col-sm-2 table-col-border table-col-size input-padding"><input type="text" class="form-control" placeholder="'+singleCharacteristic['value']+'"></div><div class="col-sm-2 table-col-border table-col-size input-padding"><input type="text" class="form-control" placeholder="'+singleCharacteristic['score']+'"></div></div></div>');
+    boxCharacteristic.append('<div class="box"> <div class="row"><div class="col-xs-2 table-col-border table-col-size"><h4 class="din-font-14 text-color">Caraterística</h4></div><div class="col-xs-2 table-col-border table-col-size"><h4 class="din-font-14 text-color">Operador</h4></div><div class="col-xs-2 table-col-border table-col-size"><h4 class="din-font-14 text-color">Valor</h4></div><div class="col-xs-2 table-col-border table-col-size"><h4 class="din-font-14 text-color">Score</h4></div></div><div class="row"><div class="col-xs-2 table-col-border table-col-size"><h4 class="din-font-14 text-color">'+singleCharacteristic.attribute['name']+'</h4></div><div class="col-xs-2 table-col-border table-col-size"><h4>'+singleCharacteristic['operator']+'</h4></div><div class="col-xs-2 table-col-border table-col-size"><h4 class="din-font-14 text-color">'+singleCharacteristic['value']+'</h4></div><div class="col-xs-2 table-col-border table-col-size"><h4 class="din-font-14 text-color">'+singleCharacteristic['score']+'</h4></div></div></div>');
 
     var removeCharacteristicElement = boxCharacteristic.find(".removeCharacteristic");
     removeCharacteristicElement.unbind("click", removeCharacteristic());
@@ -710,72 +715,6 @@ $(document).ready(function() {
 
     $(document).on('click', '.saveChanges', function() {
 
-      //ADICIONAR
-      for(var i=0; i < AddToCategory.length; i++) {
-        var codeCat, index;
-        for (var j=0; j < CategoryArray.length; j++) {
-          if(AddToCategory[i] === CategoryArray[j]){
-            codeCat = CodeCategoryArray[j];
-            index = i;
-            //console.log("EPAA: " +AddQuestion[i]);
-            console.log("AQUIII " + codeCat);
-            break;
-          }
-        }
-
-          var body = [];
-          var answers = [];
-          var attributes = [];
-
-          for(var y=0; y < AddQuestion.length ; y++) {
-            for(var z=0; z < AddAnswer.length; z++ ) {
-              console.log("1 " + AddQuestion[y] + "  " + AddAnswer[z]);
-              if(AddQuestion[y] === AddAnswer[z]) {
-                z+=1;
-                var attributes = [];
-                for (var p = 0; p < AddCharacteristic.length; p++) {
-                console.log("2 " + AddAnswer[z] + "  " + AddCharacteristic[p]);
-
-                  if(AddAnswer[z] === AddCharacteristic[p]) {
-                    attributes.push({"name": AddCharacteristic[p+1] , "operator": AddCharacteristic[p+2], "value" : AddCharacteristic[p+3], "score"  : AddCharacteristic[p+4] });
-                    p += 4;
-                  }
-                  else {
-                    p += 4;
-                  }
-
-                }
-
-                answers.push({"text": AddAnswer[z] , attributes});
-
-              }
-
-            }
-
-            body.push({"text": AddQuestion[y], answers});
-            body.answers = answers;
-          }
-
-          console.log(JSON.stringify(body));
-
-          console.log(AddQuestion);
-          console.log(AddAnswer);
-          console.log(AddCharacteristic);
-
-        $.ajax({
-            url:  configs.server+configs.addQuestions,
-            type: 'POST',
-            contentType: "application/json; charset=utf-8",
-            data: JSON.stringify({category : codeCat , questions : body}),
-            dataType : 'json',
-            }).done(function(response){
-              console.log("SUCESSO   ADD questions");
-            }).fail(function(err){
-              loadFinished();
-              processError(err);
-            });
-      }
-
       //REMOVER
       console.log(removeQuestions.length + "  " + QuestionsArray.length);
       var codesQuestions = [];
@@ -822,10 +761,84 @@ $(document).ready(function() {
           });
         }
 
-        /*setTimeout(function(){
-          location.reload();
-        }, 2000); */
-    });
+        //ADICIONAR
+       
+        for(var i=0; i < AddToCategory.length; i++) {
+              var codeCat, index, namecategoria;
+              for (var j=0; j < CategoryArray.length; j++) {
+                if(AddToCategory[i] === CategoryArray[j]){
+                  codeCat = CodeCategoryArray[j];
+                  namecategoria=AddToCategory[i];
+                  index = i;
+                  //console.log("EPAA: " +AddQuestion[i]);
+                  console.log("AQUIII " + codeCat);
+                  break;
+                }
+              }
+
+            var body = [];
+          var answers = [];
+          var attributes = [];
+
+          for(var y=0; y < AddQuestion.length ; y++) {
+            if(namecategoria ===  AddQuestion[y]) {
+              y+=1;
+            for(var z=0; z < AddAnswer.length; z++ ) {
+              console.log("1 " + AddQuestion[y] + "  " + AddAnswer[z]);
+              if(AddQuestion[y] === AddAnswer[z]) {
+                z+=1;
+                var attributes = [];
+                for (var p = 0; p < AddCharacteristic.length; p++) {
+                console.log("2 " + AddAnswer[z] + "  " + AddCharacteristic[p]);
+
+                  if(AddAnswer[z] === AddCharacteristic[p]) {
+                    attributes.push({"name": AddCharacteristic[p+1] , "operator": AddCharacteristic[p+2], "value" : AddCharacteristic[p+3], "score"  : AddCharacteristic[p+4] });
+                    p += 4;
+                  }
+                  else {
+                    p += 4;
+                  }
+
+                }
+
+                answers.push({"text": AddAnswer[z] , attributes});
+
+              }
+
+            }
+
+            body.push({"text": AddQuestion[y], answers});
+            body.answers = answers;
+          }
+        }
+
+          console.log(JSON.stringify(body));
+
+          console.log(AddQuestion);
+          console.log(AddAnswer);
+          console.log(AddCharacteristic);
+
+          loadService("A adicionar questões...");
+        $.ajax({
+            url:  configs.server+configs.addQuestions,
+            type: 'POST',
+            contentType: "application/json; charset=utf-8",
+            data: JSON.stringify({category : codeCat , questions : body}),
+            dataType : 'json',
+            }).done(function(response){
+              console.log("SUCESSO   ADD questions");
+              loadFinished();
+             location.reload();
+            }).fail(function(err){
+              loadFinished();
+              processError(err);
+               location.reload();
+            });
+         
+         }
+
+      });
+    
 });
 
 //
@@ -888,10 +901,18 @@ function capitalizeFirstLetter(string) {
     return string.charAt(0).toUpperCase() + string.slice(1);
 }
 
+
+function loadService(text){
+  //$('.interface-square').empty();
+  $('.loading').children().hide();
+  $('.loading').append('<div id="loady"><div class="loader" id="loader"></div><div id="loadyText">'+text+'</div></div>');
+  $("body").find("*").attr("disabled", "disabled");
+}
+
 function loadFinished(){
   $('#loady').remove();
   $("body").find("*").removeAttr("disabled");
-  $('.interface-square').children().show();
+  $('.loading').children().show();
 }
 
 function processError(err){

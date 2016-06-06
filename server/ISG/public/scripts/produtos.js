@@ -78,7 +78,7 @@ function addCategory() {
       }
     }*/
 
-
+    loadService("A adicionar categoria...");
     $.ajax({
         url: configs.server+configs.addCategoryApi,
         contentType: "application/json; charset=utf-8",
@@ -87,9 +87,12 @@ function addCategory() {
         crossDomain: true,
        }).done(function(response){
             console.log("SUCESSO   ADD category");
+            loadFinished();
+            location.reload();
          }).fail(function(err){
             loadFinished();
-            processError(err);
+            processError(err);                    
+            location.reload();
         });
 
 
@@ -121,9 +124,6 @@ function addCategory() {
       //disable button submit add category
       $('#InputButtonCatName').attr("disabled", true);
 
-       setTimeout(function(){
-          location.reload();
-        }, 1000);
   });
 
 }
@@ -343,7 +343,8 @@ $(document).ready(function() {
               test1.append("code", code);
               test1.append("csv", myFile[0]);
 
-
+              loadService("A adicionar produtos...");
+  
               $.ajax({
                   url:  configs.server+configs.addProducts,
                   type: 'POST',
@@ -351,20 +352,20 @@ $(document).ready(function() {
                   contentType: false,
                   processData: false,
                 }).done(function(response){
-                    console.log("SUCESSO   ADD PRODUCTS");
+                    console.log("SUCESSO ADD PRODUCTS");
+                    loadFinished();
+                    location.reload();
                  }).fail(function(err){
                     loadFinished();
-                    processError(err);
+                    processError(err);                    
+                    location.reload();
                 });
               
               console.log(filename + " E " +nameCategory + " C " + code);
             }
 
         });
-
-        setTimeout(function(){
-          location.reload();
-        }, 2000);
+      
     });
 });
 
@@ -469,11 +470,19 @@ function capitalizeFirstLetter(string) {
 }
 
 
+function loadService(text){
+  //$('.interface-square').empty();
+  $('.loading').children().hide();
+  $('.loading').append('<div id="loady"><div class="loader" id="loader"></div><div id="loadyText">'+text+'</div></div>');
+  $("body").find("*").attr("disabled", "disabled");
+}
+
 function loadFinished(){
   $('#loady').remove();
   $("body").find("*").removeAttr("disabled");
-  $('.interface-square').children().show();
+  $('.loading').children().show();
 }
+
 
 function processError(err){
   var msg = err;
