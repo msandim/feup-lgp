@@ -423,7 +423,7 @@ function autoFillFeedbackPage(){
 		stringified = JSON.stringify(serviceCall);
 		loadService("A enviar feedback...");
 		$.ajax({
-					url: configs.server+configs.getNextQuestionService,
+					url: configs.server+configs.sendFeedbackService,
 					contentType: "application/json; charset=utf-8",
 					dataType: "json",
 					data: stringified,
@@ -443,7 +443,7 @@ function autoFillFeedbackPage(){
 		stringified = JSON.stringify(serviceCall);
 		loadService("A enviar feedback...");
 		$.ajax({
-					url: configs.server+configs.getNextQuestionService,
+					url: configs.server+configs.sendFeedbackService,
 					contentType: "application/json; charset=utf-8",
 					dataType: "json",
 					data: stringified,
