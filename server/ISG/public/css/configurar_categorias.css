@@ -276,7 +276,7 @@ body {
 
 .login{
   z-index: 1;
-  position: fixed;
+  position: relative;
   width:350px;
   margin:0 auto;
   margin-top:8px;
