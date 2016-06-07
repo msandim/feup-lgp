@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
    <link rel="stylesheet" type="text/css" href="@routes.Assets.versioned("bootstrap/css/bootstrap.min.css")" />
   <link rel="stylesheet" type="text/css" href="@routes.Assets.versioned("css/configurar_categorias.css")" />
-  <link rel="stylesheet" type="text/css" href="@routes.Assets.versioned("css/index.css")" />
+
 
   <!-- search dependencies-->
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
@@ -36,42 +36,43 @@
 
         </div>
         <!--end grupo de cat-->
+        <div class="row loading">
+          <div class>
+            <div class="col-xs-7"></div>
+            <div class="col-xs-2 nodge-to-the-left pull-right">
+
+              <button style="margin-bottom:4px;white-space: normal;" id="myBtn" type="button" class="btn btn-block down-button AddModal din-font-12">ADICIONAR CATEGORIA</button>
+             <!-- The Modal -->
+            <div id="myModal" class="modal">
+
+              <!-- Modal content -->
+              <div class="modal-content">
+                <div class="modal-header">
+                  <span class="close"><img src="@routes.Assets.versioned("css/images/x.png")" class="x-size"></span>
+                  <h2 class="aleo-font text-color">Adicione o Nome da Categoria: </h2>
+                </div>
+                  <div class="modal-body">
+                    <input class="inputCatName din-font-12" id="ValidateCat" type="text" placeholder="> Nome da Categoria" required>
+                    <input class="inputCatCode din-font-12" id="ValidateCode" type="text" placeholder="> Code da Categoria" required>
+                  </div>
+                  <div class="modal-footer">
+                    <button class="btn btn-default AddCategory" id="InputButtonCatName" disabled="disabled">Adicionar</button>
+                  </div>
+              </div>
+            </div>
+            </div>
+            <div class="col-xs-2 nodge-to-the-right pull-right bottom-separation">
+              <button style="margin-bottom:4px;white-space: normal;" type="button" class="btn btn-block down-button saveChanges din-font-12">GRAVAR ALTERAÇÕES</button>
+            </div>
+
+             <div class="col-xs-1 nodge-to-the-left ghost-col">
+             </div>
+          </div>
+        </div>
       </div>
       <!--end of col-xs-9-->
 
-      <div class="row loading">
-        <div class="navbar navbar-fixed-bottom">
-          <div class="col-xs-7"></div>
-          <div class="col-xs-2 nodge-to-the-left pull-right">
 
-            <button style="margin-bottom:4px;white-space: normal;" id="myBtn" type="button" class="btn btn-block down-button AddModal din-font-12">ADICIONAR CATEGORIA</button>
-           <!-- The Modal -->
-          <div id="myModal" class="modal">
-
-            <!-- Modal content -->
-            <div class="modal-content">
-              <div class="modal-header">
-                <span class="close"><img src="@routes.Assets.versioned("css/images/x.png")" class="x-size"></span>
-                <h2 class="aleo-font text-color">Adicione o Nome da Categoria: </h2>
-              </div>
-                <div class="modal-body">
-                  <input class="inputCatName din-font-12" id="ValidateCat" type="text" placeholder="> Nome da Categoria" required>
-                  <input class="inputCatCode din-font-12" id="ValidateCode" type="text" placeholder="> Code da Categoria" required>
-                </div>
-                <div class="modal-footer">
-                  <button class="btn btn-default AddCategory" id="InputButtonCatName" disabled="disabled">Adicionar</button>
-                </div>
-            </div>
-          </div>
-          </div>
-          <div class="col-xs-2 nodge-to-the-right pull-right bottom-separation">
-            <button style="margin-bottom:4px;white-space: normal;" type="button" class="btn btn-block down-button saveChanges din-font-12">GRAVAR ALTERAÇÕES</button>
-          </div>
-
-           <div class="col-xs-1 nodge-to-the-left ghost-col">
-           </div>
-        </div>
-      </div>
     </div>
   </div>
 
