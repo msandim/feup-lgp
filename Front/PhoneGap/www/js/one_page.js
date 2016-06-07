@@ -2,7 +2,7 @@
 
 //Servidor e serviços
 var configs={
-	server:"http://intelligentsalesguide.me:9000",
+	server:"http://intelligentsalesguide.me",
 	getNextQuestionService:"/api/getNextQuestion",
 	sendFeedbackService:"/api/sendFeedback",
   getAllCategoriesService:"/api/allCategories"
