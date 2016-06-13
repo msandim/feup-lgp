@@ -2,6 +2,10 @@ body {
   padding: 20px;
 }
 
+.AddButtonFile {
+  background-color: #E6E7E8;
+}
+
 .interface-size {
   max-height:70%;
   max-height:70vh;
@@ -413,3 +417,4 @@ body {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
 }
+
