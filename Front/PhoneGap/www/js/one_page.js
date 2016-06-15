@@ -484,6 +484,7 @@ function addProductAndCalculateScoreDifference(product){
 	if(!exists){
 		toNextPage['products'].push(product);
 		toNextPage['products'][toNextPage['products'].length-1]['scoreChange'] = Math.round( (product['score']) * 10 ) / 10;
+		toNextPage['products'][toNextPage['products'].length-1]['score'] = Math.round( (product['score']) * 10 ) / 10;
 	}
 }
 
