@@ -415,7 +415,7 @@ function autoFillFeedbackPage(){
 	});
   $('.main').append('<h4 class="h4-above-title din-font-12 title-color">CATEGORIA: '+toNextPage['category']+'</h4><h1 class="h1-title aleo-font title-color">Lista final de produtos</h1><div class="interface-square interface-size grad less-pad"></div><div class="buttons-row"><div class="row"><div class= "col-ms-2"><h4 class="pull-left aleo-font title-color">Esta sequência foi útil?</h4><button type="button" class="btn col-sm-2 pull-right no-button no-border-radius din-font-14 bottom-button-background">NÃO</button><button type="button" class="btn col-sm-2 pull-right yes-button no-border-radius din-font-14 bottom-button-background" style="margin-right:10px;">SIM</button></div></div></div>');
   service['products'].forEach(function(product){
-    $('.interface-square').append('<div class="row"> <div class="col-sm-3 image-padding"><img src="img/tv1.jpg"></div><div class="col-sm-4"><p class="center-div din-font-14 hub-white">'+product['name']+'</p></div><div class="col-sm-2"><p class="center-div din-font-14 hub-white">1399,00€</p></div><div class="col-sm-3 text-right total-border pull-right"><p class="center-div din-font-14 hub-white">TOTAL:'+product['score']+'</p></div></div>');
+    $('.interface-square').append('<div class="row"> <div class="col-sm-3 image-padding"><img src="img/tv1.jpg"></div><div class="col-sm-4"><p class="center-div din-font-14 hub-white">'+product['name']+'</p></div><div class="col-sm-2"><p class="center-div din-font-14 hub-white">1399,00€</p></div><div class="col-sm-3 text-right total-border pull-right"><p class="center-div din-font-14 hub-white">TOTAL:'+Math.round( (product['score']) * 10 ) / 10 +'</p></div></div>');
   });
 
   $('.yes-button').click(function(){
@@ -484,6 +484,7 @@ function addProductAndCalculateScoreDifference(product){
 	if(!exists){
 		toNextPage['products'].push(product);
 		toNextPage['products'][toNextPage['products'].length-1]['scoreChange'] = Math.round( (product['score']) * 10 ) / 10;
+		toNextPage['products'][toNextPage['products'].length-1]['score'] = Math.round( (product['score']) * 10 ) / 10;
 	}
 }
 
