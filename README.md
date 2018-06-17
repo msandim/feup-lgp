@@ -1,5 +1,7 @@
 # Intelligent Sales Guide
 
+The goal of the "Intelligent Sales Guide" project was to develop an intelligent sales system that helps the salespeople in asking effective questions to its clients, in order to better recommend appropriate products from a store. This system selects sequences of questions to send to the salesperson based on the specificity of each question and on the effectiveness of similar sequences in the past in selling one or more recommended products.</p>
+
 ## Useful links
 
 [SCRAIM](https://lgp16.scraim.com)
